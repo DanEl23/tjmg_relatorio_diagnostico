@@ -5,6 +5,7 @@ from docx.shared import Pt, RGBColor, Cm
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_SECTION
 
+
 # --- IMPORTS DO PROJETO ---
 from src.content import static_data 
 from src.media import images
@@ -57,7 +58,7 @@ def configurar_estilos_tjmg(document):
 def inserir_capa(document, pasta_resources):
     """ Insere a imagem de capa se ela existir """
     caminho_capa = pasta_resources / "capa_relatorio.png"
-    
+
     if caminho_capa.exists():
         print("🖼️ Inserindo Capa...")
         p = document.add_paragraph()
@@ -73,7 +74,7 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
     print(f"--- 🚀 Iniciando Geração (Modo Zero-Base) ---")
 
     # 1. SETUP DE DIRETÓRIOS
-    pasta_raiz = Path(caminho_base_dummy).parent.parent 
+    pasta_raiz = Path(caminho_base_dummy).parent.parent
     if "src" in str(pasta_raiz): pasta_raiz = pasta_raiz.parent
     
     caminho_conteudo = pasta_raiz / "data" / "processed" / "Conteudo_Fonte.docx"
@@ -83,7 +84,8 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
     if not caminho_conteudo.exists():
         caminho_conteudo = Path(caminho_base_dummy).parent / "Conteudo_Fonte.docx"
         caminho_sumario = Path(caminho_base_dummy).parent / "Sumario_Modelo.docx"
-        pasta_resources = Path(caminho_base_dummy).parent / "resources"
+        pasta_resources = Path(caminho_base_dummy).parent.parent.parent / "resources"
+        print(f"Pasta_resources ajustada para: {pasta_resources}")
 
     print(f"📂 Fonte: {caminho_conteudo}")
     print(f"📂 Sumário: {caminho_sumario}")
