@@ -5,7 +5,6 @@ from docx.shared import Pt, RGBColor, Cm
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_SECTION
 
-
 # --- IMPORTS DO PROJETO ---
 from src.content import static_data 
 from src.media import images
@@ -47,18 +46,17 @@ def configurar_estilos_tjmg(document):
             pf.left_indent = Cm(recuo)
         except: pass
 
-    # --- ATUALIZAÇÃO DOS RECUOS ---
-    # Heading 1: Recuo de 1.25 cm (Mantido)
+    # Heading 1: Tamanho 16, Recuo de 1.25 cm
     criar_ou_atualizar_estilo('Heading 1', 16, 1.25, 18)
     
-    # Heading 2 e 3: SEM RECUO (Alinhado à margem padrão)
-    criar_ou_atualizar_estilo('Heading 2', 14, 0.0, 12)
-    criar_ou_atualizar_estilo('Heading 3', 12, 0.0, 12)
+    # Heading 2 e 3: Tamanho 16, Sem recuo
+    criar_ou_atualizar_estilo('Heading 2', 16, 0.0, 12)
+    criar_ou_atualizar_estilo('Heading 3', 16, 0.0, 12)
 
 def inserir_capa(document, pasta_resources):
     """ Insere a imagem de capa se ela existir """
     caminho_capa = pasta_resources / "capa_relatorio.png"
-
+    
     if caminho_capa.exists():
         print("🖼️ Inserindo Capa...")
         p = document.add_paragraph()
@@ -74,7 +72,7 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
     print(f"--- 🚀 Iniciando Geração (Modo Zero-Base) ---")
 
     # 1. SETUP DE DIRETÓRIOS
-    pasta_raiz = Path(caminho_base_dummy).parent.parent
+    pasta_raiz = Path(caminho_base_dummy).parent.parent 
     if "src" in str(pasta_raiz): pasta_raiz = pasta_raiz.parent
     
     caminho_conteudo = pasta_raiz / "data" / "processed" / "Conteudo_Fonte.docx"
@@ -85,7 +83,6 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
         caminho_conteudo = Path(caminho_base_dummy).parent / "Conteudo_Fonte.docx"
         caminho_sumario = Path(caminho_base_dummy).parent / "Sumario_Modelo.docx"
         pasta_resources = Path(caminho_base_dummy).parent.parent.parent / "resources"
-        print(f"Pasta_resources ajustada para: {pasta_resources}")
 
     print(f"📂 Fonte: {caminho_conteudo}")
     print(f"📂 Sumário: {caminho_sumario}")
@@ -98,7 +95,7 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
     # 3. CAPA
     inserir_capa(doc_final, pasta_resources)
 
-    # 4. SUMÁRIO (Com ajustes de formatação e espaçamento)
+    # 4. SUMÁRIO (Visual)
     try:
         doc_sumario_orig = Document(caminho_sumario)
         print("📋 Gerando página de Sumário...")
@@ -115,16 +112,37 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
 
     mapa = static_data.MAPA_RECURSOS
     
+    # Variáveis de Estado
+    em_lista_numerica = False
+    em_lista_marcadores = False
+
     print("--- Processando Texto ---")
     for para in doc_fonte.paragraphs:
         texto = para.text.strip()
         if not texto: continue
         
-        # Filtro de segurança (Ignora sumário antigo no texto)
+        # Filtro de segurança (Sumário antigo)
         if texto.upper() == "SUMÁRIO" or re.match(r'^\d+$', texto):
             continue
 
-        # A. COMANDOS
+        # --- CONTROLE DE LISTAS ---
+        # 1. Lista Numérica
+        if "[INICIAR_LISTA_NUMERICA]" in texto:
+            em_lista_numerica = True
+            continue 
+        if "[FINALIZAR_LISTA_NUMERICA]" in texto:
+            em_lista_numerica = False
+            continue 
+
+        # 2. Lista de Marcadores
+        if "[INICIAR_LISTA_MARCADORES]" in texto:
+            em_lista_marcadores = True
+            continue
+        if "[FINALIZAR_LISTA_MARCADORES]" in texto:
+            em_lista_marcadores = False
+            continue
+
+        # A. COMANDOS GERAIS
         if "[QUEBRA_PAGINA]" in texto:
             doc_final.add_page_break()
             continue
@@ -149,14 +167,30 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
                 h.runs[0].font.name = 'Calibri'
             continue
 
-        # D. TEXTO COMUM
+        # D. TEXTO COMUM (OU ITEM DE LISTA)
         p = doc_final.add_paragraph(texto)
-        p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
         
-        # Formatação do texto padrão
-        p.paragraph_format.line_spacing = 1.5  
-        p.paragraph_format.space_after = Pt(10) 
+        if em_lista_numerica:
+            # Lista Numérica: Espaçamento 1.0
+            try: p.style = 'List Number'
+            except: pass 
+            p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            p.paragraph_format.line_spacing = 1.0 
+            
+        elif em_lista_marcadores:
+            # Lista de Marcadores: Espaçamento 1.0
+            try: p.style = 'List Bullet'
+            except: pass
+            p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            p.paragraph_format.line_spacing = 1.0
+
+        else:
+            # Texto Normal: Espaçamento 1.5
+            p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+            p.paragraph_format.line_spacing = 1.5  
+            p.paragraph_format.space_after = Pt(10) 
         
+        # Formatação de Fonte (Comum)
         run = p.runs[0] if p.runs else p.add_run(texto)
         run.font.name = 'Calibri'
         run.font.size = Pt(11)
@@ -169,12 +203,13 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
     except Exception as e:
         print(f"❌ Erro ao salvar: {e}")
 
-# --- HELPER DE RECURSOS ---
+# --- HELPER DE RECURSOS (ATUALIZADO) ---
 def processar_recurso(doc, chave, item):
     tipo = item["tipo"]
     dados = item.get("dados")
     print(f"⚡ Inserindo: {chave}")
 
+    # === IMAGENS ===
     if tipo == "IMAGEM":
         images.adicionar_imagem(
             doc, item["arquivo"], titulo=chave, 
@@ -182,12 +217,20 @@ def processar_recurso(doc, chave, item):
             largura_custom=item.get("largura"),
             recuo_esq=item.get("recuo_esq", 0)
         )
-    elif "TABELA_ORCAMENTO" in tipo:
+    
+    # === TABELAS DE ORÇAMENTO (Específico vs Genérico) ===
+    # Importante: Verifica o tipo exato primeiro para usar a função específica
+    elif tipo == "TABELA_ORCAMENTO_CONJUNTO":
+        builders.adicionar_tabela_orcamento_conjunto(doc, dados)
+        
+    elif tipo == "TABELA_ORCAMENTO":
         builders.adicionar_tabela_orcamento(
             doc, titulo_vindo_do_word=chave, dados=dados, 
             numero_tabela=item.get("num", "09"),
             titulo_custom=item.get("titulo")
         )
+
+    # === DEMAIS TABELAS ===
     elif tipo == "TABELA_PROCESSOS":
         builders.adicionar_tabela_processos(doc, dados, texto_legenda=chave)
     elif tipo == "TABELA_ATOS":
@@ -200,18 +243,22 @@ def processar_recurso(doc, chave, item):
         builders.adicionar_tabela_comarcas(doc, dados)
     elif tipo == "TABELA_NUCLEOS":
         builders.adicionar_tabela_nucleos(doc, dados)
+    
+    # === TABELAS NOVAS INSERIDAS ===
     elif tipo == "TABELA_CIDADES":
         builders.adicionar_tabela_cidades(doc, dados)
+        
     elif tipo == "TABELA_JUSTICA_NUMEROS":
-        builders.adicionar_tabela_justica_numeros(doc, dados)
+        builders.adicionar_tabela_justica_numeros(doc, dados, texto_legenda=chave)
+
+    # === GENÉRICA ===
     elif tipo == "TABELA_GENERICA":
         builders.adicionar_tabela_generica(doc, chave, dados)
     
     doc.add_paragraph() 
 
-# --- FUNÇÃO DO SUMÁRIO (MANTIDA COM FORMATAÇÃO ESPECÍFICA) ---
+# --- FUNÇÃO DO SUMÁRIO ---
 def adicionar_pagina_sumario_visual(doc, doc_orig):
-    # Título SUMÁRIO
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.LEFT 
     run = p.add_run("SUMÁRIO")
@@ -232,7 +279,6 @@ def adicionar_pagina_sumario_visual(doc, doc_orig):
             
             p_item = doc.add_paragraph()
             
-            # Recuos Específicos do Sumário
             if lvl == 1: indent = Cm(0)
             elif lvl == 2: indent = Cm(0.42)
             elif lvl == 3: indent = Cm(0.85)

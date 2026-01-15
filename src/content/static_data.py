@@ -455,6 +455,21 @@ MAPA_RECURSOS = {
         "fonte_custom": "Armazém de Informações - BO SIAFI/MG",
         "titulo": TITULO_TABELA_ORCAMENTO_ACAO
     },
+    "Tabela 11 - Orçamento 2025 por ação orçamentária": {
+        "tipo": "TABELA_ORCAMENTO_CONJUNTO", # Ou usar TABELA_ORCAMENTO com num="11"
+        "dados": dados_tabela_orcamento_2025,
+        "fonte_custom": "Lei Orçamentária Anual nº 24.678, de 30/12/2024. Fonte: Lei Orçamentária Anual nº 25.124, de 30/12/2024.",
+        "titulo": TITULO_TABELA_ORCAMENTO_ACAO
+    },
+    "Tabela - Cidades": {
+        "tipo": "TABELA_CIDADES", 
+        "dados": dados_tabela_cidades
+    },
+    "Tabela 12 - Dados estatísticos do Relatório Justiça em Números – Edições 2019 a 2024/CNJ.": {
+        "tipo": "TABELA_JUSTICA_NUMEROS", 
+        "dados": dados_tabela_justica_numeros,
+        "fonte_custom": "Legenda: s/d = Dados não encontrados no Relatório Justiça em Números do Período. (*) O indicador considera: número de servidores(as) (efetivos(as), requisitados(as), cedidos(as) e comissionados(as) sem vínculo efetivo); e número de trabalhadores(as) auxiliares (terceirizados(as), estagiários(as), juízes(as) leigos(as) e conciliadores(as)."
+    },
     # --- IMAGENS (Apenas nome do arquivo, o caminho vem do config) ---
     "Figura 01 - Informações sobre o Estado de Minas Gerais.": {
         "tipo": "IMAGEM", "arquivo": "figura_01.png",
@@ -468,7 +483,7 @@ MAPA_RECURSOS = {
         "tipo": "IMAGEM", "arquivo": "figura_03.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO"
     },
-    "Figura 04 - Figura 04 - Força de Trabalho.": {
+    "Figura 04 - Força de Trabalho.": {
         "tipo": "IMAGEM", "arquivo": "figura_04.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO"
     },
@@ -480,13 +495,13 @@ MAPA_RECURSOS = {
         "tipo": "IMAGEM", "arquivo": "figura_06.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO"
     },
-    "Figura 07 - Resultados dos indicadores estratégicos do TJMG.": {
+    "Figura 07 - Instalações prediais do TJMG.": {
         "tipo": "IMAGEM", "arquivo": "figura_07.png",
-        "fonte" : "Fonte: Sigplan"
+        "fonte" : "Fonte: Centro de Informações para a Gestão Institucional – CEINFO"
     },
     "Figura 08 - Desempenho da ação por programa (Unidade 1031).": {
         "tipo": "IMAGEM", "arquivo": "figura_08.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "fonte" : "Fonte Sigplan",
         "largura": 19.0,
         "recuo_esq": -1.85
     },

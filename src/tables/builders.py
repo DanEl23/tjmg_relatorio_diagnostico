@@ -1098,7 +1098,7 @@ def adicionar_tabela_orcamento(document, titulo_vindo_do_word, dados, numero_tab
     
     r_leg = p_leg.add_run(texto_legenda)
     r_leg.font.name = FONTE_NOME; r_leg.font.size = Pt(8)
-    
+
 
 def adicionar_tabela_orcamento_conjunto(document, dados):
     table = document.add_table(rows=0, cols=2)
@@ -1170,12 +1170,19 @@ def adicionar_tabela_cidades(document, dados):
                 cell._tc.get_or_add_tcPr().append(shading)
 
 
-def adicionar_tabela_justica_numeros(document, dados):
-    """ Tabela 13: Justiça em Números """
+def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None):
+    """ 
+    Tabela 13: Justiça em Números 
+    - Fonte: Calibri
+    - Alinhamento Vertical: Centro
+    - Espaçamento: 0pt
+    """
+    if not dados: return
+
     table = document.add_table(rows=0, cols=7)
     tbl = table._tbl
     
-    # CORREÇÃO DO WARNING AQUI
+    # Configuração da Tabela (XML)
     tblPr = tbl.tblPr
     if tblPr is None:
         tblPr = OxmlElement('w:tblPr')
@@ -1210,43 +1217,89 @@ def adicionar_tabela_justica_numeros(document, dados):
         if tipo.startswith("HEADER") or tipo.startswith("SUB"):
             trPr.append(OxmlElement('w:tblHeader'))
             
+        # --- HEADER PRINCIPAL MESCLADO ---
         if tipo == "HEADER_MERGE":
             c = row.cells[0].merge(row.cells[6])
             c.text = vals[0]
+            
+            # Formatação
+            set_cell_vertical_alignment(c, 'center') # <--- ALINHAMENTO VERTICAL
             shading = OxmlElement('w:shd')
             shading.set(qn('w:fill'), '44546A')
             c._tc.get_or_add_tcPr().append(shading)
-            c.paragraphs[0].runs[0].font.color.rgb = RGBColor(255,255,255)
-            c.paragraphs[0].runs[0].bold = True
-            c.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+            
+            p = c.paragraphs[0]
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.paragraph_format.space_before = Pt(0)
+            p.paragraph_format.space_after = Pt(0)
+            
+            if p.runs:
+                run = p.runs[0]
+                run.font.name = 'Calibri' # <--- FONTE CALIBRI
+                run.font.size = Pt(11)
+                run.font.color.rgb = RGBColor(255,255,255)
+                run.bold = True
+            
             remove_all_borders(c)
 
+        # --- SUBTÍTULOS ---
         elif tipo in ["SUB_HEADER", "SUB_HEADER_SECONDARY"]:
             for j in range(7):
                 c = row.cells[j]
                 c.text = vals[j]
+                
+                set_cell_vertical_alignment(c, 'center') # <--- ALINHAMENTO VERTICAL
                 shading = OxmlElement('w:shd')
                 shading.set(qn('w:fill'), 'EEEEEE')
                 c._tc.get_or_add_tcPr().append(shading)
                 remove_all_borders(c)
-                c.paragraphs[0].runs[0].bold = True
+                
+                p = c.paragraphs[0]
+                p.paragraph_format.space_before = Pt(0)
+                p.paragraph_format.space_after = Pt(0)
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER if j > 0 else WD_ALIGN_PARAGRAPH.LEFT
+
+                if p.runs:
+                    run = p.runs[0]
+                    run.font.name = 'Calibri' # <--- FONTE CALIBRI
+                    run.font.size = Pt(11)
+                    run.bold = True
                 
                 if tipo == "SUB_HEADER_SECONDARY":
                     set_cell_bottom_border(c)
                     
+        # --- DADOS ---
         elif tipo == "DATA_ROW":
             data_idx += 1
             for j in range(7):
                 c = row.cells[j]
                 c.text = vals[j]
+                
+                set_cell_vertical_alignment(c, 'center') # <--- ALINHAMENTO VERTICAL
                 remove_all_borders(c)
+                
                 if data_idx % 2 != 0:
                     shading = OxmlElement('w:shd')
                     shading.set(qn('w:fill'), 'D9D9D9')
                     c._tc.get_or_add_tcPr().append(shading)
+                
+                p = c.paragraphs[0]
+                p.paragraph_format.space_before = Pt(0)
+                p.paragraph_format.space_after = Pt(0)
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER if j > 0 else WD_ALIGN_PARAGRAPH.LEFT
+                
+                if p.runs:
+                    run = p.runs[0]
+                    run.font.name = 'Calibri' # <--- FONTE CALIBRI
+                    run.font.size = Pt(11)
 
-    document.add_paragraph("Tabela 12 - Dados estatísticos do Relatório Justiça em Números. Fonte: CNJ", style='Caption')
-
+    # Legenda Dinâmica
+    if texto_legenda:
+        p_legenda = document.add_paragraph(texto_legenda, style='Caption')
+        p_legenda.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    else:
+        # Fallback caso não seja passado texto
+        document.add_paragraph("Tabela 12 - Dados estatísticos do Relatório Justiça em Números. Fonte: CNJ", style='Caption')
 
 def adicionar_tabela_generica(document, titulo_tabela, dados):
     """
