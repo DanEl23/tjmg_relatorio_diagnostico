@@ -1,0 +1,60 @@
+main.py                  # Arquivo principal para execução do projeto
+migrar_arquivos.py       # Script para migração de arquivos entre pastas ou formatos
+requirements.txt         # Lista de dependências Python do projeto
+
+data/                    # Diretório para dados utilizados e gerados
+    output/              # Saída de dados processados ou resultados finais
+    processed/           # Dados já processados e prontos para uso
+        dicionario_graficos.json           # Dicionário com informações sobre gráficos
+        mapeamento_graficos_completo.json  # Mapeamento detalhado de gráficos
+        canvas_images/                     # Imagens extraídas de canvas
+        extracted_images/                  # Imagens extraídas de outras fontes
+    raw/                  # Dados brutos, ainda não processados
+
+Fontes JN2025/           # Fontes e arquivos de referência do projeto JN2025
+resources/               # Recursos auxiliares, como imagens, templates, etc.
+
+src/                     # Código-fonte principal do projeto
+    __init__.py          # Torna o diretório um pacote Python
+    config.py            # Configurações globais do projeto
+    content/             # Dados e conteúdos estáticos
+        __init__.py      # Inicialização do pacote content
+        static_data.py   # Dados estáticos utilizados no projeto
+    core/                # Núcleo de funcionalidades principais
+        __init__.py      # Inicialização do pacote core
+        generator.py     # Geração de relatórios ou dados
+    extractors/          # Módulos para extração de dados
+        __init__.py      # Inicialização do pacote extractors
+        excel_loader.py  # Carregamento e leitura de arquivos Excel
+        pdf_extractor.py # Extração de dados de arquivos PDF
+        process_extractor.py # Extração de dados de processos
+    staging/             # Scripts de testes e protótipos
+        extrair_tabelas_planilha.py     # Extração de tabelas de planilhas
+        teste_busca_graficos.py         # Teste de busca de gráficos
+        teste_tabela_areas.py           # Teste de extração de áreas
+        teste_tabela_comarcas.py        # Teste de extração de comarcas
+        teste_tabela_estrutura.py       # Teste de extração de estrutura
+        teste_tabela_historicos.py      # Teste de extração de históricos
+        teste_tabela_justica_numeros.py # Teste de extração de números da justiça
+        teste_tabela_nucleos.py         # Teste de extração de núcleos
+        teste_tabela_orcamento.py       # Teste de extração de orçamento
+        teste_tabela.py                 # Teste genérico de extração de tabelas
+    tables/               # Construção e utilidades para tabelas
+        __init__.py      # Inicialização do pacote tables
+        builders.py      # Funções para construir tabelas
+        utils.py         # Utilitários para manipulação de tabelas
+    tools/                # Ferramentas auxiliares para o projeto
+        __init__.py      # Inicialização do pacote tools
+        diagnose_pdf.py  # Diagnóstico de PDFs
+        diagnostico_metadados.py # Diagnóstico de metadados
+        explorar_planilha.py     # Exploração de planilhas
+        extract_pdf_pages.py     # Extração de páginas de PDFs
+    utils/                # Utilitários gerais do projeto
+        __init__.py      # Inicialização do pacote utils
+        image_matcher.py # Funções para comparação e matching de imagens
+
+tests/                   # Testes automatizados do projeto
+    integration/         # Testes de integração
+    unit/                # Testes unitários
+
+tools/                   # Ferramentas externas ou scripts auxiliares

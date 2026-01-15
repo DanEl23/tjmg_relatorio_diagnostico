@@ -1,0 +1,40 @@
+# --- Python & Sistema ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+.DS_Store
+Thumbs.db
+
+# --- Ambiente Virtual ---
+# Ignora a pasta do ambiente virtual
+venv/
+env/
+.env
+
+# --- IDEs (VS Code, PyCharm, etc) ---
+.vscode/
+.idea/
+*.swp
+
+# --- Projeto Específico (Dados) ---
+# Ignora arquivos brutos (PDFs gigantes, Excels confidenciais)
+# Mas mantém um arquivo .gitkeep se existir para segurar a pasta
+data/raw/*
+!data/raw/.gitkeep
+
+# Ignora imagens extraídas temporárias
+data/processed/extracted_images/*
+!data/processed/extracted_images/.gitkeep
+
+# Ignora os relatórios gerados
+data/output/*
+!data/output/.gitkeep
+
+# Ignora a pasta de "rascunhos" da refatoração
+src/staging/
+
+# --- Exceções (Arquivos de Exemplo que você QUER versionar) ---
+# Descomente abaixo se quiser versionar o Excel ou Word de exemplo
+# !data/raw/Conteudo_Fonte.docx
+# !data/raw/Sumario_Modelo.docx
