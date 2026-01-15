@@ -51,9 +51,9 @@ def main():
     
     try:
         gerar_relatorio_completo(
-            template_path=template_path,
+            caminho_base_dummy=template_path, # <--- MUDANÇA AQUI (Nome do argumento alterado)
             output_path=output_path,
-            mapa_recursos=MAPA_RECURSOS # <--- Passa o Dicionário, não lista
+            mapa_recursos=MAPA_RECURSOS
         )
     except Exception as e:
         print(f"\n❌ ERRO FATAL durante a geração: {e}")
