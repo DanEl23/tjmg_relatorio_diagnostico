@@ -9,8 +9,7 @@ dados_tabela_atos = [
     ("Lei Complementar nº 59/2001", "Contém a organização e a divisão judiciárias do Estado de Minas Gerais."),
     ("Resolução do Tribunal Pleno nº 03/2012", "Contém o Regimento Interno do Tribunal de Justiça."),
     ("Resolução nº 518/2007", "Dispõe sobre os níveis hierárquicos e as atribuições gerais das unidades organizacionais que integram a Secretaria do Tribunal de Justiça do Estado de Minas Gerais."),
-    ("Resolução nº 522/2007", 
-     "Dispõe sobre a Superintendência Administrativa:\n"
+    ("Resolução nº 522/2007", "Dispõe sobre a Superintendência Administrativa:\n"
      "ü Superintendente Administrativo;\n"
      "ü Diretoria Executiva da Gestão de Bens, Serviços e Patrimônio;\n"
      "ü Diretoria Executiva de Engenharia e Gestão Predial;\n"
@@ -25,8 +24,7 @@ dados_tabela_atos = [
     ("Resolução n° 878/2018", "Referenda a instalação da Câmara de que trata o art. 7º da Lei Complementar estadual nº 146, de 9 de janeiro de 2018, promovida pela Resolução nº 877, de 29 de junho de 2018."),
     ("Resolução nº 886/2019", "Determina a instalação da 8ª Câmara Criminal no Tribunal de Justiça."),
     ("Resolução nº 893/2019", "Determina a instalação da 20ª Câmara Cível no Tribunal de Justiça."),
-    ("Resolução n° 969/2021", 
-     "Dispõe sobre os Comitês de Assessoramento à Presidência, estabelece a estrutura e o funcionamento das unidades organizacionais da Secretaria do Tribunal de Justiça diretamente vinculadas ou subordinadas à Presidência:\n"
+    ("Resolução n° 969/2021", "Dispõe sobre os Comitês de Assessoramento à Presidência, estabelece a estrutura e o funcionamento das unidades organizacionais da Secretaria do Tribunal de Justiça diretamente vinculadas ou subordinadas à Presidência:\n"
      "ü Comitê de Governança e Gestão Estratégica;\n"
      "ü Comitê Executivo de Gestão Institucional;\n"
      "ü Comitê Institucional de Inteligência;\n"

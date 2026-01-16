@@ -5,6 +5,10 @@ from docx.shared import Pt, RGBColor, Cm
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.section import WD_SECTION
 
+# --- IMPORTS PARA PAGINAÇÃO/XML ---
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+
 # --- IMPORTS DO PROJETO ---
 from src.content import static_data 
 from src.media import images
@@ -15,14 +19,82 @@ COR_VINHO = RGBColor(162, 22, 18)
 COR_PRETO = RGBColor(0, 0, 0)
 
 def configurar_layout_pagina(document):
-    """ Configura A4 e Margens padrão TJMG """
+    """ Configura A4, Margens e Distâncias de Cabeçalho/Rodapé """
     section = document.sections[0]
     section.page_width = Cm(21.0)
     section.page_height = Cm(29.7)
+    
+    # Margens da Página
     section.top_margin = Cm(3.0)
     section.bottom_margin = Cm(2.0)
     section.left_margin = Cm(3.0)
     section.right_margin = Cm(2.0)
+    
+    # Distâncias
+    section.header_distance = Cm(1.0)
+    section.footer_distance = Cm(1.25)
+
+def adicionar_paginacao_rodape(document):
+    """ 
+    Insere numeração de página no rodapé (Alinhado à Direita).
+    - Ordem: [Número da Página] -> [Parágrafo em Branco].
+    - Fonte: Calibri 12
+    - Espaçamento: 1.5 (linhas) e 6pt (antes/depois).
+    """
+    section = document.sections[0]
+    footer = section.footer
+    
+    # 1. Configura o parágrafo do NÚMERO DA PÁGINA
+    if footer.paragraphs:
+        p_num = footer.paragraphs[0]
+        p_num.text = "" 
+    else:
+        p_num = footer.add_paragraph()
+        
+    p_num.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+    p_num.paragraph_format.line_spacing = 1.5
+    p_num.paragraph_format.space_before = Pt(6)
+    p_num.paragraph_format.space_after = Pt(6)
+
+    # 2. Força o Estilo 'Footer'
+    try:
+        style = document.styles['Footer']
+        style.font.name = 'Calibri'
+        style.font.size = Pt(12)
+        style.paragraph_format.line_spacing = 1.5
+        p_num.style = style
+    except KeyError:
+        pass
+
+    # 3. Cria o Run e o Campo PAGE
+    run = p_num.add_run()
+    run.font.name = 'Calibri'
+    run.font.size = Pt(12)
+    
+    fldChar1 = OxmlElement('w:fldChar')
+    fldChar1.set(qn('w:fldCharType'), 'begin')
+
+    instrText = OxmlElement('w:instrText')
+    instrText.set(qn('xml:space'), 'preserve')
+    instrText.text = "PAGE"
+
+    fldChar2 = OxmlElement('w:fldChar')
+    fldChar2.set(qn('w:fldCharType'), 'separate')
+
+    fldChar3 = OxmlElement('w:fldChar')
+    fldChar3.set(qn('w:fldCharType'), 'end')
+
+    run._element.append(fldChar1)
+    run._element.append(instrText)
+    run._element.append(fldChar2)
+    run._element.append(fldChar3)
+
+    # 4. Adiciona um parágrafo VAZIO DEPOIS
+    p_vazio = footer.add_paragraph()
+    p_vazio.text = ""
+    p_vazio.paragraph_format.line_spacing = 1.5 
+    p_vazio.paragraph_format.space_before = Pt(6)
+    p_vazio.paragraph_format.space_after = Pt(6)
 
 def configurar_estilos_tjmg(document):
     """ Define estilos Heading 1, 2, 3 com a cor Vinho """
@@ -91,6 +163,9 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
     doc_final = Document()
     configurar_layout_pagina(doc_final)
     configurar_estilos_tjmg(doc_final)
+    
+    # --- PAGINAÇÃO ---
+    adicionar_paginacao_rodape(doc_final)
 
     # 3. CAPA
     inserir_capa(doc_final, pasta_resources)
@@ -121,79 +196,117 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
         texto = para.text.strip()
         if not texto: continue
         
-        # Filtro de segurança (Sumário antigo)
+        # --- FILTRO: LIXO DE SUMÁRIO ANTIGO ---
         if texto.upper() == "SUMÁRIO" or re.match(r'^\d+$', texto):
             continue
 
         # --- CONTROLE DE LISTAS ---
-        # 1. Lista Numérica
         if "[INICIAR_LISTA_NUMERICA]" in texto:
-            em_lista_numerica = True
-            continue 
+            em_lista_numerica = True; continue 
         if "[FINALIZAR_LISTA_NUMERICA]" in texto:
-            em_lista_numerica = False
-            continue 
+            em_lista_numerica = False; continue 
 
-        # 2. Lista de Marcadores
         if "[INICIAR_LISTA_MARCADORES]" in texto:
-            em_lista_marcadores = True
-            continue
+            em_lista_marcadores = True; continue
         if "[FINALIZAR_LISTA_MARCADORES]" in texto:
-            em_lista_marcadores = False
+            em_lista_marcadores = False; continue
+
+        # --- A. TEXTO DESTAQUE (Iniciado por #) ---
+        if texto.startswith('#'):
+            texto_limpo = texto.lstrip('#').strip()
+            if not texto_limpo: continue
+
+            print(f"⭐ Texto Destaque: {texto_limpo}")
+            p = doc_final.add_paragraph(texto_limpo)
+            p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+            p.paragraph_format.line_spacing = 1.5
+            p.paragraph_format.space_after = Pt(10)
+
+            run = p.runs[0] if p.runs else p.add_run(texto_limpo)
+            run.font.name = 'Calibri'
+            run.font.size = Pt(12)
+            run.bold = True
+            run.font.color.rgb = COR_VINHO 
             continue
 
-        # A. COMANDOS GERAIS
+        # --- B. COMANDOS GERAIS ---
         if "[QUEBRA_PAGINA]" in texto:
             doc_final.add_page_break()
             continue
 
-        # B. RECURSOS VISUAIS
+        # --- C. RECURSOS VISUAIS ---
         if texto in mapa:
             processar_recurso(doc_final, texto, mapa[texto])
             continue
 
-        # C. TÍTULOS (Headings)
-        match = re.match(r'^(\d+(\.\d+)*)\.?\s+(.*)', texto)
+        # --- D. TÍTULOS (Headings) ---
+        match = re.match(r'^\s*(\d+(?:\.\d+)*\.?)\s+(.*)', texto)
+        eh_titulo_valido = False
+        
         if match:
-            num = match.group(1)
-            txt = match.group(3).strip()
-            nivel = num.count('.') + 1
-            if nivel > 3: nivel = 3
+            prefixo = match.group(1).strip()
+            titulo_texto = match.group(2).strip()
             
-            print(f"🔖 Título: {num} {txt}")
-            h = doc_final.add_heading(f"{num} {txt}", level=nivel)
-            if h.runs: 
-                h.runs[0].font.color.rgb = COR_VINHO
-                h.runs[0].font.name = 'Calibri'
+            # Validação Rigorosa
+            tem_ponto = '.' in prefixo
+            segmentos = prefixo.replace('.', ' ').split()
+            tem_numero_grande = any(len(seg) > 2 for seg in segmentos)
+            
+            if tem_ponto and not tem_numero_grande:
+                eh_titulo_valido = True
+                
+                num_limpo = prefixo.rstrip('.')
+                nivel = num_limpo.count('.') + 1
+                if nivel > 3: nivel = 3
+                
+                if nivel == 1:
+                    texto_final_titulo = f"{num_limpo}. {titulo_texto}"
+                else:
+                    texto_final_titulo = f"{num_limpo} {titulo_texto}"
+
+                # Linha vazia antes do H2
+                if nivel == 2:
+                    doc_final.add_paragraph()
+
+                print(f"🔖 Título Detectado: {texto_final_titulo}")
+                h = doc_final.add_heading(texto_final_titulo, level=nivel)
+                
+                if h.runs: 
+                    h.runs[0].font.color.rgb = COR_VINHO
+                    h.runs[0].font.name = 'Calibri'
+        
+        if eh_titulo_valido:
             continue
 
-        # D. TEXTO COMUM (OU ITEM DE LISTA)
+        # --- E. TEXTO COMUM (OU ITEM DE LISTA) ---
         p = doc_final.add_paragraph(texto)
         
         if em_lista_numerica:
-            # Lista Numérica: Espaçamento 1.0
             try: p.style = 'List Number'
             except: pass 
             p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            
+            # --- AJUSTE: Espaçamento 1.0 para Lista Numérica ---
             p.paragraph_format.line_spacing = 1.0 
+            p.paragraph_format.space_after = Pt(0) # Compacto
             
         elif em_lista_marcadores:
-            # Lista de Marcadores: Espaçamento 1.0
             try: p.style = 'List Bullet'
             except: pass
             p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-            p.paragraph_format.line_spacing = 1.0
+            
+            # Mantém 1.5 para Marcadores (Padrão anterior)
+            p.paragraph_format.line_spacing = 1.5 
 
         else:
-            # Texto Normal: Espaçamento 1.5
             p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
             p.paragraph_format.line_spacing = 1.5  
             p.paragraph_format.space_after = Pt(10) 
         
-        # Formatação de Fonte (Comum)
+        # --- FORMATAÇÃO DE FONTE GERAL ---
         run = p.runs[0] if p.runs else p.add_run(texto)
         run.font.name = 'Calibri'
-        run.font.size = Pt(11)
+        run.font.size = Pt(12)
         run.font.color.rgb = COR_PRETO
 
     # 6. SALVAR
@@ -203,7 +316,7 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
     except Exception as e:
         print(f"❌ Erro ao salvar: {e}")
 
-# --- HELPER DE RECURSOS (ATUALIZADO) ---
+# --- HELPER DE RECURSOS ---
 def processar_recurso(doc, chave, item):
     tipo = item["tipo"]
     dados = item.get("dados")
@@ -218,8 +331,7 @@ def processar_recurso(doc, chave, item):
             recuo_esq=item.get("recuo_esq", 0)
         )
     
-    # === TABELAS DE ORÇAMENTO (Específico vs Genérico) ===
-    # Importante: Verifica o tipo exato primeiro para usar a função específica
+    # === TABELAS DE ORÇAMENTO ===
     elif tipo == "TABELA_ORCAMENTO_CONJUNTO":
         builders.adicionar_tabela_orcamento_conjunto(doc, dados)
         
@@ -244,7 +356,7 @@ def processar_recurso(doc, chave, item):
     elif tipo == "TABELA_NUCLEOS":
         builders.adicionar_tabela_nucleos(doc, dados)
     
-    # === TABELAS NOVAS INSERIDAS ===
+    # === TABELAS NOVAS ===
     elif tipo == "TABELA_CIDADES":
         builders.adicionar_tabela_cidades(doc, dados)
         

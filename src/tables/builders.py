@@ -1301,19 +1301,23 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None):
         # Fallback caso não seja passado texto
         document.add_paragraph("Tabela 12 - Dados estatísticos do Relatório Justiça em Números. Fonte: CNJ", style='Caption')
 
+
 def adicionar_tabela_generica(document, titulo_tabela, dados):
     """
-    Tabela Genérica (2 colunas).
-    - Header: MAIÚSCULO e Repete na quebra de página.
-    - Legenda: Inferior (Título + Fonte).
+    Tabela Genérica (2 colunas) - Layout Ajustado Final.
+    - Correção: Listas de marcadores voltam a aparecer (respeitando o estilo Bullet).
+    - Correção: Texto comum sem recuo (0cm).
+    - Correção: Sem linhas em branco no topo da célula.
     """
+    if not dados: return
+
     # --- Configurações Físicas ---
     LARGURA_TOTAL = 9922 
     LARGURA_COL_1 = int(LARGURA_TOTAL * 0.3)
     LARGURA_COL_2 = LARGURA_TOTAL - LARGURA_COL_1
     
     FONTE_NOME = 'Calibri'
-    ESPACAMENTO_LINHA = 1.15
+    ESPACAMENTO_LINHA = 1.0  
     COR_HEADER_BG = '7F7F7F'
 
     # --- Tabela ---
@@ -1328,23 +1332,19 @@ def adicionar_tabela_generica(document, titulo_tabela, dados):
         row = table.add_row()
         trPr = row._tr.get_or_add_trPr()
         
-        # Define altura mínima da linha
         trH = OxmlElement('w:trHeight')
         trH.set(qn('w:val'), '340')
         trH.set(qn('w:hRule'), 'atLeast')
         trPr.append(trH)
 
-        # Prepara o Texto
         texto_col1 = str(linha[0])
         texto_col2 = str(linha[1])
 
-        # --- LÓGICA DO CABEÇALHO ---
-        if i == 0:
-            # 1. Marca para repetir em cada página
+        # --- CABEÇALHO ---
+        eh_cabecalho = (i == 0)
+        if eh_cabecalho:
             tblHeader = OxmlElement('w:tblHeader')
             trPr.append(tblHeader)
-            
-            # 2. Transforma texto em MAIÚSCULO
             texto_col1 = texto_col1.upper()
             texto_col2 = texto_col2.upper()
 
@@ -1359,7 +1359,7 @@ def adicionar_tabela_generica(document, titulo_tabela, dados):
             tw.set(qn('w:type'), 'dxa')
             tcPr.append(tw)
             
-            # Bordas Completas
+            # Bordas
             tcBorders = OxmlElement('w:tcBorders')
             for edge in ['top', 'left', 'bottom', 'right']:
                 border = OxmlElement(f'w:{edge}')
@@ -1369,54 +1369,96 @@ def adicionar_tabela_generica(document, titulo_tabela, dados):
                 border.set(qn('w:color'), '000000')
                 tcBorders.append(border)
             tcPr.append(tcBorders)
-
-            # Conteúdo
-            cell.text = vals[j]
-            p = cell.paragraphs[0]
-            r = p.runs[0] if p.runs else p.add_run(vals[j])
             
             set_cell_vertical_alignment(cell, 'center')
-            p.paragraph_format.line_spacing = ESPACAMENTO_LINHA
-            p.paragraph_format.space_before = p.paragraph_format.space_after = Pt(0)
+
+            # --- CONTEÚDO ---
+            texto_base = vals[j]
             
-            # Estilos (Header vs Dados)
-            if i == 0:
-                # Header: Fundo Cinza, Texto Branco, Negrito, Centralizado
-                sh = OxmlElement('w:shd')
-                sh.set(qn('w:fill'), COR_HEADER_BG)
-                cell._tc.get_or_add_tcPr().append(sh)
+            # CASO ESPECIAL: Marcador 'ü' na área de dados
+            if not eh_cabecalho and "ü" in texto_base:
+                cell.text = "" # Limpa conteúdo (sobra 1 parágrafo vazio)
                 
-                r.bold = True
-                r.font.color.rgb = RGBColor(255,255,255)
-                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                # Flag para usar o parágrafo vazio existente na primeira inserção
+                primeiro_uso = True
+                
+                itens = texto_base.split('ü')
+                
+                for k, item in enumerate(itens):
+                    item_limpo = item.strip()
+                    if not item_limpo: continue 
+                    
+                    # Seleciona ou cria parágrafo
+                    if primeiro_uso:
+                        p_atual = cell.paragraphs[0]
+                        primeiro_uso = False
+                    else:
+                        p_atual = cell.add_paragraph()
+                    
+                    p_atual.text = item_limpo
+                    
+                    # Lógica de Estilo
+                    # Se k==0 e o texto original NÃO começava com ü, é o texto introdutório.
+                    eh_intro = (k == 0 and not texto_base.strip().startswith("ü"))
+                    
+                    if eh_intro:
+                         # Texto Normal (Intro): Força ZERO recuo
+                         p_atual.style = None 
+                         p_atual.paragraph_format.left_indent = Pt(0) 
+                    else:
+                         # Item de Lista: Usa estilo Bullet
+                         # IMPORTANTE: Não forçar left_indent=0 aqui, senão a bolinha some
+                         p_atual.style = 'List Bullet'
+                    
+                    p_atual.alignment = WD_ALIGN_PARAGRAPH.LEFT
+                    p_atual.paragraph_format.line_spacing = ESPACAMENTO_LINHA
+                    p_atual.paragraph_format.space_before = Pt(0)
+                    p_atual.paragraph_format.space_after = Pt(0)
+                    
+                    if p_atual.runs:
+                        run = p_atual.runs[0]
+                        run.font.name = FONTE_NOME
+                        run.font.size = Pt(12)
+                        run.font.color.rgb = RGBColor(0,0,0)
+                        run.bold = False
+
             else:
-                # Dados: Fundo Branco, Texto Preto, Normal
-                r.bold = False
-                r.font.color.rgb = RGBColor(0,0,0)
+                # --- TEXTO NORMAL (Sem marcadores) ---
+                cell.text = texto_base
+                p = cell.paragraphs[0]
                 
-                # Alinhamento: Coluna 1 Centralizada, Coluna 2 Esquerda
-                p.alignment = WD_ALIGN_PARAGRAPH.CENTER if j == 0 else WD_ALIGN_PARAGRAPH.LEFT
-                if j == 1: 
-                    p.paragraph_format.left_indent = Pt(6)
+                p.paragraph_format.line_spacing = ESPACAMENTO_LINHA
+                p.paragraph_format.space_before = Pt(0)
+                p.paragraph_format.space_after = Pt(0)
+                p.paragraph_format.left_indent = Pt(0) # Remove recuo padrão indesejado
 
-            r.font.name = FONTE_NOME
-            r.font.size = Pt(12)
+                run = p.runs[0] if p.runs else p.add_run(texto_base)
+                run.font.name = FONTE_NOME
+                run.font.size = Pt(12)
 
-    # --- LEGENDA UNIFICADA (Inferior) ---
+                if eh_cabecalho:
+                    sh = OxmlElement('w:shd')
+                    sh.set(qn('w:fill'), COR_HEADER_BG)
+                    cell._tc.get_or_add_tcPr().append(sh)
+                    
+                    run.bold = True
+                    run.font.color.rgb = RGBColor(255,255,255)
+                    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                else:
+                    run.bold = False
+                    run.font.color.rgb = RGBColor(0,0,0)
+                    p.alignment = WD_ALIGN_PARAGRAPH.LEFT if j == 0 else WD_ALIGN_PARAGRAPH.LEFT
+
+    # --- LEGENDA ---
     p_leg = document.add_paragraph()
     p_leg.alignment = WD_ALIGN_PARAGRAPH.LEFT
     p_leg.paragraph_format.space_before = Pt(6)
     
     fonte_texto = "CEINFO" if "Atos" in titulo_tabela else "TJMG"
-    
-    # Formatação do Título
     titulo_formatado = titulo_tabela.strip()
-    if not titulo_formatado.endswith('.'):
-        titulo_formatado += "."
-
+    if not titulo_formatado.endswith('.'): titulo_formatado += "."
     texto_legenda = f"{titulo_formatado} Fonte: {fonte_texto}"
     
     r_leg = p_leg.add_run(texto_legenda)
     r_leg.font.name = FONTE_NOME
     r_leg.font.size = Pt(8)
-
