@@ -8,92 +8,115 @@ dados_tabela_atos = [
     ("Ato Normativo", "Estrutura"),
     ("Lei Complementar nº 59/2001", "Contém a organização e a divisão judiciárias do Estado de Minas Gerais."),
     ("Resolução do Tribunal Pleno nº 03/2012", "Contém o Regimento Interno do Tribunal de Justiça."),
-    ("Resolução nº 518/2007", "Dispõe sobre os níveis hierárquicos e as atribuições gerais das unidades organizacionais que integram a Secretaria do Tribunal de Justiça do Estado de Minas Gerais."),
-    ("Resolução nº 522/2007", "Dispõe sobre a Superintendência Administrativa:\n"
-     "ü Superintendente Administrativo;\n"
-     "ü Diretoria Executiva da Gestão de Bens, Serviços e Patrimônio;\n"
-     "ü Diretoria Executiva de Engenharia e Gestão Predial;\n"
-     "ü Diretoria Executiva de Informática."),
     ("Resolução nº 557/2008", "Dispõe sobre a criação da Comissão Estadual Judiciária de Adoção, CEJA-MG."),
     ("Resolução nº 640/2010", "Cria a Coordenadoria da Infância e da Juventude."),
     ("Resolução nº 673/2011", "Cria a Coordenadoria da Mulher em Situação de Violência Doméstica e Familiar."),
-    ("Resolução nº 821/2016", "Dispõe sobre a reestruturação da Corregedoria Geral de Justiça."),
-    ("Resolução nº 862/2017", "Dispõe sobre a estrutura e o funcionamento da Ouvidoria do Tribunal de Justiça do Estado de Minas Gerais."),
-    ("Resolução nº 873/2018", "Dispõe sobre a estrutura e o funcionamento do Núcleo Permanente de Métodos de Solução de Conflitos, da Superintendência da Gestão de Inovação e do órgão jurisdicional da Secretaria do Tribunal de Justiça diretamente vinculado à Terceira Vice-Presidência, e estabelece normas para a instalação dos Centros Judiciários de Solução de Conflitos e Cidadania."),
     ("Resolução nº 877/2018", "Instala, \"ad referendum\" do Órgão Especial, a 19ª Câmara Cível no Tribunal de Justiça."),
-    ("Resolução n° 878/2018", "Referenda a instalação da Câmara de que trata o art. 7º da Lei Complementar estadual nº 146, de 9 de janeiro de 2018, promovida pela Resolução nº 877, de 29 de junho de 2018."),
     ("Resolução nº 886/2019", "Determina a instalação da 8ª Câmara Criminal no Tribunal de Justiça."),
     ("Resolução nº 893/2019", "Determina a instalação da 20ª Câmara Cível no Tribunal de Justiça."),
-    ("Resolução n° 969/2021", "Dispõe sobre os Comitês de Assessoramento à Presidência, estabelece a estrutura e o funcionamento das unidades organizacionais da Secretaria do Tribunal de Justiça diretamente vinculadas ou subordinadas à Presidência:\n"
+    ("Resolução nº 1066/2023", "Dispõe sobre a estrutura e o funcionamento do Grupo de Monitoramento e Fiscalização do Sistema Carcerário e Socioeducativo - GMF no âmbito do Tribunal de Justiça do Estado de Minas Gerais."),
+    ("Resolução nº 1080/2024", "Institui o Regulamento da Escola Judicial Desembargador Edésio Fernandes - EJEF."),
+    ("Resolução nº 1086/2024", "Altera a Resolução do Órgão Especial nº 1.010, de 29 de agosto de 2020, que \"Dispõe sobre a implementação, a estrutura e o funcionamento dos \"Núcleos de Justiça 4.0\" e dá outras providências\", e altera a Resolução do Órgão Especial nº 1.053, de 20 de setembro de 2023, que \"Dispõe sobre a Superintendência Judiciária e dá outras providências\"."),
+    ("Resolução nº 1125/2025", "Dispõe sobre os níveis hierárquicos das unidades organizacionais que integram a Secretaria do Tribunal de Justiça do Estado de Minas Gerais e define suas atribuições gerais."),
+    ("Resolução nº 1128/2026", "Dispõe sobre a estrutura e o funcionamento das unidades organizacionais da Secretaria do Tribunal de Justiça diretamente vinculadas ou subordinadas à Presidência e dá outras providências.\n"
+     "ü Secretaria de Governança e Gestão Estratégica - SEGOVE;\n"
+     "ü Gabinete da Presidência - GAPRE;\n"
+     "ü Assessoria Jurídica da Presidência - ASPRE;\n"
+     "ü Diretoria Executiva de Comunicação - DIRCOM;\n"
+     "ü Gabinete de Segurança Institucional - GSI;\n"
+     "ü Diretoria Executiva de Planejamento Orçamentário e Qualidade na Gestão Institucional – DEPLAG;\n"
+     "ü Gerência de Suporte aos Juizados Especiais - GEJESP;\n"
+     "ü Assessoria de Precatórios - ASPREC;\n"
+     "ü Secretaria de Auditoria Interna - SECAUD;\n"
+     "- XI - Memória do Judiciário - MEJUD."),
+    ("Resolução nº 1129/2026", "Dispõe sobre os Comitês e os Núcleos de Assessoramento à Presidência do Tribunal de Justiça do Estado de Minas Gerais - TJMG e dá outras providências.\n"
      "ü Comitê de Governança e Gestão Estratégica;\n"
      "ü Comitê Executivo de Gestão Institucional;\n"
      "ü Comitê Institucional de Inteligência;\n"
      "ü Comitê de Monitoramento e Suporte à Prestação Jurisdicional;\n"
-     "ü Comitê de Tecnologia da Informação e Comunicação;\n"
-     "ü Comitê Gestor de Segurança da Informação;\n"
-     "ü Comitê Gestor da Política Judiciária para a Primeira Infância; (Alínea acrescentada pela Resolução do Órgão Especial nº 1052/2023).\n"
-     "ü Comitê Gestor Regional de Primeira Instância. (Alínea acrescentada pela Resolução do Órgão Especial nº 1063/2023).\n"
-     "ü Secretaria de Governança e Gestão Estratégica;\n"
-     "ü Diretoria Executiva de Comunicação;\n"
-     "ü Gabinete de Segurança Institucional;\n"
-     "ü Diretoria Executiva de Planejamento Orçamentário e Qualidade na Gestão Institucional;\n"
-     "ü Gerência de Suporte aos Juizados Especiais;\n"
-     "ü Secretaria do Órgão Especial;\n"
-     "ü Assessoria de Precatórios;\n"
-     "ü Secretaria de Auditoria Interna;\n"
-     "ü Memória do Judiciário."),
-    ("Resolução nº 971/2021", "Institui o Programa de Justiça Restaurativa e dispõe sobre a estrutura e funcionamento do Comitê de Justiça Restaurativa - COMJUR e da Central de Apoio à Justiça Restaurativa – CEAJUR."),
-    ("Resolução nº 977/2021", "Determina a instalação da Vigésima Primeira Câmara Cível e da Nona Câmara Criminal, a especialização de Câmaras no Tribunal de Justiça."),
-    ("Resolução nº 979/2021", "Dispõe sobre a estrutura organizacional e o regulamento da Escola Judicial Desembargador Edésio Fernandes - EJEF."),
-    ("Resolução nº 1053/2023", "Dispõe sobre a Superintendência Judiciária."),
-    ("Resolução nº 1062/2023", "Altera a Resolução do Órgão Especial nº 979, de 17 de novembro de 2021, que \"Dispõe sobre a estrutura organizacional e o regulamento da Escola Judicial Desembargador Edésio Fernandes - EJEF\"."),
-    ("Resolução nº 1063/2023", "Dispõe sobre a organização e o funcionamento do Comitê Gestor Regional de Primeira Instância no âmbito do Poder Judiciário do Estado de Minas Gerais."),
-    ("Resolução nº 1066/2023", "Dispõe sobre a estrutura e o funcionamento do Grupo de Monitoramento e Fiscalização do Sistema Carcerário e Socioeducativo - GMF no âmbito do Tribunal de Justiça do Estado de Minas Gerais."),
-    ("Resolução nº 1079/2024", "Altera a Resolução do Órgão Especial nº 979, de 17 de novembro de 2021, que \"Dispõe sobre a estrutura organizacional e o regulamento da Escola Judicial Desembargador Edésio Fernandes - EJEF."),
-    ("Resolução nº 1080/2024", "Institui o Regulamento da Escola Judicial Desembargador Edésio Fernandes - EJEF."),
-    ("Resolução nº 1086/2024", "Altera a Resolução do Órgão Especial nº 1.010, de 29 de agosto de 2020, que \"Dispõe sobre a implementação, a estrutura e o funcionamento dos \"Núcleos de Justiça 4.0\" e dá outras providências\", e altera a Resolução do Órgão Especial nº 1.053, de 20 de setembro de 2023, que \"Dispõe sobre a Superintendência Judiciária e dá outras providências\".")
+     "ü Comitê de Governança de Tecnologia da Informação e Comunicação;\n"
+     "ü Comitê Gestor de Segurança da Informação e Proteção de Dados Pessoais;\n"
+     "ü Comitê Gestor da Política Judiciária para a Primeira Infância;\n"
+     "ü Comitê Gestor Regional de Primeira Instância;\n"
+     "ü Comitê Gestor de Atenção Integral à Saúde de Magistrados e Servidores;\n"
+     "ü Comitê Orçamentário da Justiça de Segunda Instância;\n"
+     "ü Comitê Orçamentário da Justiça de Primeira Instância;\n"
+     "ü Núcleo de Cooperação Judiciária;\n"
+     "ü Núcleo de Demandas Estruturais."),
+    ("Resolução nº 1130/2026", "Dispõe sobre a Superintendência Administrativa e dá outras providências.\n"
+     "ü Diretoria Executiva de Contratações - DIRCONT;\n"
+     "ü Diretoria Executiva de Engenharia e Gestão Predial - DENGEP;\n"
+     "ü Diretoria Executiva de Tecnologia da Informação e Comunicação - DIRTEC;\n"
+     "ü Diretoria Executiva de Finanças e Execução Orçamentária - DIRFIN;\n"
+     "ü Diretoria Executiva de Administração de Recursos Humanos - DEARHU."),
+    ("Resolução nº 1136/2026", "Dispõe sobre a estrutura organizacional e o funcionamento da Superintendência Judiciária."),
+    ("Resolução nº 1137/2026", "Dispõe sobre a estrutura organizacional e o funcionamento das Diretorias Executivas que compõem a Escola Judicial Desembargador Edésio Fernandes - EJEF."),
+    ("Resolução nº 1138/2026", "Dispõe sobre a estrutura organizacional e o funcionamento da Superintendência de Tratamento Adequado dos Conflitos de Interesses."),
+    ("Resolução nº 1139/2026", "Dispõe sobre a reestruturação da Corregedoria Geral de Justiça."),
+    ("Resolução nº 1140/2026", "Dispõe sobre a estrutura, as atribuições e o funcionamento da Ouvidoria do Tribunal de Justiça do Estado de Minas Gerais.")
 ]
 
 # --- DADOS TABELA 02 (ÁREAS) ---
 dados_tabela_areas = [
-    # Tipo, Col 1, Col 2
-    ("HEADER_MAIN", "DENOMINAÇÃO", ""),
-    ("DATA_MERGED", "Comitê Estratégico de Gestão Institucional", ""),
-    ("DATA_MERGED", "Comitê Gestor de Segurança da Informação", ""),
-    ("DATA_MERGED", "Comitê Institucional de Inteligência", ""),
+    # Tipo, Coluna 1 (Denominação), Coluna 2 (Sigla)
+    # Cabeçalho Principal
+    ("HEADER_MAIN", "DENOMINAÇÃO", ""),    # Comitês e Núcleos (Sem Sigla na entrada fornecida)
+    ("DATA_MERGED", "Comitê de Governança de Tecnologia da Informação e Comunicação", ""),
     ("DATA_MERGED", "Comitê de Governança e Gestão Estratégica", ""),
     ("DATA_MERGED", "Comitê de Monitoramento e Suporte à Prestação Jurisdicional", ""),
-    ("DATA_MERGED", "Comitê de Tecnologia da Informação e Comunicação", ""),
+    ("DATA_MERGED", "Comitê Executivo de Gestão Institucional", ""),
+    ("DATA_MERGED", "Comitê Gestor da Política Judiciária para a Primeira Infância", ""),
+    ("DATA_MERGED", "Comitê Gestor de Atenção Integral à Saúde de Magistrados e Servidores", ""),
+    ("DATA_MERGED", "Comitê Gestor de Segurança da Informação e Proteção de Dados Pessoais", ""),
+    ("DATA_MERGED", "Comitê Gestor Regional de Primeira Instância", ""),
+    ("DATA_MERGED", "Comitê Institucional de Inteligência", ""),
+    ("DATA_MERGED", "Comitê Orçamentário da Justiça de Primeira Instância", ""),
+    ("DATA_MERGED", "Comitê Orçamentário da Justiça de Segunda Instância", ""),
+    ("DATA_MERGED", "Núcleo de Cooperação Judiciária", ""),
+    ("DATA_MERGED", "Núcleo de Demandas Estruturais", ""),    # Unidades da Presidência
+    ("HEADER_GROUP_SIGLA", "UNIDADES ORGANIZACIONAIS DIRETAMENTE VINCULADAS OU SUBORDINADAS À PRESIDÊNCIA", "SIGLA"),
+    ("DATA_SPLIT", "Assessoria de Precatórios", "ASPREC"),
+    ("DATA_SPLIT", "Assessoria Jurídica da Presidência", "ASPRE"),
+    ("DATA_SPLIT", "Diretoria Executiva de Comunicação", "DIRCOM"),
+    ("DATA_SPLIT", "Diretoria Executiva de Planejamento Orçamentário e Qualidade na Gestão Institucional", "DEPLAG"),
+    ("DATA_SPLIT", "Gabinete da Presidência", "GAPRE"),
+    ("DATA_SPLIT", "Gabinete de Segurança Institucional", "GSI"),
+    ("DATA_SPLIT", "Gerência de Suporte aos Juizados Especiais", "GEJESP"),
+    ("DATA_SPLIT", "Memória do Judiciário", "MEJUD"),
+    ("DATA_SPLIT", "Secretaria de Auditoria Interna", "SECAUD"),
+    ("DATA_SPLIT", "Secretaria de Governança e Gestão Estratégica", "SEGOVE"),    # Superintendência Administrativa
     ("HEADER_GROUP_SIGLA", "SUPERINTENDÊNCIA ADMINISTRATIVA", "SIGLA"),
     ("DATA_SPLIT", "Diretoria Executiva de Administração de Recursos Humanos", "DEARHU"),
-    ("DATA_SPLIT", "Diretoria Executiva de Comunicação", "DIRCOM"),
+    ("DATA_SPLIT", "Diretoria Executiva de Contratações", "DIRCONT"),
     ("DATA_SPLIT", "Diretoria Executiva de Engenharia e Gestão Predial", "DENGEP"),
-    ("DATA_SPLIT", "Diretoria Executiva de Finanças e Execução Orçamentária", "DIRFIN"),
-    ("DATA_SPLIT", "Diretoria Executiva de Gestão de Bens, Serviços e Patrimônio", "DIRSEP"),
-    ("DATA_SPLIT", "Diretoria Executiva de Informática", "DIRTEC"),
-    ("DATA_SPLIT", "Diretoria Executiva de Planejamento Orçamentário e Qualidade na Gestão Institucional", "DEPLAG"),
-    ("DATA_SPLIT", "Gabinete de Segurança Institucional", "GSI"),
-    ("DATA_SPLIT", "Secretaria de Auditoria Interna", "SECAUD"),
-    ("DATA_SPLIT", "Secretaria de Governança e Gestão Estratégica", "SEGOVE"),
-    ("DATA_SPLIT", "Secretaria do Órgão Especial", "SEOESP"),
-    ("HEADER_GROUP_MERGED", "SUPERINTENDÊNCIA DO 1º VICE-PRESIDENTE", ""),
+    ("DATA_SPLIT", "Diretoria Executiva de Tecnologia da Informação e Comunicação", "DIRTEC"),    # 1ª Vice-Presidência
+    ("HEADER_GROUP_SIGLA", "SUPERINTENDÊNCIA DO 1º VICE-PRESIDENTE", "SIGLA"),
+    ("DATA_SPLIT", "Assessoria da 1ª Vice-Presidência", "1ª ASVIP"),
     ("DATA_SPLIT", "Diretoria Executiva de Suporte à Prestação Jurisdicional", "DIRSUP"),
-    ("DATA_SPLIT", "Secretaria de Padronização e Acompanhamento da Gestão Judiciária", "SEPAD"),
-    ("HEADER_GROUP_MERGED", "SUPERINTENDÊNCIA DO 2º VICE-PRESIDENTE", ""),
+    ("DATA_SPLIT", "Gabinete da 1ª Vice-Presidência", "1º GAVIP"),
+    ("DATA_SPLIT", "Gabinetes dos Desembargadores", "GADES"),
+    ("DATA_SPLIT", "Gerências dos Cartórios das Câmaras", "GECART"),
+    ("DATA_SPLIT", "Secretaria de Padronização e Acompanhamento da Gestão Judiciária", "SEPAD"),    # 2ª Vice-Presidência
+    ("HEADER_GROUP_SIGLA", "SUPERINTENDÊNCIA DO 2º VICE-PRESIDENTE", "SIGLA"),
     ("DATA_SPLIT", "Diretoria Executiva de Desenvolvimento de Pessoas", "DIRDEP"),
-    ("DATA_SPLIT", "Diretoria Executiva de Gestão da Informação Documental", "DIRGED"),
-    ("HEADER_GROUP_MERGED", "SUPERINTENDÊNCIA DO 3º VICE-PRESIDENTE", ""),
-    ("DATA_SPLIT", "Assessoria de Gestão da Inovação", "AGIN"),
-    ("DATA_SPLIT", "Núcleo Permanente de Métodos Consensuais de Solução de Conflitos", "NUPEMEC"),
-    ("HEADER_GROUP_MERGED", "CORREGEDORIA-GERAL DE JUSTIÇA", ""),
-    ("DATA_SPLIT", "Diretoria Executiva de Atividade Correcional", "DIRCOR"),
+    ("DATA_SPLIT", "Diretoria Executiva de Gestão da Informação Documental", "DIRGED"),    # 3ª Vice-Presidência
+    ("HEADER_GROUP_SIGLA", "SUPERINTENDÊNCIA DO 3º VICE-PRESIDENTE", "SIGLA"),
+    ("DATA_SPLIT", "Assessoria da 3ª Vice-Presidência", "3ª ASVIP"),
+    ("DATA_SPLIT", "Comitê de Justiça Restaurativa", "COMJUR"),
+    ("DATA_SPLIT", "Diretoria Executiva de Planejamento e Gestão da 3ª Vice-Presidência", "DIRTEVI"),
+    ("DATA_SPLIT", "Gabinete da 3ª Vice-Presidência", "3º GAVIP"),
+    ("DATA_SPLIT", "Núcleo Permanente de Métodos Consensuais de Solução de Conflitos", "NUPEMEC"),    # Corregedoria
+    ("HEADER_GROUP_SIGLA", "CORREGEDORIA-GERAL DE JUSTIÇA", "SIGLA"),
+    ("DATA_SPLIT", "Diretoria Executiva da Atividade Correcional", "DIRCOR"),
+    ("DATA_SPLIT", "Diretoria Executiva dos Serviços Notariais e de Registro", "DIRNOT"),
     ("DATA_SPLIT", "Secretaria de Suporte ao Planejamento e à Gestão da Primeira Instância", "SEPLAN")
 ]
 
 dados_tabela_estrutura = [
-    # Tipo, Col 1
+    # Tipo, Coluna 1
     ("HEADER_MAIN", "ESTRUTURAS PARA A PRESTAÇÃO JURISDICIONAL NA SEGUNDA INSTÂNCIA"),
     
+    # Câmaras Cíveis
     ("HEADER_GROUP_MERGED", "Câmaras Cíveis"),
     ("DATA_MERGED", "01ª Câmara Cível"),
     ("DATA_MERGED", "02ª Câmara Cível"),
@@ -117,6 +140,7 @@ dados_tabela_estrutura = [
     ("DATA_MERGED", "20ª Câmara Cível"),
     ("DATA_MERGED", "21ª Câmara Cível Especializada"),
 
+    # Câmaras Criminais
     ("HEADER_GROUP_MERGED", "Câmaras Criminais"),
     ("DATA_MERGED", "01ª Câmara Criminal"),
     ("DATA_MERGED", "02ª Câmara Criminal"),
@@ -126,16 +150,26 @@ dados_tabela_estrutura = [
     ("DATA_MERGED", "06ª Câmara Criminal"),
     ("DATA_MERGED", "07ª Câmara Criminal"),
     ("DATA_MERGED", "08ª Câmara Criminal"),
-    ("DATA_MERGED", "09ª Câmara Criminal"),
+    ("DATA_MERGED", "09ª Câmara Criminal Especializada"),
 
+    # Justiça 4.0 - Cível
     ("HEADER_GROUP_MERGED", "Justiça 4.0 - Cível"),
-    ("DATA_MERGED", "Câmara Justiça 4.0 - Especializada Cível - 4"),
-    ("DATA_MERGED", "Câmara Justiça 4.0 - Especializada Cível - 8"),
-    ("DATA_MERGED", "Câmara Justiça 4.0 - Cível - 18"),
+    ("DATA_MERGED", "1º Núcleo de Justiça 4.0 - Cível Família (1º NUCIF 4.0)"),
+    ("DATA_MERGED", "2º Núcleo de Justiça 4.0 - Cível Família (2º NUCIF 4.0)"),
+    ("DATA_MERGED", "3º Núcleo de Justiça 4.0 - Cível Família (3º NUCIF 4.0)"),
+    ("DATA_MERGED", "4º Núcleo de Justiça 4.0 - Cível Família (4º NUCIF 4.0)"),
+    ("DATA_MERGED", "1º Núcleo de Justiça 4.0 - Cível Privado (1º NUCIP 4.0)"),
+    ("DATA_MERGED", "2º Núcleo de Justiça 4.0 - Cível Privado (2º NUCIP 4.0)"),
+    ("DATA_MERGED", "3º Núcleo de Justiça 4.0 - Cível Privado (3º NUCIP 4.0)"),
+    ("DATA_MERGED", "4º Núcleo de Justiça 4.0 - Cível Privado - (4º NUCIP 4.0)"),
+    ("DATA_MERGED", "5º Núcleo de Justiça 4.0 - Cível Privado - (5º NUCIP 4.0)"),
+    ("DATA_MERGED", "6º Núcleo de Justiça 4.0 - Cível Privado - (6º NUCIP 4.0)"),
     
+    # Justiça 4.0 - Criminal
     ("HEADER_GROUP_MERGED", "Justiça 4.0 - Criminal"),
-    ("DATA_MERGED", "Câmara Justiça 4.0 - Especializada Criminal"),
-
+    ("DATA_MERGED", "1º Núcleo de Justiça 4.0 - Criminal Especializado (1º NUCRES 4.0)"),
+    ("DATA_MERGED", "2º Núcleo de Justiça 4.0 - Criminal Especializado (2º NUCRES 4.0)"),
+    ("DATA_MERGED", "3º Núcleo de Justiça 4.0 - Criminal Especializado (3º NUCRES 4.0)")
 ]
 
 dados_tabela_comarcas = [
@@ -188,77 +222,77 @@ dados_tabela_comarcas = [
     ("DATA_4_COL", "Miraí", "Montalvânia", "Monte Alegre de Minas", "Monte Azul"),
     ("DATA_4_COL", "Monte Belo", "Monte Carmelo", "Monte Santo de Minas", "Monte Sião"),
     ("DATA_4_COL", "Montes Claros", "Morada Nova de Minas", "Muriaé", "Mutum"),
-    ("DATA_4_COL", "Muzambinho", "Natércia", "Nepomuceno", "Nova Era"),
-    ("DATA_4_COL", "Nova Lima", "Nova Ponte", "Nova Resende", "Nova Serrana"),
-    ("DATA_4_COL", "Novo Cruzeiro", "Oliveira", "Ouro Branco", "Ouro Fino"),
-    ("DATA_4_COL", "Ouro Preto", "Palma", "Pará de Minas", "Paracatu"),
-    ("DATA_4_COL", "Paraguaçu", "Paraisópolis", "Paraopeba ", "Passa Quatro"),
-    ("DATA_4_COL", "Passa Tempo", "Passos", "Patos de Minas", "Patrocínio"),
-    ("DATA_4_COL", "Peçanha", "Pedra Azul", "Pedralva", "Pedro Leopoldo"),
-    ("DATA_4_COL", "Perdizes", "Perdões", "Piranga", "Pirapetinga"),
-    ("DATA_4_COL", "Pirapora", "Pitangui", "Piumhi", "Poço Fundo"),
-    ("DATA_4_COL", "Poços de Caldas", "Pompéu", "Ponte Nova", "Porteirinha"),
-    ("DATA_4_COL", "Pouso Alegre", "Prados", "Prata", "Pratápolis"),
-    ("DATA_4_COL", "Presidente Olegário", "Raul Soares", "Resende Costa", "Resplendor"),
-    ("DATA_4_COL", "Ribeirão das Neves", "Rio Casca", "Rio Novo", "Rio Paranaíba"),
-    ("DATA_4_COL", "Rio Pardo de Minas", "Rio Piracicaba", "Rio Pomba", "Rio Preto"),
-    ("DATA_4_COL", "Rio Vermelho", "Sabará", "Sabinópolis", "Sacramento"),
-    ("DATA_4_COL", "Salinas", "Santa Bárbara", "Santa Luzia", "Santa Maria do Suaçuí"),
-    ("DATA_4_COL", "Santa Rita de Caldas", "Santa Rita do Sapucaí", "Santa Vitória", "Santo Antônio do Monte"),
-    ("DATA_4_COL", "Santos Dumont", "São Domingos do Prata", "São Francisco", "São Gonçalo do Sapucaí"),
-    ("DATA_4_COL", "São Gotardo", "São João da Ponte", "São João Del Rei", "São João do Paraíso"),
-    ("DATA_4_COL", "São João Evangelista", "São João Nepomuceno", "São Lourenço", "São Romão"),
-    ("DATA_4_COL", "São Roque de Minas", "São Sebastião do Paraíso", "Senador Firmino", "Serro"),
-    ("DATA_4_COL", "Sete Lagoas", "Silvianópolis", "Taiobeiras", "Tarumirim"),
-    ("DATA_4_COL", "Teixeiras", "Teófilo Otoni", "Timóteo", "Tiros"),
-    ("DATA_4_COL", "Tombos", "Três Corações", "Três Marias", "Três pontas"),
-    ("DATA_4_COL", "Tupaciguara", "Turmalina", "Ubá", "Uberaba"),
-    ("DATA_4_COL", "Uberlândia", "Unaí", "Varginha", "Várzea da Palma"),
-    ("DATA_4_COL", "Vazante", "Vespasiano", "Viçosa", "Virginópolis"),
-    ("DATA_4_COL", "Visconde do Rio Branco", "", "", "")
+    ("DATA_4_COL", "Muzambinho", "Nanuque", "Natércia", "Nepomuceno"),
+    ("DATA_4_COL", "Nova Era", "Nova Lima", "Nova Ponte", "Nova Resende"),
+    ("DATA_4_COL", "Nova Serrana", "Novo Cruzeiro", "Oliveira", "Ouro Branco"),
+    ("DATA_4_COL", "Ouro Fino", "Ouro Preto", "Palma", "Pará de Minas"),
+    ("DATA_4_COL", "Paracatu", "Paraguaçu", "Paraisópolis", "Paraopeba "),
+    ("DATA_4_COL", "Passa Quatro", "Passa Tempo", "Passos", "Patos de Minas"),
+    ("DATA_4_COL", "Patrocínio", "Peçanha", "Pedra Azul", "Pedralva"),
+    ("DATA_4_COL", "Pedro Leopoldo", "Perdizes", "Perdões", "Piranga"),
+    ("DATA_4_COL", "Pirapetinga", "Pirapora", "Pitangui", "Piumhi"),
+    ("DATA_4_COL", "Poço Fundo", "Poços de Caldas", "Pompéu", "Ponte Nova"),
+    ("DATA_4_COL", "Porteirinha", "Pouso Alegre", "Prados", "Prata"),
+    ("DATA_4_COL", "Pratápolis", "Presidente Olegário", "Raul Soares", "Resende Costa"),
+    ("DATA_4_COL", "Resplendor", "Ribeirão das Neves", "Rio Casca", "Rio Novo"),
+    ("DATA_4_COL", "Rio Paranaíba", "Rio Pardo de Minas", "Rio Piracicaba", "Rio Pomba"),
+    ("DATA_4_COL", "Rio Preto", "Rio Vermelho", "Sabará", "Sabinópolis"),
+    ("DATA_4_COL", "Sacramento", "Salinas", "Santa Bárbara", "Santa Luzia"),
+    ("DATA_4_COL", "Santa Maria do Suaçuí", "Santa Rita de Caldas", "Santa Rita do Sapucaí", "Santa Vitória"),
+    ("DATA_4_COL", "Santo Antônio do Monte", "Santos Dumont", "São Domingos do Prata", "São Francisco"),
+    ("DATA_4_COL", "São Gonçalo do Sapucaí", "São Gotardo", "São João da Ponte", "São João Del Rei"),
+    ("DATA_4_COL", "São João do Paraíso", "São João Evangelista", "São João Nepomuceno", "São Lourenço"),
+    ("DATA_4_COL", "São Romão", "São Roque de Minas", "São Sebastião do Paraíso", "Senador Firmino"),
+    ("DATA_4_COL", "Serro", "Sete Lagoas", "Silvianópolis", "Taiobeiras"),
+    ("DATA_4_COL", "Tarumirim", "Teixeiras", "Teófilo Otoni", "Timóteo"),
+    ("DATA_4_COL", "Tiros", "Tombos", "Três Corações", "Três Marias"),
+    ("DATA_4_COL", "Três pontas", "Tupaciguara", "Turmalina", "Ubá"),
+    ("DATA_4_COL", "Uberaba", "Uberlândia", "Unaí", "Varginha"),
+    ("DATA_4_COL", "Várzea da Palma", "Vazante", "Vespasiano", "Viçosa"),
+    ("DATA_4_COL", "Virginópolis", "Visconde do Rio Branco", "", ""),
 ]
 
 dados_tabela_nucleos = [
     # Tipo, Col 1
     ("HEADER_GROUP_MERGED", "Núcleos de Justiça 4.0 – 1ª Instância"), 
-    ("DATA_MERGED", "Núcleo de Justiça 4.0 - Cooperação Judiciária"),
+    ("DATA_MERGED", "Núcleo de Justiça 4.0 - Cooperação Judiciária (Foco em Brumadinho e, agora, previdenciário)"),
     ("DATA_MERGED", "Núcleo de Justiça 4.0 – Cível"),
     ("DATA_MERGED", "Núcleo de Justiça 4.0 – Criminal"),
     ("DATA_MERGED", "Núcleo de Justiça 4.0 - Fazenda Pública"),
-    ("DATA_MERGED", "CEMES - Central de Execução de Medidas de Segurança 4.0")
+    ("DATA_MERGED", "Núcleo de Justiça 4.0 – Juizado Especial")
 ]
 
 dados_tabela_processos = [
     # Tipo, Col 1, Col 2, Col 3, Col 4, Col 5, Col 6, Col 7
         # Gerado automaticamente a partir da planilha Informações TJMG_CEINFO.xlsx
         ('HEADER_MERGE', 'PROCESSOS DISTRIBUÍDOS', '', '', '', '', '', '', ''),
-        ('SUB_HEADER', 'Instância', '2020.0', '2021.0', '2022.0', '2023.0', '2024.0', '2025.0', 'Média'),
-        ('DATA_ROW', 'Justiça Comum', '1191628.0', '1365924.0', '1565819.0', '1710153.0', '1675686.0', '', '1501842'),
-        ('DATA_ROW', 'Juizado Especial', '534375.0', '536797.0', '558504.0', '622683.0', '661356.0', '', '582743'),
-        ('DATA_ROW', 'Turma Recursal', '56088.0', '84268.0', '84215.0', '93299.0', '103728.0', '', '84319.6'),
-        ('DATA_ROW', '2º Grau', '199457.0', '222614.0', '227760.0', '271256.0', '334528.0', '', '251123'),
+        ('SUB_HEADER', 'Instância', '2021.0', '2022.0', '2023.0', '2024.0', '2025.0', 'Média'),
+        ('DATA_ROW', 'Justiça Comum', '1365924.0', '1565819.0', '1710153.0', '1675686.0', '1679349', '1531426'),
+        ('DATA_ROW', 'Juizado Especial', '536797.0', '558504.0', '622683.0', '661356.0', '578088', '581967'),
+        ('DATA_ROW', 'Turma Recursal', '84268.0', '84215.0', '93299.0', '103728.0', '106876', '88079'),
+        ('DATA_ROW', '2º Grau', '222614.0', '227760.0', '271256.0', '334528.0', '368713', '270721'),
 ]
 
 dados_tabela_julgamentos = [
     # Tipo, Col 1, Col 2, Col 3, Col 4, Col 5, Col 6, Col 7
-    ("HEADER_MERGE", "JULGAMENTOS", "", "", "", "", "", ""),
-    ("SUB_HEADER", "Instância", "2020", "2021", "2022", "2023", "2024", "Média"),
-    ("DATA_ROW", "Justiça Comum", "878705", "1015223", "1185589", "1320950", "1412397", "1162573"),
-    ("DATA_ROW", "Juizado Especial", "460286", "636208", "810834", "932469", "920189", "751997"),
-    ("DATA_ROW", "Turma Recursal", "878705", "67797", "77926", "105764", "117904", "249619"),
-    ("DATA_ROW", "2º Grau", "52746", "225454", "236418", "275286", "337993", "225579"),
-    ("TOTAL_ROW", "Total", "2270442", "1944682", "2310767", "2634469", "2788483", "2389769")
+    ("HEADER_MERGE", "JULGAMENTOS", "", "", "", "", "", "", ""),
+    ("SUB_HEADER", "Instância", "2021", "2022", "2023", "2024", "2025", "Média"),
+    ("DATA_ROW", "Justiça Comum", "1015223", "1185589", "1320950", "1412397", "1480894", "1215626"),
+    ("DATA_ROW", "Juizado Especial", "636208", "810834", "932469", "920189", "884599", "774097"),
+    ("DATA_ROW", "Turma Recursal", "67797", "77926", "105764", "117904", "147371", "232577"),
+    ("DATA_ROW", "2º Grau", "225454", "236418", "275286", "337993", "358728", "247770"),
+    ("TOTAL_ROW", "Total", "1944682", "2310767", "2634469", "2788483", "2871592", "2470072")
 ]
 
 dados_tabela_acervo = [
     # Tipo, Col 1, Col 2, Col 3, Col 4, Col 5, Col 6, Col 7
     ("HEADER_MERGE", "ACERVO DE FEITOS ATIVOS NO ÚLTIMO DIA DO ANO", "", "", "", "", "", ""),
-    ("SUB_HEADER", "Instância", "2020", "2021", "2022", "2023", "2024", "Média"),
-    ("DATA_ROW", "Justiça Comum", "4255163", "4152223", "4233968", "4140228", "4042435", "4164803"),
-    ("DATA_ROW", "Juizado Especial", "1125405", "1125081", "1053185", "963386", "922153", "1037842"),
-    ("DATA_ROW", "Turma Recursal", "41272", "67940", "69541", "76573", "87801", "68625"),
-    ("DATA_ROW", "2º Grau", "224715", "232448", "224156", "220826", "206944", "221818"),
-    ("TOTAL_ROW", "Total", "5646555", "5577692", "5580850", "5401013", "5259333", "5493089")
+    ("SUB_HEADER", "Instância", "2021", "2022", "2023", "2024", "2025", "Média"),
+    ("DATA_ROW", "Justiça Comum", "4152223", "4233968", "4140228", "4042435", "3967597", "4131935"),
+    ("DATA_ROW", "Juizado Especial", "1125081", "1053185", "963386", "922153", "840190", "1004900"),
+    ("DATA_ROW", "Turma Recursal", "67940", "69541", "76573", "87801", "79767", "70482"),
+    ("DATA_ROW", "2º Grau", "232448", "224156", "220826", "206944", "235708", "224132"),
+    ("TOTAL_ROW", "Total", "5577692", "5580850", "5401013", "5259333", "5123262", "5431450")
 ]
 
 TITULO_TABELA_ORCAMENTO = "Unidade Orçamentária 1031 – TJMG | Despesa Realizada por Ação Orçamentária – 2024"
@@ -407,9 +441,10 @@ dados_tabela_justica_numeros = [
 
 MAPA_RECURSOS = {
     # --- TABELAS ---
-    "Tabela 01 - Atos Normativos": {
+    "Tabela 01 - Atos Normativos referentes à Estrutura do TJMG.": {
         "tipo": "TABELA_GENERICA",
-        "dados": dados_tabela_atos
+        "dados": dados_tabela_atos,
+        "fonte_custom": "Portal TJMG",
     },
     "Tabela 02 - Principais áreas da Secretaria do TJMG": {
         "tipo": "TABELA_AREAS",

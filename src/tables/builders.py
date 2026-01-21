@@ -1101,39 +1101,169 @@ def adicionar_tabela_orcamento(document, titulo_vindo_do_word, dados, numero_tab
 
 
 def adicionar_tabela_orcamento_conjunto(document, dados):
-    table = document.add_table(rows=0, cols=2)
-    table.columns[0].width = Cm(9.6)
-    table.columns[1].width = Cm(6.4)
-    for row_data in dados:
-        tipo = row_data[0]
-        vals = row_data[1:3]
-        row = table.add_row()
-        set_row_height_at_least(row, 340)
-        for j in range(2):
-            cell = row.cells[j]
-            remove_all_borders(cell)
-            set_cell_vertical_alignment(cell, 'center')
-            if tipo == "GROUP_TITLE":
-                if j == 0:
-                    cell.merge(row.cells[1])
-                    cell.text = vals[0]
-                    set_cell_all_borders(cell)
-                    shading = OxmlElement('w:shd')
-                    shading.set(qn('w:fill'), '7F7F7F')
-                    cell._tc.get_or_add_tcPr().append(shading)
-                    cell.paragraphs[0].runs[0].font.color.rgb = RGBColor(255,255,255)
-                    cell.paragraphs[0].runs[0].bold = True
-                    cell.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
-                continue
-            cell.text = vals[j]
-            set_cell_all_borders(cell)
-            if tipo == "TOTAL_ROW":
-                cell.paragraphs[0].runs[0].bold = True
-                shading = OxmlElement('w:shd')
-                shading.set(qn('w:fill'), 'BFBFBF')
-                cell._tc.get_or_add_tcPr().append(shading)
-    document.add_paragraph("Tabela 11 - Orçamento 2025. Fonte: LOA", style='Caption').alignment = WD_ALIGN_PARAGRAPH.LEFT
+    """
+    Tabela 11: Orçamento Conjunto.
+    - Coluna 2 Fixa: 7.25 cm.
+    - Total Row: Centralizado Horizontal e Verticalmente (ambas colunas).
+    - Group Title: Mesclado, Cinza Escuro, Branco.
+    - Data Row: Col1 Esq, Col2 Centro.
+    """
+    if not dados: return
 
+    # --- Configurações Físicas ---
+    # 1 cm = aprox 567 twips.
+    # Largura Total = 9922 (aprox 17.5 cm)
+    LARGURA_TOTAL = 9922 
+    
+    # Coluna 2 fixa em 7.25 cm
+    # 7.25 * 567 = 4110.75 -> Arredondando para 4111
+    LARGURA_COL_2 = 4111 
+    LARGURA_COL_1 = LARGURA_TOTAL - LARGURA_COL_2
+    
+    FONTE_NOME = 'Calibri'
+    TAMANHO_FONTE = Pt(12)
+    ALTURA_LINHA_TWIPS = '340' # ~0.6 cm
+    COR_GROUP_BG = '7F7F7F'    # Cinza Escuro
+    COR_SUB_BG = 'D9D9D9'      # Cinza Claro
+    COR_TOTAL_BG = 'BFBFBF'    # Cinza Médio (para linha de Total)
+    
+    # Cria a Tabela
+    table = document.add_table(rows=0, cols=2)
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    
+    # Define Largura Total da Tabela
+    tbl = table._tbl
+    tblPr = tbl.tblPr if tbl.tblPr is not None else OxmlElement('w:tblPr')
+    tblW = OxmlElement('w:tblW'); tblW.set(qn('w:w'), str(LARGURA_TOTAL)); tblW.set(qn('w:type'), 'dxa'); tblPr.append(tblW)
+
+    # --- HELPER: Formatação de Célula ---
+    def formatar_celula(cell, texto, bold=False, color_rgb=RGBColor(0,0,0), align_h='LEFT', bg_color=None, largura=None):
+        cell.text = str(texto) if texto else ""
+        p = cell.paragraphs[0]
+        
+        # Alinhamento Horizontal
+        if align_h == 'CENTER': p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        elif align_h == 'RIGHT': p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        else: p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        
+        # Alinhamento Vertical
+        set_cell_vertical_alignment(cell, 'center')
+        
+        # Espaçamento e Recuo
+        p.paragraph_format.line_spacing = 1.0
+        p.paragraph_format.space_before = Pt(0)
+        p.paragraph_format.space_after = Pt(0)
+        p.paragraph_format.left_indent = Pt(0)
+
+        # Fonte
+        run = p.runs[0] if p.runs else p.add_run(str(texto) if texto else "")
+        run.font.name = FONTE_NOME
+        run.font.size = TAMANHO_FONTE
+        run.bold = bold
+        run.font.color.rgb = color_rgb
+        
+        # Fundo (Shading)
+        if bg_color:
+            tcPr = cell._element.get_or_add_tcPr()
+            shd = OxmlElement('w:shd')
+            shd.set(qn('w:fill'), bg_color)
+            tcPr.append(shd)
+        
+        # Largura da Célula
+        if largura:
+            tcPr = cell._element.get_or_add_tcPr()
+            tcW = OxmlElement('w:tcW')
+            tcW.set(qn('w:w'), str(largura))
+            tcW.set(qn('w:type'), 'dxa')
+            tcPr.append(tcW)
+
+        # Bordas
+        tcPr = cell._element.get_or_add_tcPr()
+        tcBorders = OxmlElement('w:tcBorders')
+        for edge in ['top', 'left', 'bottom', 'right']:
+            border = OxmlElement(f'w:{edge}')
+            border.set(qn('w:val'), 'single')
+            border.set(qn('w:sz'), '4')
+            border.set(qn('w:space'), '0')
+            border.set(qn('w:color'), '000000')
+            tcBorders.append(border)
+        tcPr.append(tcBorders)
+
+    # --- HELPER: Altura da Linha ---
+    def definir_altura_linha(row):
+        trPr = row._tr.get_or_add_trPr()
+        trH = OxmlElement('w:trHeight')
+        trH.set(qn('w:val'), ALTURA_LINHA_TWIPS)
+        trH.set(qn('w:hRule'), 'atLeast')
+        trPr.append(trH)
+
+    # ==========================================
+    # LOOP PRINCIPAL
+    # ==========================================
+    for row_data in dados:
+        # Extrai Tipo e Valores
+        tipo = row_data[0]
+        vals = row_data[1:] 
+        
+        val1 = vals[0] if len(vals) > 0 else ""
+        val2 = vals[1] if len(vals) > 1 else ""
+
+        row = table.add_row()
+        definir_altura_linha(row)
+
+        # --- TIPO 1: TÍTULO DO GRUPO (GROUP_TITLE) ---
+        if tipo == "GROUP_TITLE":
+            cell = row.cells[0]
+            cell.merge(row.cells[1])
+            formatar_celula(
+                cell, val1.upper(), bold=True, 
+                color_rgb=RGBColor(255, 255, 255), align_h='CENTER', 
+                bg_color=COR_GROUP_BG, largura=LARGURA_TOTAL
+            )
+
+        # --- TIPO 2: SUB CABEÇALHO (SUB_HEADER) ---
+        elif tipo == "SUB_HEADER":
+            formatar_celula(row.cells[0], val1, bold=True, align_h='CENTER', bg_color=COR_SUB_BG, largura=LARGURA_COL_1)
+            formatar_celula(row.cells[1], val2, bold=True, align_h='CENTER', bg_color=COR_SUB_BG, largura=LARGURA_COL_2)
+
+        # --- TIPO 3: LINHA DE TOTAL (TOTAL_ROW) ---
+        elif tipo == "TOTAL_ROW":
+            # Aqui aplicamos o ajuste solicitado: AMBAS colunas centralizadas
+            formatar_celula(
+                row.cells[0], val1, bold=True, 
+                align_h='CENTER', # <--- AJUSTADO PARA CENTER
+                bg_color=COR_TOTAL_BG, largura=LARGURA_COL_1
+            )
+            formatar_celula(
+                row.cells[1], val2, bold=True, 
+                align_h='CENTER', # <--- MANTIDO CENTER
+                bg_color=COR_TOTAL_BG, largura=LARGURA_COL_2
+            )
+
+        # --- TIPO 4: DADOS NORMAIS (DATA_ROW) ---
+        else:
+            # Coluna 1: Esquerda
+            formatar_celula(
+                row.cells[0], val1, bold=False, 
+                align_h='LEFT', 
+                largura=LARGURA_COL_1
+            )
+            # Coluna 2: Centralizada
+            formatar_celula(
+                row.cells[1], val2, bold=False, 
+                align_h='CENTER', 
+                largura=LARGURA_COL_2
+            )
+
+    # --- LEGENDA ---
+    p_leg = document.add_paragraph()
+    p_leg.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p_leg.paragraph_format.space_before = Pt(6)
+    
+    r_leg = p_leg.add_run("Tabela 11 - Orçamento 2025. Fonte: LOA")
+    r_leg.font.name = FONTE_NOME
+    r_leg.font.size = Pt(8)
+    
 
 def adicionar_tabela_cidades(document, dados):
     """ Tabela 12: Cidades (4 colunas zebradas) """
@@ -1302,12 +1432,11 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None):
         document.add_paragraph("Tabela 12 - Dados estatísticos do Relatório Justiça em Números. Fonte: CNJ", style='Caption')
 
 
-def adicionar_tabela_generica(document, titulo_tabela, dados):
+def adicionar_tabela_generica(document, titulo_tabela, dados, fonte=None):
     """
     Tabela Genérica (2 colunas) - Layout Ajustado Final.
-    - Correção: Listas de marcadores voltam a aparecer (respeitando o estilo Bullet).
-    - Correção: Texto comum sem recuo (0cm).
-    - Correção: Sem linhas em branco no topo da célula.
+    - Aceita fonte customizada.
+    - Mantém tratamento de marcadores 'ü'.
     """
     if not dados: return
 
@@ -1377,18 +1506,15 @@ def adicionar_tabela_generica(document, titulo_tabela, dados):
             
             # CASO ESPECIAL: Marcador 'ü' na área de dados
             if not eh_cabecalho and "ü" in texto_base:
-                cell.text = "" # Limpa conteúdo (sobra 1 parágrafo vazio)
+                cell.text = "" # Limpa conteúdo
                 
-                # Flag para usar o parágrafo vazio existente na primeira inserção
                 primeiro_uso = True
-                
                 itens = texto_base.split('ü')
                 
                 for k, item in enumerate(itens):
                     item_limpo = item.strip()
                     if not item_limpo: continue 
                     
-                    # Seleciona ou cria parágrafo
                     if primeiro_uso:
                         p_atual = cell.paragraphs[0]
                         primeiro_uso = False
@@ -1397,17 +1523,13 @@ def adicionar_tabela_generica(document, titulo_tabela, dados):
                     
                     p_atual.text = item_limpo
                     
-                    # Lógica de Estilo
-                    # Se k==0 e o texto original NÃO começava com ü, é o texto introdutório.
+                    # Lógica de Estilo (Intro vs Bullet)
                     eh_intro = (k == 0 and not texto_base.strip().startswith("ü"))
                     
                     if eh_intro:
-                         # Texto Normal (Intro): Força ZERO recuo
                          p_atual.style = None 
                          p_atual.paragraph_format.left_indent = Pt(0) 
                     else:
-                         # Item de Lista: Usa estilo Bullet
-                         # IMPORTANTE: Não forçar left_indent=0 aqui, senão a bolinha some
                          p_atual.style = 'List Bullet'
                     
                     p_atual.alignment = WD_ALIGN_PARAGRAPH.LEFT
@@ -1423,14 +1545,14 @@ def adicionar_tabela_generica(document, titulo_tabela, dados):
                         run.bold = False
 
             else:
-                # --- TEXTO NORMAL (Sem marcadores) ---
+                # --- TEXTO NORMAL ---
                 cell.text = texto_base
                 p = cell.paragraphs[0]
                 
                 p.paragraph_format.line_spacing = ESPACAMENTO_LINHA
                 p.paragraph_format.space_before = Pt(0)
                 p.paragraph_format.space_after = Pt(0)
-                p.paragraph_format.left_indent = Pt(0) # Remove recuo padrão indesejado
+                p.paragraph_format.left_indent = Pt(0)
 
                 run = p.runs[0] if p.runs else p.add_run(texto_base)
                 run.font.name = FONTE_NOME
@@ -1449,15 +1571,25 @@ def adicionar_tabela_generica(document, titulo_tabela, dados):
                     run.font.color.rgb = RGBColor(0,0,0)
                     p.alignment = WD_ALIGN_PARAGRAPH.LEFT if j == 0 else WD_ALIGN_PARAGRAPH.LEFT
 
-    # --- LEGENDA ---
+    # --- LEGENDA (ALTERADA AQUI) ---
     p_leg = document.add_paragraph()
     p_leg.alignment = WD_ALIGN_PARAGRAPH.LEFT
     p_leg.paragraph_format.space_before = Pt(6)
     
-    fonte_texto = "CEINFO" if "Atos" in titulo_tabela else "TJMG"
+    # Lógica de Seleção da Fonte
+    if fonte:
+        fonte_texto = fonte
+    else:
+        # Fallback original
+        fonte_texto = "CEINFO" if "Atos" in titulo_tabela else "TJMG"
+
     titulo_formatado = titulo_tabela.strip()
-    if not titulo_formatado.endswith('.'): titulo_formatado += "."
-    texto_legenda = f"{titulo_formatado} Fonte: {fonte_texto}"
+    
+    # Garante que termine com ponto antes de "Fonte:"
+    if titulo_formatado.endswith('.'):
+        titulo_formatado = titulo_formatado[:-1]
+        
+    texto_legenda = f"{titulo_formatado}. Fonte: {fonte_texto}"
     
     r_leg = p_leg.add_run(texto_legenda)
     r_leg.font.name = FONTE_NOME

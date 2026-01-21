@@ -289,6 +289,8 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
             # --- AJUSTE: Espaçamento 1.0 para Lista Numérica ---
             p.paragraph_format.line_spacing = 1.0 
             p.paragraph_format.space_after = Pt(0) # Compacto
+            p.paragraph_format.left_indent = Cm(1.27) 
+            p.paragraph_format.first_line_indent = Cm(-0.63)
             
         elif em_lista_marcadores:
             try: p.style = 'List Bullet'
@@ -297,6 +299,10 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
             
             # Mantém 1.5 para Marcadores (Padrão anterior)
             p.paragraph_format.line_spacing = 1.5 
+            
+            # --- NOVO AJUSTE: Recuo de 1.27cm ---
+            p.paragraph_format.left_indent = Cm(1.27)
+            p.paragraph_format.first_line_indent = Cm(-0.63) # Recuo negativo para a bolinha
 
         else:
             p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
@@ -317,15 +323,22 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
         print(f"❌ Erro ao salvar: {e}")
 
 # --- HELPER DE RECURSOS ---
+# --- HELPER DE RECURSOS ---
 def processar_recurso(doc, chave, item):
     tipo = item["tipo"]
     dados = item.get("dados")
-    print(f"⚡ Inserindo: {chave}")
+    
+    # Tenta obter título e fonte customizados do dicionário (static_data.py)
+    # Se não existirem, usa valores padrão
+    titulo_real = item.get("titulo", chave) 
+    fonte_custom = item.get("fonte_custom")
+
+    print(f"⚡ Inserindo: {titulo_real}")
 
     # === IMAGENS ===
     if tipo == "IMAGEM":
         images.adicionar_imagem(
-            doc, item["arquivo"], titulo=chave, 
+            doc, item["arquivo"], titulo=titulo_real, 
             fonte=item.get("fonte", "Própria"),
             largura_custom=item.get("largura"),
             recuo_esq=item.get("recuo_esq", 0)
@@ -337,14 +350,14 @@ def processar_recurso(doc, chave, item):
         
     elif tipo == "TABELA_ORCAMENTO":
         builders.adicionar_tabela_orcamento(
-            doc, titulo_vindo_do_word=chave, dados=dados, 
+            doc, titulo_vindo_do_word=titulo_real, dados=dados, 
             numero_tabela=item.get("num", "09"),
             titulo_custom=item.get("titulo")
         )
 
-    # === DEMAIS TABELAS ===
+    # === DEMAIS TABELAS ESPECÍFICAS ===
     elif tipo == "TABELA_PROCESSOS":
-        builders.adicionar_tabela_processos(doc, dados, texto_legenda=chave)
+        builders.adicionar_tabela_processos(doc, dados, texto_legenda=titulo_real)
     elif tipo == "TABELA_ATOS":
         builders.adicionar_tabela_atos(doc, dados)
     elif tipo == "TABELA_AREAS":
@@ -361,14 +374,20 @@ def processar_recurso(doc, chave, item):
         builders.adicionar_tabela_cidades(doc, dados)
         
     elif tipo == "TABELA_JUSTICA_NUMEROS":
-        builders.adicionar_tabela_justica_numeros(doc, dados, texto_legenda=chave)
+        builders.adicionar_tabela_justica_numeros(doc, dados, texto_legenda=titulo_real)
 
-    # === GENÉRICA ===
+    # === GENÉRICA (AQUI ESTÁ A CORREÇÃO PRINCIPAL) ===
     elif tipo == "TABELA_GENERICA":
-        builders.adicionar_tabela_generica(doc, chave, dados)
+        # Agora passamos o 'titulo_real' e a 'fonte_custom' para o construtor
+        builders.adicionar_tabela_generica(
+            doc, 
+            titulo_tabela=titulo_real, 
+            dados=dados, 
+            fonte=fonte_custom
+        )
     
-    doc.add_paragraph() 
-
+    doc.add_paragraph()
+    
 # --- FUNÇÃO DO SUMÁRIO ---
 def adicionar_pagina_sumario_visual(doc, doc_orig):
     p = doc.add_paragraph()
