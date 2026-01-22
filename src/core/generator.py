@@ -347,6 +347,9 @@ def processar_recurso(doc, chave, item):
     # === TABELAS DE ORÇAMENTO ===
     elif tipo == "TABELA_ORCAMENTO_CONJUNTO":
         builders.adicionar_tabela_orcamento_conjunto(doc, dados)
+
+    elif tipo == "TABELA_ORCAMENTO_CONJUNTO_COMPARACAO":
+        builders.adicionar_tabela_orcamento_detalhada(doc, dados)
         
     elif tipo == "TABELA_ORCAMENTO":
         builders.adicionar_tabela_orcamento(
@@ -387,7 +390,7 @@ def processar_recurso(doc, chave, item):
         )
     
     doc.add_paragraph()
-    
+
 # --- FUNÇÃO DO SUMÁRIO ---
 def adicionar_pagina_sumario_visual(doc, doc_orig):
     p = doc.add_paragraph()

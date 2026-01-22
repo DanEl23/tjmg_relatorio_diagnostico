@@ -987,36 +987,85 @@ def adicionar_tabela_processos(document, dados, texto_legenda=None):
     
 def adicionar_tabela_orcamento(document, titulo_vindo_do_word, dados, numero_tabela="09", titulo_custom=None):
     """
-    Tabela de Orçamento com Título Superior e Legenda Inferior distintos.
-    - titulo_custom: Título que aparece ACIMA da tabela (ex: Unidade Orçamentária...).
-    - titulo_vindo_do_word: Texto usado na LEGENDA (ex: Tabela 09 - Despesa...).
+    Tabela de Orçamento Dinâmica.
+    - Atualização: Alinhamento ESQUERDA com Recuo Manual (tblInd) para ajuste fino de centralização.
     """
-    # --- Configurações Físicas ---
+    if not dados: return
+
+    # --- 1. DETECÇÃO DE COLUNAS ---
+    sample_row = next((d for d in dados if d[0] == 'DATA_ROW'), dados[0])
+    qtd_dados = len(sample_row) - 1 
+    NUM_COLUNAS = qtd_dados 
+    
+    # --- Configurações Padrão ---
     LARGURA_TOTAL = 9922 
-    LARGURA_COL_1 = 6500  
-    LARGURA_COL_2 = LARGURA_TOTAL - LARGURA_COL_1
     ALTURA_LINHA = 340 
     FONTE_NOME = 'Calibri'; FONTE_TAM = Pt(12); ESPACAMENTO_LINHA = 1.15
     COR_HEADER_BG = '7F7F7F'; COR_TOTAL_BG = 'BFBFBF'; COR_DADOS_BG = 'FFFFFF'
+    
+    # Variável de Recuo (Default 0)
+    RECUO_TABELA = 0 
 
-    # --- 1. TÍTULO SUPERIOR (Vindo do static_data) ---
+    # --- DEFINIÇÃO DE LARGURAS ---
+    if NUM_COLUNAS == 4:
+        # Layout 4 Colunas (Valores Fixos)
+        LARGURA_COL_1 = 4184
+        LARGURA_COL_2 = 2680
+        LARGURA_COL_3 = 2680
+        LARGURA_COL_4 = 793
+        larguras = [LARGURA_COL_1, LARGURA_COL_2, LARGURA_COL_3, LARGURA_COL_4]
+        
+        LARGURA_TOTAL_REAL = sum(larguras) # ~10337 twips (18.2cm)
+        ALTURA_LINHA = 646 # 1.14cm
+        
+        # --- AJUSTE DE RECUO AQUI ---
+        # Como a tabela tem 18.2cm e a área útil é ~16cm, ela sobra 2.2cm.
+        # Para centralizar visualmente, precisamos puxar para a esquerda (negativo).
+        # Tente valores como -500, -900, -1200 até achar o centro ideal.
+        # Se quiser empurrar para a DIREITA, use valor positivo.
+        RECUO_TABELA = -675  
+
+    elif NUM_COLUNAS == 3:
+        LARGURA_COL_1 = 1500; LARGURA_COL_2 = 5422; LARGURA_COL_3 = 3000  
+        larguras = [LARGURA_COL_1, LARGURA_COL_2, LARGURA_COL_3]
+        LARGURA_TOTAL_REAL = 9922
+    else:
+        LARGURA_COL_1 = 6500; LARGURA_COL_2 = 9922 - LARGURA_COL_1
+        larguras = [LARGURA_COL_1, LARGURA_COL_2]
+        LARGURA_TOTAL_REAL = 9922
+
+    # --- 2. TÍTULO SUPERIOR ---
     if titulo_custom:
         p_top = document.add_paragraph()
         p_top.alignment = WD_ALIGN_PARAGRAPH.CENTER
         run_top = p_top.add_run(str(titulo_custom))
-        run_top.font.name = FONTE_NOME
-        run_top.font.size = Pt(12)
-        run_top.bold = True
+        run_top.font.name = FONTE_NOME; run_top.font.size = Pt(12); run_top.bold = True
         p_top.paragraph_format.space_after = Pt(12)
 
-    # --- 2. CONSTRUÇÃO DA TABELA ---
-    table = document.add_table(rows=0, cols=2)
-    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    # --- 3. CONSTRUÇÃO DA TABELA ---
+    table = document.add_table(rows=0, cols=NUM_COLUNAS)
+    table.autofit = False 
+    
+    # [IMPORTANTE] Mudamos para LEFT para o recuo (tblInd) funcionar corretamente
+    table.alignment = WD_TABLE_ALIGNMENT.LEFT 
+
     tbl = table._tbl
     tblPr = tbl.tblPr if tbl.tblPr is not None else OxmlElement('w:tblPr')
-    tblW = OxmlElement('w:tblW'); tblW.set(qn('w:w'), str(LARGURA_TOTAL)); tblW.set(qn('w:type'), 'dxa'); tblPr.append(tblW)
+    
+    # Define Largura Total Fixa
+    tblW = OxmlElement('w:tblW'); tblW.set(qn('w:w'), str(LARGURA_TOTAL_REAL)); tblW.set(qn('w:type'), 'dxa'); tblPr.append(tblW)
+    
+    # Trava Layout
+    tblLayout = OxmlElement('w:tblLayout'); tblLayout.set(qn('w:type'), 'fixed'); tblPr.append(tblLayout)
 
-    # Helpers de formatação
+    # [NOVO] Aplica o Recuo (Indentation)
+    if RECUO_TABELA != 0:
+        tblInd = OxmlElement('w:tblInd')
+        tblInd.set(qn('w:w'), str(RECUO_TABELA))
+        tblInd.set(qn('w:type'), 'dxa')
+        tblPr.append(tblInd)
+
+    # Helpers
     def converter_para_float(valor):
         if isinstance(valor, (int, float)): return float(valor)
         s = str(valor).strip().replace('R$', '').replace(' ', '')
@@ -1029,25 +1078,28 @@ def adicionar_tabela_orcamento(document, titulo_vindo_do_word, dados, numero_tab
         if val_float == 0: return "-"
         return "{:,.2f}".format(val_float).replace(",", "X").replace(".", ",").replace("X", ".")
 
+    # --- LOOP DE DADOS ---
     for i, row_data in enumerate(dados):
         tipo = row_data[0]
-        vals = [str(row_data[1]), str(row_data[2])] # Pega colunas 1 e 2
-        
+        vals = [str(x) for x in row_data[1:]]
+        while len(vals) < NUM_COLUNAS: vals.append("")
+
         row = table.add_row()
         trPr = row._tr.get_or_add_trPr()
-        trH = OxmlElement('w:trHeight'); trH.set(qn('w:val'), str(ALTURA_LINHA)); trH.set(qn('w:hRule'), 'atLeast'); trPr.append(trH)
+        
+        trH = OxmlElement('w:trHeight')
+        trH.set(qn('w:val'), str(ALTURA_LINHA))
+        trH.set(qn('w:hRule'), 'atLeast') 
+        trPr.append(trH)
 
-        # Repetição de cabeçalho
-        if i == 0 or tipo == "SUB_HEADER":
-            trPr.append(OxmlElement('w:tblHeader'))
+        if i == 0 or tipo == "SUB_HEADER": trPr.append(OxmlElement('w:tblHeader'))
 
         if tipo == "GROUP_TITLE":
-            cell = row.cells[0]; cell.merge(row.cells[1])
+            cell = row.cells[0]; cell.merge(row.cells[NUM_COLUNAS - 1])
             cell.text = vals[0].upper()
             sh = OxmlElement('w:shd'); sh.set(qn('w:fill'), COR_HEADER_BG); cell._tc.get_or_add_tcPr().append(sh)
             p = cell.paragraphs[0]; p.alignment = WD_ALIGN_PARAGRAPH.CENTER
             r = p.runs[0]; r.font.name = FONTE_NOME; r.font.size = FONTE_TAM; r.bold = True; r.font.color.rgb = RGBColor(255,255,255)
-            # Bordas
             tcPr = cell._element.get_or_add_tcPr(); tcBorders = OxmlElement('w:tcBorders')
             for edge in ['top', 'left', 'bottom', 'right']:
                 border = OxmlElement(f'w:{edge}'); border.set(qn('w:val'), 'single'); border.set(qn('w:sz'), '4'); border.set(qn('w:color'), '000000'); tcBorders.append(border)
@@ -1056,7 +1108,8 @@ def adicionar_tabela_orcamento(document, titulo_vindo_do_word, dados, numero_tab
 
         for j, cell in enumerate(row.cells):
             tcPr = cell._element.get_or_add_tcPr()
-            tw = OxmlElement('w:tcW'); tw.set(qn('w:w'), str(LARGURA_COL_1 if j == 0 else LARGURA_COL_2)); tw.set(qn('w:type'), 'dxa'); tcPr.append(tw)
+            largura_atual = larguras[j] if j < len(larguras) else int(LARGURA_TOTAL_REAL / NUM_COLUNAS)
+            tw = OxmlElement('w:tcW'); tw.set(qn('w:w'), str(largura_atual)); tw.set(qn('w:type'), 'dxa'); tcPr.append(tw)
             
             tcBorders = OxmlElement('w:tcBorders')
             for edge in ['top', 'left', 'bottom', 'right']:
@@ -1065,7 +1118,12 @@ def adicionar_tabela_orcamento(document, titulo_vindo_do_word, dados, numero_tab
 
             texto_f = vals[j]
             if tipo == "SUB_HEADER": texto_f = texto_f.upper()
-            if j == 1 and tipo in ["DATA_ROW", "TOTAL_ROW"]: texto_f = formatar_moeda(vals[j])
+            
+            if tipo in ["DATA_ROW", "TOTAL_ROW"]:
+                if NUM_COLUNAS == 2 and j == 1: texto_f = formatar_moeda(vals[j])
+                elif NUM_COLUNAS == 3 and j > 0:
+                     if any(c.isdigit() for c in vals[j]): texto_f = formatar_moeda(vals[j])
+                elif NUM_COLUNAS == 4 and j in [1, 2]: texto_f = formatar_moeda(vals[j])
 
             cell.text = texto_f
             p = cell.paragraphs[0]; r = p.runs[0] if p.runs else p.add_run(texto_f)
@@ -1081,21 +1139,17 @@ def adicionar_tabela_orcamento(document, titulo_vindo_do_word, dados, numero_tab
             
             if j == 0 and tipo != "SUB_HEADER":
                 p.alignment = WD_ALIGN_PARAGRAPH.LEFT; p.paragraph_format.left_indent = Pt(6)
-            else: p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            else: 
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
             r.font.name = FONTE_NOME; r.font.size = FONTE_TAM; r.bold = is_bold; r.font.color.rgb = RGBColor.from_string(f_color)
 
-    # --- 3. LEGENDA INFERIOR (Vindo do Word + Fonte) ---
+    # --- 4. LEGENDA INFERIOR ---
     p_leg = document.add_paragraph()
     p_leg.alignment = WD_ALIGN_PARAGRAPH.LEFT
     p_leg.paragraph_format.space_before = Pt(6)
-    
-    # Lógica de fonte baseada no número
     fonte_final = "Armazém de Informações - BO SIAFI/MG" if str(numero_tabela) == "09" else "LOA"
-    
-    # Monta a legenda: Tabela XX - Texto do Word. Fonte: YYY
     texto_legenda = f"{titulo_vindo_do_word.strip()}. Fonte: {fonte_final}"
-    
     r_leg = p_leg.add_run(texto_legenda)
     r_leg.font.name = FONTE_NOME; r_leg.font.size = Pt(8)
 
@@ -1103,166 +1157,267 @@ def adicionar_tabela_orcamento(document, titulo_vindo_do_word, dados, numero_tab
 def adicionar_tabela_orcamento_conjunto(document, dados):
     """
     Tabela 11: Orçamento Conjunto.
-    - Coluna 2 Fixa: 7.25 cm.
-    - Total Row: Centralizado Horizontal e Verticalmente (ambas colunas).
-    - Group Title: Mesclado, Cinza Escuro, Branco.
-    - Data Row: Col1 Esq, Col2 Centro.
+    - Atualização: Inclui 'R$' na formatação da Coluna 2.
+    - Ex: R$ 1.234.567
     """
     if not dados: return
 
     # --- Configurações Físicas ---
-    # 1 cm = aprox 567 twips.
-    # Largura Total = 9922 (aprox 17.5 cm)
     LARGURA_TOTAL = 9922 
-    
-    # Coluna 2 fixa em 7.25 cm
-    # 7.25 * 567 = 4110.75 -> Arredondando para 4111
     LARGURA_COL_2 = 4111 
     LARGURA_COL_1 = LARGURA_TOTAL - LARGURA_COL_2
     
     FONTE_NOME = 'Calibri'
     TAMANHO_FONTE = Pt(12)
-    ALTURA_LINHA_TWIPS = '340' # ~0.6 cm
-    COR_GROUP_BG = '7F7F7F'    # Cinza Escuro
-    COR_SUB_BG = 'D9D9D9'      # Cinza Claro
-    COR_TOTAL_BG = 'BFBFBF'    # Cinza Médio (para linha de Total)
+    ALTURA_LINHA_TWIPS = '340' 
+    COR_GROUP_BG = '7F7F7F'    
+    COR_SUB_BG = 'D9D9D9'      
+    COR_TOTAL_BG = 'BFBFBF'    
     
     # Cria a Tabela
     table = document.add_table(rows=0, cols=2)
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
     
-    # Define Largura Total da Tabela
     tbl = table._tbl
     tblPr = tbl.tblPr if tbl.tblPr is not None else OxmlElement('w:tblPr')
     tblW = OxmlElement('w:tblW'); tblW.set(qn('w:w'), str(LARGURA_TOTAL)); tblW.set(qn('w:type'), 'dxa'); tblPr.append(tblW)
+
+    # --- HELPER: Formatação de Moeda (R$ + Inteiro + Milhar) ---
+    def formatar_moeda(valor):
+        if not valor: return ""
+        try:
+            # Limpeza e conversão
+            if isinstance(valor, str):
+                s = valor.replace('R$', '').replace(' ', '').strip()
+                if not s or s in ['-', 'nan', 'None']: return "-"
+                val_float = float(s.replace('.', '').replace(',', '.'))
+            else:
+                val_float = float(valor)
+            
+            # 1. Formata o número: 1.234.567
+            numero_str = "{:,.0f}".format(val_float).replace(",", ".")
+            
+            # 2. Adiciona o prefixo R$
+            return f"R$ {numero_str}"
+        except:
+            return str(valor)
 
     # --- HELPER: Formatação de Célula ---
     def formatar_celula(cell, texto, bold=False, color_rgb=RGBColor(0,0,0), align_h='LEFT', bg_color=None, largura=None):
         cell.text = str(texto) if texto else ""
         p = cell.paragraphs[0]
         
-        # Alinhamento Horizontal
         if align_h == 'CENTER': p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         elif align_h == 'RIGHT': p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
         else: p.alignment = WD_ALIGN_PARAGRAPH.LEFT
         
-        # Alinhamento Vertical
         set_cell_vertical_alignment(cell, 'center')
         
-        # Espaçamento e Recuo
         p.paragraph_format.line_spacing = 1.0
         p.paragraph_format.space_before = Pt(0)
         p.paragraph_format.space_after = Pt(0)
         p.paragraph_format.left_indent = Pt(0)
 
-        # Fonte
         run = p.runs[0] if p.runs else p.add_run(str(texto) if texto else "")
         run.font.name = FONTE_NOME
         run.font.size = TAMANHO_FONTE
         run.bold = bold
         run.font.color.rgb = color_rgb
         
-        # Fundo (Shading)
         if bg_color:
             tcPr = cell._element.get_or_add_tcPr()
-            shd = OxmlElement('w:shd')
-            shd.set(qn('w:fill'), bg_color)
-            tcPr.append(shd)
+            shd = OxmlElement('w:shd'); shd.set(qn('w:fill'), bg_color); tcPr.append(shd)
         
-        # Largura da Célula
         if largura:
             tcPr = cell._element.get_or_add_tcPr()
-            tcW = OxmlElement('w:tcW')
-            tcW.set(qn('w:w'), str(largura))
-            tcW.set(qn('w:type'), 'dxa')
-            tcPr.append(tcW)
+            tcW = OxmlElement('w:tcW'); tcW.set(qn('w:w'), str(largura)); tcW.set(qn('w:type'), 'dxa'); tcPr.append(tcW)
 
-        # Bordas
         tcPr = cell._element.get_or_add_tcPr()
         tcBorders = OxmlElement('w:tcBorders')
         for edge in ['top', 'left', 'bottom', 'right']:
-            border = OxmlElement(f'w:{edge}')
-            border.set(qn('w:val'), 'single')
-            border.set(qn('w:sz'), '4')
-            border.set(qn('w:space'), '0')
-            border.set(qn('w:color'), '000000')
-            tcBorders.append(border)
+            border = OxmlElement(f'w:{edge}'); border.set(qn('w:val'), 'single'); border.set(qn('w:sz'), '4'); border.set(qn('w:space'), '0'); border.set(qn('w:color'), '000000'); tcBorders.append(border)
         tcPr.append(tcBorders)
 
-    # --- HELPER: Altura da Linha ---
     def definir_altura_linha(row):
         trPr = row._tr.get_or_add_trPr()
-        trH = OxmlElement('w:trHeight')
-        trH.set(qn('w:val'), ALTURA_LINHA_TWIPS)
-        trH.set(qn('w:hRule'), 'atLeast')
-        trPr.append(trH)
+        trH = OxmlElement('w:trHeight'); trH.set(qn('w:val'), ALTURA_LINHA_TWIPS); trH.set(qn('w:hRule'), 'atLeast'); trPr.append(trH)
 
     # ==========================================
     # LOOP PRINCIPAL
     # ==========================================
     for row_data in dados:
-        # Extrai Tipo e Valores
         tipo = row_data[0]
         vals = row_data[1:] 
         
         val1 = vals[0] if len(vals) > 0 else ""
-        val2 = vals[1] if len(vals) > 1 else ""
+        val2_raw = vals[1] if len(vals) > 1 else ""
 
         row = table.add_row()
         definir_altura_linha(row)
 
-        # --- TIPO 1: TÍTULO DO GRUPO (GROUP_TITLE) ---
         if tipo == "GROUP_TITLE":
             cell = row.cells[0]
             cell.merge(row.cells[1])
-            formatar_celula(
-                cell, val1.upper(), bold=True, 
-                color_rgb=RGBColor(255, 255, 255), align_h='CENTER', 
-                bg_color=COR_GROUP_BG, largura=LARGURA_TOTAL
-            )
+            formatar_celula(cell, val1.upper(), bold=True, color_rgb=RGBColor(255, 255, 255), align_h='CENTER', bg_color=COR_GROUP_BG, largura=LARGURA_TOTAL)
 
-        # --- TIPO 2: SUB CABEÇALHO (SUB_HEADER) ---
         elif tipo == "SUB_HEADER":
             formatar_celula(row.cells[0], val1, bold=True, align_h='CENTER', bg_color=COR_SUB_BG, largura=LARGURA_COL_1)
-            formatar_celula(row.cells[1], val2, bold=True, align_h='CENTER', bg_color=COR_SUB_BG, largura=LARGURA_COL_2)
+            formatar_celula(row.cells[1], val2_raw, bold=True, align_h='CENTER', bg_color=COR_SUB_BG, largura=LARGURA_COL_2)
 
-        # --- TIPO 3: LINHA DE TOTAL (TOTAL_ROW) ---
         elif tipo == "TOTAL_ROW":
-            # Aqui aplicamos o ajuste solicitado: AMBAS colunas centralizadas
-            formatar_celula(
-                row.cells[0], val1, bold=True, 
-                align_h='CENTER', # <--- AJUSTADO PARA CENTER
-                bg_color=COR_TOTAL_BG, largura=LARGURA_COL_1
-            )
-            formatar_celula(
-                row.cells[1], val2, bold=True, 
-                align_h='CENTER', # <--- MANTIDO CENTER
-                bg_color=COR_TOTAL_BG, largura=LARGURA_COL_2
-            )
+            # Formata moeda na coluna 2
+            val2_fmt = formatar_moeda(val2_raw)
+            
+            formatar_celula(row.cells[0], val1, bold=True, align_h='CENTER', bg_color=COR_TOTAL_BG, largura=LARGURA_COL_1)
+            formatar_celula(row.cells[1], val2_fmt, bold=True, align_h='CENTER', bg_color=COR_TOTAL_BG, largura=LARGURA_COL_2)
 
-        # --- TIPO 4: DADOS NORMAIS (DATA_ROW) ---
         else:
-            # Coluna 1: Esquerda
-            formatar_celula(
-                row.cells[0], val1, bold=False, 
-                align_h='LEFT', 
-                largura=LARGURA_COL_1
-            )
-            # Coluna 2: Centralizada
-            formatar_celula(
-                row.cells[1], val2, bold=False, 
-                align_h='CENTER', 
-                largura=LARGURA_COL_2
-            )
+            # Formata moeda na coluna 2
+            val2_fmt = formatar_moeda(val2_raw)
+
+            formatar_celula(row.cells[0], val1, bold=False, align_h='LEFT', largura=LARGURA_COL_1)
+            formatar_celula(row.cells[1], val2_fmt, bold=False, align_h='CENTER', largura=LARGURA_COL_2)
 
     # --- LEGENDA ---
     p_leg = document.add_paragraph()
     p_leg.alignment = WD_ALIGN_PARAGRAPH.LEFT
     p_leg.paragraph_format.space_before = Pt(6)
-    
-    r_leg = p_leg.add_run("Tabela 11 - Orçamento 2025. Fonte: LOA")
+    r_leg = p_leg.add_run("Tabela 11 - Orçamento 2026 por ação orçamentária. Fonte: Lei Orçamentária Anual nº 25.698, de 14/01/2026.")
     r_leg.font.name = FONTE_NOME
     r_leg.font.size = Pt(8)
+
+
+def adicionar_tabela_orcamento_detalhada(document, dados):
+    """
+    Tabela 4 Colunas com LARGURAS e RECUO FIXOS.
+    - Larguras: [6000, 2000, 800, 2000]
+    - Recuo: -0,93 cm (-527 twips)
+    """
+    if not dados: return
+
+    # ==========================================================================
+    # 1. CONFIGURAÇÕES FIXAS (Hardcoded)
+    # ==========================================================================
+    # Larguras exatas solicitadas
+    LARGURAS = [5500, 2000, 950, 2000] 
+    
+    # Soma total (10800 twips)
+    LARGURA_TOTAL_REAL = sum(LARGURAS)
+    
+    # Recuo exato de -0,93 cm (~ -527 twips)
+    RECUO_FIXO = -635 
+
+    # Configurações Visuais
+    FONTE_NOME = 'Calibri'; TAMANHO_FONTE = Pt(11); ALTURA_LINHA_TWIPS = '340'
+    COR_GROUP_BG = '7F7F7F'; COR_SUB_BG = 'D9D9D9'; COR_TOTAL_BG = 'BFBFBF'
+
+    # ==========================================================================
+    # 2. HELPERS
+    # ==========================================================================
+    def formatar_moeda(valor):
+        if not valor: return ""
+        try:
+            if isinstance(valor, str):
+                s = valor.replace('R$', '').replace(' ', '').strip()
+                if not s or s in ['-', 'nan', 'None']: return "-"
+                val_float = float(s.replace('.', '').replace(',', '.'))
+            else: val_float = float(valor)
+            return f"R$ " + "{:,.0f}".format(val_float).replace(",", ".")
+        except: return str(valor)
+
+    def formatar_celula(cell, texto, bold=False, bg_color=None, align='CENTER', largura=None):
+        cell.text = str(texto) if texto else ""
+        p = cell.paragraphs[0]
+        
+        # Alinhamento
+        if align == 'LEFT': p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        elif align == 'RIGHT': p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        else: p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        
+        set_cell_vertical_alignment(cell, 'center')
+        p.paragraph_format.line_spacing = 1.0
+        p.paragraph_format.space_before = Pt(0); p.paragraph_format.space_after = Pt(0)
+        if align == 'LEFT': p.paragraph_format.left_indent = Pt(6)
+
+        run = p.runs[0] if p.runs else p.add_run(str(texto) if texto else "")
+        run.font.name = FONTE_NOME; run.font.size = TAMANHO_FONTE; run.bold = bold
+        
+        if bg_color == COR_GROUP_BG: run.font.color.rgb = RGBColor(255, 255, 255)
+        else: run.font.color.rgb = RGBColor(0, 0, 0)
+        
+        if bg_color:
+            tcPr = cell._element.get_or_add_tcPr(); shd = OxmlElement('w:shd'); shd.set(qn('w:fill'), bg_color); tcPr.append(shd)
+        
+        # Aplica Largura Fixa na Célula
+        if largura:
+            tcPr = cell._element.get_or_add_tcPr(); tcW = OxmlElement('w:tcW'); tcW.set(qn('w:w'), str(largura)); tcW.set(qn('w:type'), 'dxa'); tcPr.append(tcW)
+        
+        # Bordas
+        tcPr = cell._element.get_or_add_tcPr(); tcBorders = OxmlElement('w:tcBorders')
+        for edge in ['top', 'left', 'bottom', 'right']:
+            border = OxmlElement(f'w:{edge}'); border.set(qn('w:val'), 'single'); border.set(qn('w:sz'), '4'); border.set(qn('w:space'), '0'); border.set(qn('w:color'), '000000'); tcBorders.append(border)
+        tcPr.append(tcBorders)
+
+    # ==========================================================================
+    # 3. CRIAÇÃO DA TABELA
+    # ==========================================================================
+    table = document.add_table(rows=0, cols=4)
+    table.autofit = False 
+    table.alignment = WD_TABLE_ALIGNMENT.LEFT # Obrigatório para o recuo funcionar
+    
+    tbl = table._tbl
+    tblPr = tbl.tblPr if tbl.tblPr is not None else OxmlElement('w:tblPr')
+    
+    # Define Largura Total e Layout Fixo
+    tblW = OxmlElement('w:tblW'); tblW.set(qn('w:w'), str(LARGURA_TOTAL_REAL)); tblW.set(qn('w:type'), 'dxa'); tblPr.append(tblW)
+    tblLayout = OxmlElement('w:tblLayout'); tblLayout.set(qn('w:type'), 'fixed'); tblPr.append(tblLayout)
+    
+    # Aplica o Recuo Fixo (-0,93cm)
+    tblInd = OxmlElement('w:tblInd'); tblInd.set(qn('w:w'), str(RECUO_FIXO)); tblInd.set(qn('w:type'), 'dxa'); tblPr.append(tblInd)
+
+    # ==========================================================================
+    # 4. PREENCHIMENTO
+    # ==========================================================================
+    for row_data in dados:
+        tipo = row_data[0]
+        vals = list(row_data[1:])
+        while len(vals) < 4: vals.append("")
+
+        row = table.add_row()
+        trPr = row._tr.get_or_add_trPr(); trH = OxmlElement('w:trHeight'); trH.set(qn('w:val'), ALTURA_LINHA_TWIPS); trH.set(qn('w:hRule'), 'atLeast'); trPr.append(trH)
+
+        # Caso Group Title (Mesclado)
+        if tipo == "GROUP_TITLE":
+            cell = row.cells[0]; cell.merge(row.cells[3])
+            formatar_celula(cell, vals[0].upper(), bold=True, bg_color=COR_GROUP_BG, align='CENTER', largura=LARGURA_TOTAL_REAL)
+            continue
+
+        bg_atual = None; bold_atual = False
+        if tipo == "SUB_HEADER": bg_atual = COR_SUB_BG; bold_atual = True
+        elif tipo == "TOTAL_ROW": bg_atual = COR_TOTAL_BG; bold_atual = True
+
+        for j, cell in enumerate(row.cells):
+            valor = vals[j]
+            
+            # Coluna 1 (Texto)
+            if j == 0:
+                align_atual = 'LEFT' if tipo != "SUB_HEADER" else 'CENTER'
+                valor_final = valor.upper() if tipo == "SUB_HEADER" else valor
+            
+            # Colunas 2, 3, 4 (Valores)
+            else:
+                align_atual = 'CENTER'
+                if tipo in ["DATA_ROW", "TOTAL_ROW"]: valor_final = formatar_moeda(valor)
+                else: valor_final = valor.upper() 
+
+            # Usa a largura fixa da lista LARGURAS
+            formatar_celula(cell, valor_final, bold=bold_atual, bg_color=bg_atual, align=align_atual, largura=LARGURAS[j])
+
+    p_leg = document.add_paragraph()
+    p_leg.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p_leg.paragraph_format.space_before = Pt(6)
+    r_leg = p_leg.add_run("Tabela Orçamentária Detalhada. Fonte: LOA/TJMG")
+    r_leg.font.name = FONTE_NOME; r_leg.font.size = Pt(8)
     
 
 def adicionar_tabela_cidades(document, dados):

@@ -295,50 +295,73 @@ dados_tabela_acervo = [
     ("TOTAL_ROW", "Total", "5577692", "5580850", "5401013", "5259333", "5123262", "5431450")
 ]
 
-TITULO_TABELA_ORCAMENTO = "Unidade Orçamentária 1031 – TJMG | Despesa Realizada por Ação Orçamentária – 2024"
+TITULO_TABELA_ORCAMENTO_1 = "Unidade Orçamentária 1031 – TJMG | Crédito Autorizado x Despesa Realizada por Ação Orçamentária – 2025"
 
 dados_tabela_orcamento = [
     # A linha HEADER_MERGE foi removida daqui!
-    ("SUB_HEADER", "AÇÃO ORÇAMENTÁRIA", "DESPESA REALIZADA 2024 (R$)", "", "", "", "", ""),
-    ("DATA_ROW", "7004 - Precatórios e Sentenças Judiciárias", "-", "", "", "", "", ""),
-    ("DATA_ROW", "7006 - Proventos de Inativos Civis e Pensionistas", "2.535.040.959,40", "", "", "", "", ""),
-    ("DATA_ROW", "2053 - Remuneração de Magistrados da Ativa E Encargos Sociais", "1.353.944.848,00", "", "", "", "", ""),
-    ("DATA_ROW", "2054 - Remuneração de Servidores da Ativa e Encargos Sociais", "5.448.469.921,18", "", "", "", "", ""),
-    ("TOTAL_ROW", "TOTAL", "9.337.455.728,58", "", "", "", "", "")
+    ["SUB_HEADER", "AÇÃO ORÇAMENTÁRIA", "CRÉDITO AUTORIZADO 2025 (R$)", "DESPESA REALIZADA 2025 (R$)", "%"],
+    ["DATA_ROW", "2053 - Remuneração de Magistrados da Ativa E Encargos Sociais", "1715985406", "1715985406", "100%"],
+    ["DATA_ROW", "2054 - Remuneração de Servidores da Ativa e Encargos Sociais", "6275094319", "6275003585", "100%"],
+    ["DATA_ROW", "7006 - Proventos de Inativos Civis e Pensionistas", "3119181127", "2954301230", "95%"],
+    ["DATA_ROW", "7004 - Precatórios e Sentenças Judiciárias", "1000", "-", "0%"],
+    ["TOTAL_ROW", "TOTAL", "11110261852", "10945290221", "99%"]
 ]
 
-TITULO_TABELA_ORCAMENTO_ACAO = "Unidade Orçamentária 4031 – FEPJ | Despesa Realizada por Ação Orçamentária – 2024"
+TITULO_TABELA_ORCAMENTO_2 = "Unidade Orçamentária 4031 – FEPJ | Crédito Autorizado x Despesa Realizada por Ação Orçamentária – 2025"
 
 dados_tabela_orcamento_acao = [
     # Tipo, Col 1, Col 2, Col 3, Col 4, Col 5, Col 6, Col 7
-    ("SUB_HEADER", "AÇÃO ORÇAMENTÁRIA", "DESPESA REALIZADA 2024 (R$)", "", "", "", "", ""),
-    ("DATA_ROW", "2025 - Gestão de Serviços De TIC", "192.893.477,53", "", "", "", "", ""),
-    ("DATA_ROW", "2055 - Auxílios Concedidos a Magistrados e Servidores", "158.320.267,00", "", "", "", "", ""),
-    ("DATA_ROW", "2091 - Obras e Gestão Predial", "520.565.747,04", "", "", "", "", ""),
-    ("DATA_ROW", "2109 - Formação, Aperfeiçoamento e Desenvolvimento Contínuo De Pessoas", "4.421.386,45", "", "", "", "", ""),
-    ("DATA_ROW", "4395 - Processamento Judiciário", "1.398.500.019,48", "", "", "", "", ""),
-    ("TOTAL_ROW", "TOTAL", "2.274.700.897,50", "", "", "", "", "")
+    ["SUB_HEADER", "AÇÃO ORÇAMENTÁRIA", "CRÉDITO AUTORIZADO 2025 (R$)", "DESPESA REALIZADA 2025 (R$)", "%"],
+    ("DATA_ROW", "2053 - Remuneração de Magistrados da Ativa E Encargos Sociais", "1715985406", "1715985406", "100%"),
+    ("DATA_ROW", "2054 - Remuneração de Servidores da Ativa e Encargos Sociais", "6275094319", "6275003585", "100%"),
+    ("DATA_ROW", "7006 - Proventos de Inativos Civis e Pensionistas", "3119181127", "2954301230", "95%"),
+    ("DATA_ROW", "7004 - Precatórios e Sentenças Judiciárias", "1000", "-", "0%"),
+    ("TOTAL_ROW", "TOTAL", "11110261852", "10945290221", "99%")
 ]
 
-dados_tabela_orcamento_2025 = [
+TITULO_TABELA_ORCAMENTO_ACAO = "Unidades Orçamentárias 1031 – TJMG e 4031 – FEPJ Orçamento 2026 por Ação"
+
+dados_tabela_orcamento_2025 = [ 
     # Título do Grupo 1 (UO 1031)
     ("GROUP_TITLE", "UO 1031 – TJMG", ""), 
-    ("SUB_HEADER", "Ação Orçamentária", "Ação Orçamentária"),
-    ("DATA_ROW", "7004 - Precatórios e Sentenças Judiciais", "7004 - Precatórios e Sentenças Judiciais"),
-    ("DATA_ROW", "7006 - Proventos de Inativos Civis e Pensionistas", "7006 - Proventos de Inativos Civis e Pensionistas"),
-    ("DATA_ROW", "2053 - Remuneração de Magistrados da Ativa", "2053 - Remuneração de Magistrados da Ativa"),
-    ("DATA_ROW", "2054 - Remuneração de Servidores da Ativa", "2054 - Remuneração de Servidores da Ativa"),
-    ("TOTAL_ROW", "VALOR TOTAL – UO 1031", "VALOR TOTAL – UO 1031"), # Fim do primeiro bloco
+    ("SUB_HEADER", "Ação Orçamentária", "Valor (R$)"),
+    ("DATA_ROW", "7004 - Precatórios e Sentenças Judiciais", "1000"),
+    ("DATA_ROW", "7006 - Proventos de Inativos Civis e Pensionistas", "3387367697"),
+    ("DATA_ROW", "2053 - Remuneração de Magistrados da Ativa", "1911006918"),
+    ("DATA_ROW", "2054 - Remuneração de Servidores da Ativa", "7198503821"),
+    ("TOTAL_ROW", "VALOR TOTAL – UO 1031", "12496879436"), # Fim do primeiro bloco
     
     # Título do Grupo 2 (UO 4031) - Começa na linha seguinte
     ("GROUP_TITLE", "UO 4031 – FEPJ", ""), 
-    ("SUB_HEADER", "Ação Orçamentária", "Ação Orçamentária"),
-    ("DATA_ROW", "2025 - Gestão de Serviços De TIC", "2025 - Gestão de Serviços De TIC"),
-    ("DATA_ROW", "2055 - Auxílios Concedidos a Magistrados", "2055 - Auxílios Concedidos a Magistrados"),
-    ("DATA_ROW", "2091 - Obras e Gestão Predial", "2091 - Obras e Gestão Predial"),
-    ("DATA_ROW", "2109 - Formação, Aperfeiçoamento e Desenvolvimento Contínuo De Pessoas", "2109 - Formação, Aperfeiçoamento e Desenvolvimento Contínuo De Pessoas"),
-    ("DATA_ROW", "4395 - Processamento Judiciário", "4395 - Processamento Judiciário"),
-    ("TOTAL_ROW", "VALOR TOTAL – UO 4031", "VALOR TOTAL – UO 4031"),
+    ("SUB_HEADER", "Ação Orçamentária", "Valor (R$)"),
+    ("DATA_ROW", "2025 - Gestão de Serviços De TIC", "364742031"),
+    ("DATA_ROW", "2055 - Auxílios Concedidos a Magistrados", "270000000"),
+    ("DATA_ROW", "2091 - Obras e Gestão Predial", "712057538"),
+    ("DATA_ROW", "2109 - Formação, Aperfeiçoamento e Desenvolvimento Contínuo De Pessoas", "6250000"),
+    ("DATA_ROW", "4395 - Processamento Judiciário", "2374248423"),
+    ("TOTAL_ROW", "VALOR TOTAL – UO 4031", "3727297992"),
+]
+
+TITULO_TABELA_ORCAMENTO_ACAO_COMPARACAO = "Unidades Orçamentárias 1031 – TJMG e 4031 – FEPJ Comparativo Orçamento 2025 x 2026"
+
+dados_tabela_orcamento_comparacao = [
+    # Tipo, Col 1, Col 2, Col 3, Col 4, Col 5
+    ("GROUP_TITLE", "UO 1031 – TJMG", ""), 
+    ("SUB_HEADER", "Ação Orçamentária", "2025", "%", "2026"),
+    ("DATA_ROW", "7004 - Precatórios e Sentenças Judiciais", "1000", "0%", "1000"),
+    ("DATA_ROW", "7006 - Proventos de Inativos Civis e Pensionistas", "3119181127", "9%", "3387367697"),
+    ("DATA_ROW", "2053 - Remuneração de Magistrados da Ativa e Encargos Sociais", "1715985406", "11%", "1911006918"),
+    ("DATA_ROW", "2054 - Remuneração de Servidores da Ativa e Encargos Sociais", "6275094319", "15%", "7198503821"),
+    ("TOTAL_ROW", "VALOR TOTAL – UO 4031", "11110263877", "12,48%", "12496879436"),
+
+    ("GROUP_TITLE", "UO 1031 – TJMG", ""), 
+    ("SUB_HEADER", "Ação Orçamentária", "2025", "%", "2026"),
+    ("DATA_ROW", "2025 - Gestão de Serviços De TIC", "265699614", "37%", "364742031"),
+    ("DATA_ROW", "2055 - Auxílios Concedidos a Magistrados e Servidores", "220000000", "23%", "270000000"),
+    ("DATA_ROW", "2091 - Obras e Gestão Predial", "650796141", "9%", "712057538"),
+    ("DATA_ROW", "2109 - Formação, Aperfeiçoamento e Desenvolvimento Contínuo De Pessoas", "4900000", "28%", "6250000"),
+    ("DATA_ROW", "4395 - Processamento Judiciário", "2714248423", "-4%", "2374248423"),
+    ("TOTAL_ROW", "VALOR TOTAL – UO 4031", "3612835151", "3,17%", "3727297992"),
 ]
 
 dados_tabela_cidades = [
@@ -479,20 +502,26 @@ MAPA_RECURSOS = {
         "dados": dados_tabela_orcamento,
         "num": "09",
         "fonte_custom": "Armazém de Informações - BO SIAFI/MG",
-        "titulo": TITULO_TABELA_ORCAMENTO
+        "titulo": TITULO_TABELA_ORCAMENTO_1
     },
     "Tabela 10 - Despesa realizada por ação (Unidade 4031)": {
         "tipo": "TABELA_ORCAMENTO", # Ou usar TABELA_ORCAMENTO com num="11"
         "dados": dados_tabela_orcamento_acao,
         "num": "09",
         "fonte_custom": "Armazém de Informações - BO SIAFI/MG",
-        "titulo": TITULO_TABELA_ORCAMENTO_ACAO
+        "titulo": TITULO_TABELA_ORCAMENTO_2
     },
-    "Tabela 11 - Orçamento 2025 por ação orçamentária": {
+    "Tabela 11 - Orçamento 2026 por ação orçamentária": {
         "tipo": "TABELA_ORCAMENTO_CONJUNTO", # Ou usar TABELA_ORCAMENTO com num="11"
         "dados": dados_tabela_orcamento_2025,
-        "fonte_custom": "Lei Orçamentária Anual nº 24.678, de 30/12/2024. Fonte: Lei Orçamentária Anual nº 25.124, de 30/12/2024.",
+        "fonte_custom": "Fonte: Lei Orçamentária Anual nº 25.698, de 14/01/2026.",
         "titulo": TITULO_TABELA_ORCAMENTO_ACAO
+    },
+    "Tabela 12 - Comparativo Orçamento 2025 x 2026 por ação orçamentária": {
+        "tipo": "TABELA_ORCAMENTO_CONJUNTO_COMPARACAO",
+        "dados": dados_tabela_orcamento_comparacao,
+        "fonte_custom": "",
+        "titulo": TITULO_TABELA_ORCAMENTO_ACAO_COMPARACAO
     },
     "Tabela - Cidades": {
         "tipo": "TABELA_CIDADES", 
