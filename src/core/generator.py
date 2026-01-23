@@ -18,6 +18,7 @@ from src.tables import builders
 COR_VINHO = RGBColor(162, 22, 18)
 COR_PRETO = RGBColor(0, 0, 0)
 
+
 def configurar_layout_pagina(document):
     """ Configura A4, Margens e Distâncias de Cabeçalho/Rodapé """
     section = document.sections[0]
@@ -33,6 +34,7 @@ def configurar_layout_pagina(document):
     # Distâncias
     section.header_distance = Cm(1.0)
     section.footer_distance = Cm(1.25)
+
 
 def adicionar_paginacao_rodape(document):
     """ 
@@ -96,6 +98,7 @@ def adicionar_paginacao_rodape(document):
     p_vazio.paragraph_format.space_before = Pt(6)
     p_vazio.paragraph_format.space_after = Pt(6)
 
+
 def configurar_estilos_tjmg(document):
     """ Define estilos Heading 1, 2, 3 com a cor Vinho """
     styles = document.styles
@@ -125,6 +128,7 @@ def configurar_estilos_tjmg(document):
     criar_ou_atualizar_estilo('Heading 2', 16, 0.0, 12)
     criar_ou_atualizar_estilo('Heading 3', 16, 0.0, 12)
 
+
 def inserir_capa(document, pasta_resources):
     """ Insere a imagem de capa se ela existir """
     caminho_capa = pasta_resources / "capa_relatorio.png"
@@ -138,6 +142,37 @@ def inserir_capa(document, pasta_resources):
         document.add_section(WD_SECTION.NEW_PAGE)
     else:
         print(f"⚠️ Capa não encontrada em: {caminho_capa}")
+
+
+def adicionar_texto_com_negrito(paragrafo, texto, cor_rgb=RGBColor(0,0,0), tamanho=12):
+    """
+    Processa o texto procurando por trechos entre asteriscos (*texto*).
+    Gera 'runs' separados para aplicar negrito apenas onde necessário.
+    """
+    # Regex que divide o texto mantendo os delimitadores
+    # (\*[^*]+\*) -> Captura grupos que começam e terminam com *, sem * no meio
+    partes = re.split(r'(\*[^*]+\*)', texto)
+    
+    for parte in partes:
+        if not parte: continue # Pula strings vazias resultantes do split
+        
+        run = paragrafo.add_run()
+        
+        # Se for um trecho entre asteriscos (*negrito*)
+        if parte.startswith('*') and parte.endswith('*') and len(parte) > 2:
+            texto_limpo = parte[1:-1] # Remove os *
+            run.text = texto_limpo
+            run.bold = True
+        else:
+            # Texto comum
+            run.text = parte
+            run.bold = False
+            
+        # Aplica a formatação padrão (Fonte/Cor/Tamanho) em TODOS os pedaços
+        run.font.name = 'Calibri'
+        run.font.size = Pt(tamanho)
+        run.font.color.rgb = cor_rgb
+
 
 def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None):
     """ Gera o relatório DO ZERO (Blank Document). """
@@ -204,12 +239,18 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
         if "[INICIAR_LISTA_NUMERICA]" in texto:
             em_lista_numerica = True; continue 
         if "[FINALIZAR_LISTA_NUMERICA]" in texto:
-            em_lista_numerica = False; continue 
+            em_lista_numerica = False
+            if doc_final.paragraphs:
+                doc_final.paragraphs[-1].paragraph_format.space_after = Pt(16)
+            continue
 
         if "[INICIAR_LISTA_MARCADORES]" in texto:
             em_lista_marcadores = True; continue
         if "[FINALIZAR_LISTA_MARCADORES]" in texto:
-            em_lista_marcadores = False; continue
+            em_lista_marcadores = False
+            if doc_final.paragraphs:
+                doc_final.paragraphs[-1].paragraph_format.space_after = Pt(16)
+            continue
 
         # --- A. TEXTO DESTAQUE (Iniciado por #) ---
         if texto.startswith('#'):
@@ -279,16 +320,15 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
             continue
 
         # --- E. TEXTO COMUM (OU ITEM DE LISTA) ---
-        p = doc_final.add_paragraph(texto)
+        p = doc_final.add_paragraph() 
         
         if em_lista_numerica:
             try: p.style = 'List Number'
             except: pass 
             p.alignment = WD_ALIGN_PARAGRAPH.LEFT
             
-            # --- AJUSTE: Espaçamento 1.0 para Lista Numérica ---
             p.paragraph_format.line_spacing = 1.0 
-            p.paragraph_format.space_after = Pt(0) # Compacto
+            p.paragraph_format.space_after = Pt(0)
             p.paragraph_format.left_indent = Cm(1.27) 
             p.paragraph_format.first_line_indent = Cm(-0.63)
             
@@ -297,24 +337,19 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
             except: pass
             p.alignment = WD_ALIGN_PARAGRAPH.LEFT
             
-            # Mantém 1.5 para Marcadores (Padrão anterior)
             p.paragraph_format.line_spacing = 1.5 
             
-            # --- NOVO AJUSTE: Recuo de 1.27cm ---
             p.paragraph_format.left_indent = Cm(1.27)
-            p.paragraph_format.first_line_indent = Cm(-0.63) # Recuo negativo para a bolinha
+            p.paragraph_format.first_line_indent = Cm(-0.63)
 
         else:
             p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
             p.paragraph_format.line_spacing = 1.5  
             p.paragraph_format.space_after = Pt(10) 
         
-        # --- FORMATAÇÃO DE FONTE GERAL ---
-        run = p.runs[0] if p.runs else p.add_run(texto)
-        run.font.name = 'Calibri'
-        run.font.size = Pt(12)
-        run.font.color.rgb = COR_PRETO
-
+        # AQUI O TEXTO É INSERIDO PELA PRIMEIRA E ÚNICA VEZ
+        adicionar_texto_com_negrito(p, texto, cor_rgb=COR_PRETO, tamanho=12)
+        
     # 6. SALVAR
     try:
         doc_final.save(output_path)
@@ -389,7 +424,8 @@ def processar_recurso(doc, chave, item):
             fonte=fonte_custom
         )
     
-    doc.add_paragraph()
+    if doc.paragraphs:
+        doc.paragraphs[-1].paragraph_format.space_after = Pt(6)
 
 # --- FUNÇÃO DO SUMÁRIO ---
 def adicionar_pagina_sumario_visual(doc, doc_orig):

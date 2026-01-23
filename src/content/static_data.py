@@ -535,42 +535,78 @@ MAPA_RECURSOS = {
     # --- IMAGENS (Apenas nome do arquivo, o caminho vem do config) ---
     "Figura 01 - Informações sobre o Estado de Minas Gerais.": {
         "tipo": "IMAGEM", "arquivo": "figura_01.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO"
+        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "largura": 15.07,
+        "recuo_esq": 0
     },
     "Figura 02 - Síntese da estrutura na área fim.": {
         "tipo": "IMAGEM", "arquivo": "figura_02.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO"
+        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "largura": 17.69,
+        "recuo_esq": -0.85
     },
     "Figura 03 - Novas estruturas na área fim.": {
         "tipo": "IMAGEM", "arquivo": "figura_03.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO"
+        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "largura": 18.56,
+        "recuo_esq": -1.25
     },
     "Figura 04 - Força de Trabalho.": {
         "tipo": "IMAGEM", "arquivo": "figura_04.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO"
+        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "largura": 17.00
     },
     "Figura 05 - Colaboradores da Justiça.": {
         "tipo": "IMAGEM", "arquivo": "figura_05.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO"
+        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "largura": 17.00
     },
     "Figura 06 – Força de Trabalho e Colaboradores na área de TI.": {
         "tipo": "IMAGEM", "arquivo": "figura_06.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO"
+        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "largura": 17.00
     },
-    "Figura 07 - Instalações prediais do TJMG.": {
+    "Figura 07 - Grandes Litigantes Polo Passivo.": {
         "tipo": "IMAGEM", "arquivo": "figura_07.png",
+        "fonte" : "Fonte: Painel Litigantes do CNJ",
+        "largura": 12.50
+    },
+    "Figura 08 - Grandes Litigantes Polo Ativo.": {
+        "tipo": "IMAGEM", "arquivo": "figura_08.png",
+        "fonte" : "Fonte: Painel Litigantes do CNJ",
+        "largura": 12.50
+    },
+    "Figura 09 - Instalações prediais do TJMG.": {
+        "tipo": "IMAGEM", "arquivo": "figura_09.png",
         "fonte" : "Fonte: Centro de Informações para a Gestão Institucional – CEINFO"
     },
-    "Figura 08 - Desempenho da ação por programa (Unidade 1031).": {
-        "tipo": "IMAGEM", "arquivo": "figura_08.png",
+    "Figura 10 - Desempenho da ação por programa (Unidade 1031).": {
+        "tipo": "IMAGEM", "arquivo": "figura_10.png",
         "fonte" : "Fonte Sigplan",
         "largura": 19.0,
         "recuo_esq": -1.85
     },
-    "Figura 09 - Desempenho da ação por programa (Unidade 4031).": {
-        "tipo": "IMAGEM", "arquivo": "figura_09.png",
+    "Figura 11 - Desempenho da ação por programa (Unidade 4031).": {
+        "tipo": "IMAGEM", "arquivo": "figura_11.png",
         "fonte" : "Fonte Sigplan",
         "largura": 19.0,
         "recuo_esq": -1.85
     },
+    "Figura 12 - Esquema do Plano Estratégico 2025.": {
+        "tipo": "IMAGEM", "arquivo": "figura_12.png",
+        "fonte" : "Fonte Sigplan",
+        "largura": 18.0,
+        "recuo_esq": -0.75
+       
+    },
+    "Figura 13 - Identidade organizacional do TJMG/DIRCOM": {
+        "tipo": "IMAGEM", "arquivo": "figura_13.png",
+        "fonte" : "Fonte Sigplan",
+        "largura": 13.0
+    },
+    "Figura 14 - Mapa Estratégico do TJMG/ DIRCOM": {
+        "tipo": "IMAGEM", "arquivo": "figura_14.png",
+        "fonte" : "Fonte Sigplan",
+        "largura": 13.0
+    }
 }

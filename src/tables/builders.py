@@ -4,12 +4,41 @@ from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.oxml.shared import OxmlElement
 from docx.oxml.ns import qn
 
-# Importa as ferramentas que acabamos de criar
 from .utils import (
     set_cell_vertical_alignment, set_row_height_at_least, 
     set_row_height_flexible, set_cell_bottom_border, set_group_top_border, 
     set_cell_all_borders, remove_all_borders, limpar_espacamento_lista
 )
+
+
+def aplicar_recuo_tabela(table, recuo_cm):
+    """
+    Aplica recuo manual em qualquer tabela.
+    - table: O objeto tabela criado.
+    - recuo_cm: Valor em Centímetros (ex: -0.93 ou 1.5).
+    """
+    # 1. O alinhamento TEM que ser à Esquerda para o recuo funcionar
+    table.alignment = WD_TABLE_ALIGNMENT.LEFT
+    
+    # 2. Converte CM para Twips (1 cm ~ 567 twips)
+    valor_twips = int(recuo_cm * 567)
+    
+    # 3. Acessa as propriedades XML da tabela
+    tbl = table._tbl
+    tblPr = tbl.tblPr
+    if tblPr is None:
+        tblPr = OxmlElement('w:tblPr')
+        tbl.append(tblPr)
+    
+    # 4. Cria e aplica a tag de Indentação (w:tblInd)
+    tblInd = OxmlElement('w:tblInd')
+    tblInd.set(qn('w:w'), str(valor_twips))
+    tblInd.set(qn('w:type'), 'dxa')
+    
+    # Remove indentação antiga se houver e adiciona a nova
+    for child in tblPr.findall(qn('w:tblInd')):
+        tblPr.remove(child)
+    tblPr.append(tblInd)
 
 
 def adicionar_tabela_atos(document, dados):
@@ -405,13 +434,15 @@ def adicionar_tabela_areas(document, dados):
 def adicionar_tabela_estrutura(document, dados):
     """ Tabela 03: Estrutura (1 Coluna) - Formatação Rigorosa """
     
-    LARGURA_TOTAL = 9922 # ~17.5 cm
+    LARGURA_TOTAL = 9911 # ~17.5 cm
     FONTE_HEADER = Pt(12)
     FONTE_TAM = Pt(11)
     ALTURA_LINHA = 227
     
     table = document.add_table(rows=0, cols=1)
     
+    aplicar_recuo_tabela(table, -0.5)
+
     # Configuração de Largura
     tbl = table._tbl
     tblPr = tbl.tblPr
@@ -679,13 +710,15 @@ def adicionar_tabela_nucleos(document, dados):
     Fidelidade: Sem grade, Cabeçalhos com borda superior, Espaçamento 0pt.
     """
     
-    LARGURA_TOTAL = 9922 # ~17.5 cm
+    LARGURA_TOTAL = 9911 # ~17.5 cm
     ALTURA_LINHA = 227
     
     FONTE_NOME = 'Calibri'
     FONTE_TAM = Pt(11)
     
     table = document.add_table(rows=0, cols=1)
+    
+    aplicar_recuo_tabela(table, -0.5)
     
     # XML: Largura Fixa
     tbl = table._tbl
@@ -1304,9 +1337,6 @@ def adicionar_tabela_orcamento_detalhada(document, dados):
     # Soma total (10800 twips)
     LARGURA_TOTAL_REAL = sum(LARGURAS)
     
-    # Recuo exato de -0,93 cm (~ -527 twips)
-    RECUO_FIXO = -635 
-
     # Configurações Visuais
     FONTE_NOME = 'Calibri'; TAMANHO_FONTE = Pt(11); ALTURA_LINHA_TWIPS = '340'
     COR_GROUP_BG = '7F7F7F'; COR_SUB_BG = 'D9D9D9'; COR_TOTAL_BG = 'BFBFBF'
@@ -1363,7 +1393,7 @@ def adicionar_tabela_orcamento_detalhada(document, dados):
     # ==========================================================================
     table = document.add_table(rows=0, cols=4)
     table.autofit = False 
-    table.alignment = WD_TABLE_ALIGNMENT.LEFT # Obrigatório para o recuo funcionar
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER # Obrigatório para o recuo funcionar
     
     tbl = table._tbl
     tblPr = tbl.tblPr if tbl.tblPr is not None else OxmlElement('w:tblPr')
@@ -1372,9 +1402,6 @@ def adicionar_tabela_orcamento_detalhada(document, dados):
     tblW = OxmlElement('w:tblW'); tblW.set(qn('w:w'), str(LARGURA_TOTAL_REAL)); tblW.set(qn('w:type'), 'dxa'); tblPr.append(tblW)
     tblLayout = OxmlElement('w:tblLayout'); tblLayout.set(qn('w:type'), 'fixed'); tblPr.append(tblLayout)
     
-    # Aplica o Recuo Fixo (-0,93cm)
-    tblInd = OxmlElement('w:tblInd'); tblInd.set(qn('w:w'), str(RECUO_FIXO)); tblInd.set(qn('w:type'), 'dxa'); tblPr.append(tblInd)
-
     # ==========================================================================
     # 4. PREENCHIMENTO
     # ==========================================================================
