@@ -566,47 +566,86 @@ MAPA_RECURSOS = {
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
         "largura": 17.00
     },
-    "Figura 07 - Grandes Litigantes Polo Passivo.": {
+    "Figura 07 - Perfil racial no Poder Judiciário.": {
         "tipo": "IMAGEM", "arquivo": "figura_07.png",
-        "fonte" : "Fonte: Painel Litigantes do CNJ",
+        "fonte" : "Diagnóstico Étnico-Racial no Poder Judiciário.",
         "largura": 12.50
     },
-    "Figura 08 - Grandes Litigantes Polo Ativo.": {
+    "Figura 08 - Percentual de magistrados(as) negros(as) na Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "figura_08.png",
-        "fonte" : "Fonte: Painel Litigantes do CNJ",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 12.50
     },
-    "Figura 09 - Instalações prediais do TJMG.": {
+    "Figura 09 - : Percentual de magistrados(as) na Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "figura_09.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 12.50
+    },
+    "Figura 10 - Percentual de Desembargadoras na Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "figura_10.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 12.50
+    },
+    "Figura 11 - Grandes Litigantes Polo Passivo.": {
+        "tipo": "IMAGEM", "arquivo": "figura_11.png",
+        "fonte" : "Painel Litigantes do CNJ",
+        "largura": 12.50
+    },
+    "Figura 12 - Grandes Litigantes Polo Ativo.": {
+        "tipo": "IMAGEM", "arquivo": "figura_12.png",
+        "fonte" : "Painel Litigantes do CNJ",
+        "largura": 12.50
+    },
+    "Figura 13 - Instalações prediais do TJMG.": {
+        "tipo": "IMAGEM", "arquivo": "figura_13.png",
         "fonte" : "Fonte: Centro de Informações para a Gestão Institucional – CEINFO"
     },
-    "Figura 10 - Desempenho da ação por programa (Unidade 1031).": {
-        "tipo": "IMAGEM", "arquivo": "figura_10.png",
-        "fonte" : "Fonte Sigplan",
+    "Figura 14 - Desempenho da ação por programa (Unidade 1031).": {
+        "tipo": "IMAGEM", "arquivo": "figura_14.png",
+        "fonte" : "Sigplan",
         "largura": 19.0,
         "recuo_esq": -1.85
     },
-    "Figura 11 - Desempenho da ação por programa (Unidade 4031).": {
-        "tipo": "IMAGEM", "arquivo": "figura_11.png",
-        "fonte" : "Fonte Sigplan",
+    "Figura 15 - Desempenho da ação por programa (Unidade 4031).": {
+        "tipo": "IMAGEM", "arquivo": "figura_15.png",
+        "fonte" : "Sigplan",
         "largura": 19.0,
         "recuo_esq": -1.85
     },
-    "Figura 12 - Esquema do Plano Estratégico 2025.": {
-        "tipo": "IMAGEM", "arquivo": "figura_12.png",
-        "fonte" : "Fonte Sigplan",
+    "Figura 16 - Esquema do Plano Estratégico 2025.": {
+        "tipo": "IMAGEM", "arquivo": "figura_16.png",
+        "fonte" : "Sigplan",
         "largura": 18.0,
         "recuo_esq": -0.75
        
     },
-    "Figura 13 - Identidade organizacional do TJMG/DIRCOM": {
-        "tipo": "IMAGEM", "arquivo": "figura_13.png",
-        "fonte" : "Fonte Sigplan",
+    "Figura 17 - Identidade organizacional do TJMG/DIRCOM": {
+        "tipo": "IMAGEM", "arquivo": "figura_17.png",
+        "fonte" : "Sigplan",
         "largura": 13.0
     },
-    "Figura 14 - Mapa Estratégico do TJMG/ DIRCOM": {
-        "tipo": "IMAGEM", "arquivo": "figura_14.png",
-        "fonte" : "Fonte Sigplan",
+    "Figura 18 - Mapa Estratégico do TJMG/ DIRCOM": {
+        "tipo": "IMAGEM", "arquivo": "figura_18.png",
+        "fonte" : "Sigplan",
         "largura": 13.0
+    },
+    "Figura 19 - Classificação dos tribunais da Justiça Estadual segundo o porte, ano-base 2024.": {
+        "tipo": "IMAGEM", "arquivo": "figura_19.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -0.9
+    },
+    "Figura 20 - Casos novos por mil habitantes por Tribunal de Justiça.": {
+        "tipo": "IMAGEM", "arquivo": "figura_20.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -0.9
+    },
+    "Figura 21 - Valores arrecadados em relação ao número de processos ingressados sujeitos a cobrança.": {
+        "tipo": "IMAGEM", "arquivo": "figura_21.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -0.9
     }
 }
+
