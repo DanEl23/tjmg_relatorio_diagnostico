@@ -25,6 +25,7 @@ data/raw/*
 
 # Ignora imagens extraídas temporárias
 data/processed/extracted_images/*
+data/processed/jn_images/*
 !data/processed/extracted_images/.gitkeep
 
 # Ignora os relatórios gerados
