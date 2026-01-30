@@ -633,19 +633,85 @@ MAPA_RECURSOS = {
         "tipo": "IMAGEM", "arquivo": "figura_19.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
-        "recuo_esq": -0.9
+        "recuo_esq": -1.1
     },
     "Figura 20 - Casos novos por mil habitantes por Tribunal de Justiça.": {
         "tipo": "IMAGEM", "arquivo": "figura_20.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
-        "recuo_esq": -0.9
+        "recuo_esq": -1.1,
+        "space_after": 12
     },
     "Figura 21 - Valores arrecadados em relação ao número de processos ingressados sujeitos a cobrança.": {
         "tipo": "IMAGEM", "arquivo": "figura_21.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
-        "recuo_esq": -0.9
-    }
+        "recuo_esq": -1.1,
+        "space_after": 12
+    },
+    "Figura 22 - Índice de conciliação por Tribunal de Justiça.": {
+        "tipo": "IMAGEM", "arquivo": "figura_22.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 20
+    },
+    "Figura 23 - Percentual de audiências de conciliação por casos novos por Tribunal de Justiça.": {
+        "tipo": "IMAGEM", "arquivo": "figura_23.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 24
+    },
+    "Figura 24 - Índice de Conciliação de processos de execução de títulos extrajudiciais não fiscais por Tribunal de Justiça.": {
+        "tipo": "IMAGEM", "arquivo": "figura_24.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 42 
+    },
+    "Figura 25 - Percentual de execuções fiscais pendentes em relação ao total de processos pendentes.": {
+        "tipo": "IMAGEM", "arquivo": "figura_25.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 24
+    },
+    "Figura 26 - Índice de atendimento a demanda (IAD).": {
+        "tipo": "IMAGEM", "arquivo": "figura_26.png",
+        "fonte" : "Base de dados Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 24
+    },
+    "Figura 27 - Resultado do IPC-Jus por Tribunal de Justiça incluída a área administrativa.": {
+        "tipo": "IMAGEM", "arquivo": "figura_27.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 24
+    },
+    "Figura 28 - Resultado do IPC-Jus da área judiciária por instância e Tribunal de Justiça.": {
+        "tipo": "IMAGEM", "arquivo": "figura_28.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 24
+    },
+    "Figura 29 - Índice de Produtividade dos(as) magistrados(as) (IPM).": {
+        "tipo": "IMAGEM", "arquivo": "figura_29.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 24
+    },
+    "Figura 30 - Índice de Produtividade dos(as) Servidores(as) (IPS).": {
+        "tipo": "IMAGEM", "arquivo": "figura_30.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 24
+    },
 }
+
 

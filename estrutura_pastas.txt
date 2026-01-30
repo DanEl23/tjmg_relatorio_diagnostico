@@ -1,60 +1,111 @@
-main.py                  # Arquivo principal para execução do projeto
-migrar_arquivos.py       # Script para migração de arquivos entre pastas ou formatos
-requirements.txt         # Lista de dependências Python do projeto
+# Estrutura de Pastas do Projeto (Atualizada em 29/01/2026)
 
-data/                    # Diretório para dados utilizados e gerados
-    output/              # Saída de dados processados ou resultados finais
-    processed/           # Dados já processados e prontos para uso
-        dicionario_graficos.json           # Dicionário com informações sobre gráficos
-        mapeamento_graficos_completo.json  # Mapeamento detalhado de gráficos
-        canvas_images/                     # Imagens extraídas de canvas
-        extracted_images/                  # Imagens extraídas de outras fontes
-    raw/                  # Dados brutos, ainda não processados
+main.py
+migrar_arquivos.py
+requirements.txt
+Indicadores Comparados.csv
+teste_4_colunas.docx
+teste_tabelas.py
 
-Fontes JN2025/           # Fontes e arquivos de referência do projeto JN2025
-resources/               # Recursos auxiliares, como imagens, templates, etc.
+.venv/                      # Ambiente virtual Python
+.vscode/                    # Configurações do VS Code
 
-src/                     # Código-fonte principal do projeto
-    __init__.py          # Torna o diretório um pacote Python
-    config.py            # Configurações globais do projeto
-    content/             # Dados e conteúdos estáticos
-        __init__.py      # Inicialização do pacote content
-        static_data.py   # Dados estáticos utilizados no projeto
-    core/                # Núcleo de funcionalidades principais
-        __init__.py      # Inicialização do pacote core
-        generator.py     # Geração de relatórios ou dados
-    extractors/          # Módulos para extração de dados
-        __init__.py      # Inicialização do pacote extractors
-        excel_loader.py  # Carregamento e leitura de arquivos Excel
-        pdf_extractor.py # Extração de dados de arquivos PDF
-        process_extractor.py # Extração de dados de processos
-    staging/             # Scripts de testes e protótipos
-        extrair_tabelas_planilha.py     # Extração de tabelas de planilhas
-        teste_busca_graficos.py         # Teste de busca de gráficos
-        teste_tabela_areas.py           # Teste de extração de áreas
-        teste_tabela_comarcas.py        # Teste de extração de comarcas
-        teste_tabela_estrutura.py       # Teste de extração de estrutura
-        teste_tabela_historicos.py      # Teste de extração de históricos
-        teste_tabela_justica_numeros.py # Teste de extração de números da justiça
-        teste_tabela_nucleos.py         # Teste de extração de núcleos
-        teste_tabela_orcamento.py       # Teste de extração de orçamento
-        teste_tabela.py                 # Teste genérico de extração de tabelas
-    tables/               # Construção e utilidades para tabelas
-        __init__.py      # Inicialização do pacote tables
-        builders.py      # Funções para construir tabelas
-        utils.py         # Utilitários para manipulação de tabelas
-    tools/                # Ferramentas auxiliares para o projeto
-        __init__.py      # Inicialização do pacote tools
-        diagnose_pdf.py  # Diagnóstico de PDFs
-        diagnostico_metadados.py # Diagnóstico de metadados
-        explorar_planilha.py     # Exploração de planilhas
-        extract_pdf_pages.py     # Extração de páginas de PDFs
-    utils/                # Utilitários gerais do projeto
-        __init__.py      # Inicialização do pacote utils
-        image_matcher.py # Funções para comparação e matching de imagens
+data/
+    output/
+    processed/
+        canvas_images/
+        dicionario_graficos.json
+        extracted_images/
+        jn_images/
+        mapeamento_graficos_completo.json
+    raw/
+        15-jan-2026/
+        Conteudo_Fonte.docx
+        Informações TJMG_ASPLAG resposta do CEINFO.xlsx
+        JN_15-Jan-2026.csv
+        justica-em-numeros-2025.pdf
+        Sumario_Modelo.docx
+        Variaveis_15-Jan-2026.csv
+        ~$nteudo_Fonte.docx
 
-tests/                   # Testes automatizados do projeto
-    integration/         # Testes de integração
-    unit/                # Testes unitários
+Fontes JN2025/
+    4.1.1.  Grande Porte e Estrutura Sólida.pdf
+    4.1.2.  Alto Volume de Movimentação Processual.pdf
+    4.1.3.  Arrecadação de Receitas.pdf
+    4.1.4.  Diversidade Racial na Magistratura.pdf
+    4.1.5.  Produção de Sentenças e Baixas.pdf
+    4.2.1.  Baixa Eficiência Comparada (IPC-Jus).pdf
+    4.2.2.  Morosidade e Alto Tempo de Tramitação.pdf
+    4.2.3.  Alto Congestionamento.pdf
+    4.2.4.  Execução Fiscal e Tempo de Execução.pdf
+    4.2.5.  Baixa Conciliação.pdf
+    4.2.6.  Custo por Magistrado Servidor em Relação à Produtividade.pdf
 
-tools/                   # Ferramentas externas ou scripts auxiliares
+resources/
+    capa_relatorio.png
+    margem_final.png
+
+Notebooks/
+    Author-Variable.ttf
+    data/
+    Esseltub Regular.otf
+    gráficos.ipynb
+    Satoshi-Light.otf
+    Satoshi-Medium.otf
+    Satoshi-Variable.ttf
+
+src/
+    __init__.py
+    config.py
+    content/
+        __init__.py
+        static_data.py
+    core/
+        __init__.py
+        generator.py
+        styles.py
+    extractors/
+        __init__.py
+        cnj_loader.py
+        excel_loader.py
+        pdf_extractor.py
+        process_extractor.py
+    media/
+        __init__.py
+        images.py
+    staging/
+        editar_imagens.py
+        editor_titulos.py
+        extrair_tabelas_planilha.py
+        pdf_plumber.py
+        teste_busca_graficos.py
+        teste_tabela.py
+        teste_tabela_areas.py
+        teste_tabela_comarcas.py
+        teste_tabela_estrutura.py
+        teste_tabela_historicos.py
+        teste_tabela_justica_numeros.py
+        teste_tabela_nucleos.py
+        teste_tabela_orcamento.py
+    tables/
+        __init__.py
+        builders.py
+        utils.py
+    tools/
+        __init__.py
+        diagnose_pdf.py
+        diagnostico_metadados.py
+        explorar_planilha.py
+        extract_pdf_pages.py
+    utils/
+        __init__.py
+        image_matcher.py
+
+tests/
+    integration/
+    unit/
+
+tools/
+
+.git/
+.gitignore

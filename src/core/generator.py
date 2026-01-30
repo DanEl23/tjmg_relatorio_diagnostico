@@ -13,6 +13,7 @@ from docx.oxml.ns import qn
 from src.content import static_data 
 from src.media import images
 from src.tables import builders
+from src.extractors.jn_loader import CarregadorJN
 
 # --- CONFIGURAÇÃO VISUAL ---
 COR_VINHO = RGBColor(162, 22, 18)
@@ -185,11 +186,15 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
     caminho_conteudo = pasta_raiz / "data" / "processed" / "Conteudo_Fonte.docx"
     caminho_sumario = pasta_raiz / "data" / "processed" / "Sumario_Modelo.docx"
     pasta_resources = pasta_raiz / "resources"
+    arquivo_dados = pasta_raiz / "data" / "raw" / "JN_15-Jan-2026.csv"
+    arquivo_vars = pasta_raiz / "data" / "raw" / "Variaveis_15-Jan-2026.csv"
     
     if not caminho_conteudo.exists():
         caminho_conteudo = Path(caminho_base_dummy).parent / "Conteudo_Fonte.docx"
         caminho_sumario = Path(caminho_base_dummy).parent / "Sumario_Modelo.docx"
         pasta_resources = Path(caminho_base_dummy).parent.parent.parent / "resources"
+
+    loader_jn = CarregadorJN(arquivo_dados, arquivo_vars)
 
     print(f"📂 Fonte: {caminho_conteudo}")
     print(f"📂 Sumário: {caminho_sumario}")
@@ -412,7 +417,18 @@ def processar_recurso(doc, chave, item):
         builders.adicionar_tabela_cidades(doc, dados)
         
     elif tipo == "TABELA_JUSTICA_NUMEROS":
-        builders.adicionar_tabela_justica_numeros(doc, dados, texto_legenda=titulo_real)
+        # Aqui definimos as métricas que queremos mostrar.
+        # Você pode mudar essa lista para quaisquer códigos da coluna 'sigla' do CSV de variáveis.
+        metricas = ['ipcm', 'ipcsjud', 'tottxcg', 'tbaix', 'sent', 'cn']
+        
+        # Gera os dados dinamicamente
+        dados_tabela = loader_jn.obter_tabela_serie_historica(
+            tribunal_sigla='TJMG',
+            lista_variaveis=metricas,
+            titulo_grupo="Indicadores de Produtividade (Série Histórica)"
+        )
+        
+        builders.adicionar_tabela_justica_numeros(doc, dados_tabela, texto_legenda=titulo_real)
 
     # === GENÉRICA (AQUI ESTÁ A CORREÇÃO PRINCIPAL) ===
     elif tipo == "TABELA_GENERICA":
@@ -423,9 +439,11 @@ def processar_recurso(doc, chave, item):
             dados=dados, 
             fonte=fonte_custom
         )
+    espaco_final = item.get("space_after", 6) 
     
+    # 2. Aplica ao último parágrafo inserido (se houver parágrafos no doc)
     if doc.paragraphs:
-        doc.paragraphs[-1].paragraph_format.space_after = Pt(6)
+        doc.paragraphs[-1].paragraph_format.space_after = Pt(espaco_final)
 
 # --- FUNÇÃO DO SUMÁRIO ---
 def adicionar_pagina_sumario_visual(doc, doc_orig):
