@@ -1,122 +1,222 @@
 import pandas as pd
+import numpy as np
 from pathlib import Path
 
 class CarregadorJN:
-    def __init__(self, caminho_csv_dados, caminho_csv_vars=None):
+    def __init__(self, caminho_csv_dados, caminho_csv_manual):
         self.caminho_dados = Path(caminho_csv_dados)
-        self.caminho_vars = Path(caminho_csv_vars) if caminho_csv_vars else None
+        self.caminho_manual = Path(caminho_csv_manual)
         self.df = None
-        self.df_vars = None
-        self.anos_disponiveis = []
-        self.mapa_vars = {}
+        self.df_manual = None
+        
+        # Mapa de Métricas (Chave Amigável -> Coluna no CSV ou Manual)
+        self.mapa_metricas = {
+            # --- ESTRUTURA ---
+            "municipios": "comarca",
+            "pop_sede_perc": "pop_sede_perc", # Manual (Direto)
+            "unidades_jud": "varaje",
+            "ranking_tjmg": "ranking_manual", # Manual (Direto)
+            "magistrados": "mag",
+            "forca_trabalho": ["tf", "tfaux"],
+            "despesa_total": "dpj",
+            "despesa_hab": "g7",
+            "custo_magistrado": "g10a",
+            "custo_servidor": "g10b",
+            "perc_cargos_vagos_mag": ("magv", "mag"), # Cálculo automático
+            "perc_serv_adm": "servadmseti",
+            
+            # --- MOVIMENTAÇÃO ---
+            "casos_novos": "cnnjud",
+            "casos_pendentes": "cp",
+            "cn_100k_hab": "ch",
+            "ipm": "ipm",
+            "ips": "ips",
+            "perc_serv_jud_1grau": "serv1_perc", # Manual (Direto)
+            "iad": "iad",
+            
+            # --- DIGITAL ---
+            "perc_eletr": ("cnelet", "cn"), # Cálculo automático
+            "perc_unidades_j100": "j100_perc", # Manual (Direto)
+            "nucleos_40": "n4", # Manual (Direto)
+            "balcao_virtual": "bv", # Manual (Direto)
+            
+            # --- DETALHAMENTO ---
+            "cn_mag_1": ("cn1", "mag1"),
+            "cn_mag_2": ("cn2", "mag2"),
+            "cn_serv_1": "cs1",
+            "cn_serv_2": "cs2",
+            "carga_mag_1": "k1",
+            "carga_mag_2": "k2",
+            "carga_serv_1": "ks1",
+            "carga_serv_2": "ks2",
+            "ipm_1": "ipm1",
+            "ipm_2": "ipm2",
+            "ips_1": "ipsjud1",
+            "ips_2": "ipsjud2",
+            "iad_1": "iad1",
+            "iad_2": "iad2",
+            "ind_cn_eletr": ("cnelet", "cn"),
+            "perc_eletr_1": ("cnelet1", "cn1"),
+            "perc_eletr_2": ("cnelet2", "cn2"),
+            
+            # --- TAXAS ---
+            "tc_total": "tc",
+            "tc_liq": "tcl",
+            "tc_1": "tc1",
+            "tc_2": "tc2",
+            "tc_conhec": "tcc1",
+            "tc_exec": "tcex1",
+            "tc_exec_fiscal": "tcextfisc1",
+            
+            # --- RECORRIBILIDADE ---
+            "rin_geral": "rin",
+            "rx_geral": "rx",
+            "rin_1": "rin1",
+            "rin_2": "rin2",
+            "rx_1": "rx1",
+            "rx_2": "rx2",
+            
+            # --- OUTROS ---
+            "perc_pend_exec_estoque": ("cpextfisc1", "cp"),
+            "pend_exec_fiscal": "cpextfisc1",
+            "cejusc": "cejusc",
+            "ic_geral": "ic",
+            "ic_1": "ic1",
+            "ic_2": "ic2",
+            "tempo_sent_1": "tpsent1m",
+            "tempo_sent_2": "tpdec2m",
+            "tempo_giro": "t_giro",      # Manual
+            "tempo_fisico": "tm_fis",    # Manual
+            "tempo_eletr": "tm_elet",    # Manual
+            "cn_crim": "cncrim",
+            "cp_crim": "cpcrim",
+            "ipc_jus": "eff",
+            "ipc_jus_1": "eff1",
+            "ipc_jus_2": "eff2",
+            "ipm_meta": ["ipm", "ipmtarget"],
+            "ips_meta": ["ips", "ipstarget"],
+            "tcl_meta": ["tcl", "tcltarget"]
+        }
+
 
     def carregar(self):
-        """ Lê os CSVs tratando separadores e encoding """
-        if not self.caminho_dados.exists():
-            print(f"❌ Erro: Arquivo não encontrado: {self.caminho_dados}")
-            return
-
-        print(f"🔄 Carregando base Justiça em Números: {self.caminho_dados.name}...")
+        """ Versão Ultra-Resiliente: Detecta separadores e encodings automaticamente """
         
-        # Leitura dos Dados
-        try:
-            self.df = pd.read_csv(self.caminho_dados, sep=';', encoding='latin1', low_memory=False)
-        except:
-            self.df = pd.read_csv(self.caminho_dados, sep=';', encoding='utf-8', low_memory=False)
-
-        # --- CORREÇÃO 1: Normaliza colunas para minúsculo e remove espaços ---
-        # Isso garante que 'IPCM', 'Ipcm' e 'ipcm ' virem 'ipcm'
-        self.df.columns = self.df.columns.str.strip().str.lower()
-
-        # Leitura do Dicionário de Variáveis
-        if self.caminho_vars and self.caminho_vars.exists():
+        # 1. Carregando dados do CNJ
+        if self.caminho_dados.exists():
             try:
-                self.df_vars = pd.read_csv(self.caminho_vars, sep=';', encoding='latin1')
-            except:
-                self.df_vars = pd.read_csv(self.caminho_vars, sep=';', encoding='utf-8')
-            
-            # Normaliza também as colunas do dicionário
-            self.df_vars.columns = self.df_vars.columns.str.strip().str.lower()
+                # sep=None com engine='python' faz o Pandas detectar se é , ou ; sozinho
+                self.df = pd.read_csv(
+                    self.caminho_dados, 
+                    sep=None, 
+                    engine='python', 
+                    encoding='latin1', 
+                    on_bad_lines='skip'
+                )
+                self.df.columns = self.df.columns.str.strip().str.lower()
+                
+                # Limpeza de números (trata pontos e vírgulas de milhar/decimal)
+                cols_num = self.df.columns.drop(['justica', 'sigla', 'uf'], errors='ignore')
+                for col in cols_num:
+                    if self.df[col].dtype == object:
+                        self.df[col] = self.df[col].astype(str).str.replace('.', '', regex=False).str.replace(',', '.', regex=False)
+                        self.df[col] = pd.to_numeric(self.df[col], errors='coerce')
+                
+                if 'ano' in self.df.columns:
+                    self.df['ano'] = pd.to_numeric(self.df['ano'], errors='coerce').fillna(0).astype(int)
+                
+                print(f"✅ Base CNJ carregada: {self.df.shape[0]} linhas detectadas.")
+            except Exception as e:
+                print(f"❌ Erro ao carregar CNJ: {e}")
 
-            if 'sigla' in self.df_vars.columns and 'dsc_sigla' in self.df_vars.columns:
-                # Normaliza as chaves do dicionário para minúsculo também
-                self.df_vars['sigla'] = self.df_vars['sigla'].str.strip().str.lower()
-                self.mapa_vars = dict(zip(self.df_vars['sigla'], self.df_vars['dsc_sigla']))
-        
-        # Limpeza básica e identificação de anos
-        if 'ano' in self.df.columns:
-            self.df['ano'] = pd.to_numeric(self.df['ano'], errors='coerce')
-            self.anos_disponiveis = sorted(self.df['ano'].dropna().unique().astype(int))
-            print(f"✅ Dados carregados! Anos disponíveis: {self.anos_disponiveis}")
-        else:
-            print("❌ Erro: Coluna 'ano' não encontrada no CSV.")
+        # 2. Carregando dados MANUAIS
+        if self.caminho_manual.exists():
+            try:
+                self.df_manual = pd.read_csv(
+                    self.caminho_manual, 
+                    sep=None, 
+                    engine='python', 
+                    encoding='latin1', 
+                    on_bad_lines='skip'
+                )
+                
+                # Limpeza agressiva de nomes de colunas e índices
+                self.df_manual.columns = [str(c).strip().lower() for c in self.df_manual.columns]
+                if 'ano' not in self.df_manual.columns:
+                    self.df_manual = self.df_manual.reset_index()
+                    self.df_manual.columns = [str(c).strip().lower() for c in self.df_manual.columns]
+                
+                if 'ano' in self.df_manual.columns:
+                    self.df_manual['ano'] = pd.to_numeric(self.df_manual['ano'], errors='coerce').fillna(0).astype(int)
+                    print(f"✅ Dados manuais carregados. Colunas: {list(self.df_manual.columns)}")
+                else:
+                    print(f"⚠️ Alerta: Coluna 'ano' não encontrada no manual. Colunas: {list(self.df_manual.columns)}")
+            except Exception as e:
+                print(f"❌ Erro ao carregar Manual: {e}")
 
-    def _formatar_valor(self, valor):
-        """ Formata float/string para padrão BR (1.234,5) """
-        if pd.isna(valor) or str(valor).strip().lower() in ['nd', '', 'nan', 'inf', '-inf']:
+
+    def _obter_valor(self, df_ano, coluna):
+        ano_alvo = df_ano.iloc[0]['ano']
+        # 1. Busca no Manual primeiro
+        if self.df_manual is not None:
+            row_m = self.df_manual[self.df_manual['ano'] == ano_alvo]
+            if not row_m.empty and coluna in row_m.columns:
+                val = row_m.iloc[0][coluna]
+                if pd.notna(val): return val
+        # 2. Busca no CNJ
+        if coluna in df_ano.columns:
+            val = df_ano.iloc[0][coluna]
+            return val if pd.notna(val) else 0
+        return 0
+
+
+    def _formatar(self, valor, is_percent=False):
+        if pd.isna(valor) or valor == np.inf or valor == -np.inf or valor == 0:
             return "-"
-        
         try:
-            if isinstance(valor, str):
-                valor = float(valor.replace('.', '').replace(',', '.'))
-            
-            if valor.is_integer():
+            if is_percent:
+                return "{:,.1f}%".format(valor).replace('.', ',')
+            if float(valor).is_integer():
                 return "{:,.0f}".format(valor).replace(',', '.')
-            
             return "{:,.1f}".format(valor).replace(',', '.')
-        except:
-            return str(valor)
+        except: return str(valor)
 
-    def obter_tabela_serie_historica(self, tribunal_sigla, lista_variaveis, anos=None, titulo_grupo="Indicadores"):
-        """
-        Gera a matriz de dados para o builders.adicionar_tabela_justica_numeros
-        """
-        if self.df is None: self.carregar()
 
-        if not anos:
-            anos = self.anos_disponiveis[-6:]
-
-        # Normaliza filtro de tribunal
-        if 'sigla' in self.df.columns:
-            df_trib = self.df[self.df['sigla'].str.upper() == tribunal_sigla.upper()].copy()
-        else:
-            print("❌ Erro: Coluna 'sigla' não encontrada.")
-            return []
-
-        dados_saida = []
+    def _calcular_composto(self, df_ano, chave):
+        regra = self.mapa_metricas.get(chave, chave)
         
-        # 1. Título do Grupo
-        dados_saida.append(['HEADER_MERGE', titulo_grupo] + [''] * 6)
+        if isinstance(regra, tuple):
+            v_num = self._obter_valor(df_ano, regra[0])
+            v_den = self._obter_valor(df_ano, regra[1])
+            if v_den == 0: return "-"
+            return self._formatar((v_num / v_den) * 100, is_percent=True)
 
-        # 2. Cabeçalho dos Anos
-        header_anos = ['SUB_HEADER', 'Indicador'] + [str(a) for a in anos]
-        while len(header_anos) < 8: header_anos.append("")
-        dados_saida.append(header_anos[:8])
+        elif isinstance(regra, list):
+            vals = [self._formatar(self._obter_valor(df_ano, col)) for col in regra]
+            return " / ".join(vals)
 
-        # 3. Linhas de Dados
-        for var_cod in lista_variaveis:
-            # Garante que estamos buscando em minúsculo
-            var_cod_lower = var_cod.lower().strip()
-            
-            # --- CORREÇÃO 2: Verificação de Existência da Coluna ---
-            if var_cod_lower not in self.df.columns:
-                print(f"⚠️ Aviso: Variável '{var_cod}' não encontrada no CSV. Preenchendo com 'N/D'.")
-                # Adiciona linha vazia/erro mas não quebra o código
-                linha = ['DATA_ROW', f"{var_cod} (Não encontrado)"] + ["N/D"] * len(anos)
-            else:
-                nome_indicador = self.mapa_vars.get(var_cod_lower, var_cod)
-                if len(nome_indicador) > 60:
-                    nome_indicador = nome_indicador[:57] + "..."
+        else:
+            val = self._obter_valor(df_ano, regra)
+            # Lista de colunas que devem ser exibidas com %
+            pcts = ['pop_sede_perc', 'serv1_perc', 'j100_perc', 'tc', 'tcl', 'iad', 'rin', 'rx', 'ic', 'eff', 'tc1', 'tc2']
+            is_pct = regra in pcts or "perc" in regra
+            return self._formatar(val, is_percent=is_pct)
 
-                linha = ['DATA_ROW', nome_indicador]
 
-                for ano in anos:
-                    val = df_trib[df_trib['ano'] == ano][var_cod_lower]
-                    val_fmt = self._formatar_valor(val.values[0]) if not val.empty else "-"
-                    linha.append(val_fmt)
-            
-            # Ajusta para 7 colunas (limite da tabela)
-            while len(linha) < 8: linha.append("")
-            dados_saida.append(linha[:8])
+    def obter_dados_tabela(self, tribunal_sigla, lista_metricas_amigaveis, anos, titulos_linhas=None):
+        if self.df is None: self.carregar()
+        if self.df is None: return []
+        df_trib = self.df[self.df['sigla'].str.upper() == tribunal_sigla.upper()].copy()
+        
+        dados_saida = []
+        header = ['SUB_HEADER', 'Indicador'] + [str(a) for a in anos]
+        dados_saida.append(header + [""] * (8 - len(header)))
 
+        for i, chave in enumerate(lista_metricas_amigaveis):
+            label = titulos_linhas[i] if titulos_linhas and i < len(titulos_linhas) else chave
+            linha = ['DATA_ROW', label]
+            for ano in anos:
+                df_ano = df_trib[df_trib['ano'] == ano]
+                linha.append(self._calcular_composto(df_ano, chave) if not df_ano.empty else "-")
+            dados_saida.append(linha + [""] * (8 - len(linha)))
         return dados_saida

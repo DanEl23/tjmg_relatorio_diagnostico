@@ -532,6 +532,14 @@ MAPA_RECURSOS = {
         "dados": dados_tabela_justica_numeros,
         "fonte_custom": "Legenda: s/d = Dados não encontrados no Relatório Justiça em Números do Período. (*) O indicador considera: número de servidores(as) (efetivos(as), requisitados(as), cedidos(as) e comissionados(as) sem vínculo efetivo); e número de trabalhadores(as) auxiliares (terceirizados(as), estagiários(as), juízes(as) leigos(as) e conciliadores(as)."
     },
+    "Tabela 13 - Relatório Justiça em Números (CNJ) | Dados do TJMG": {
+        "tipo": "TABELA_JUSTICA_NUMEROS",
+        "dados": dados_tabela_justica_numeros, # Ensure this variable is defined or available
+        "fonte_custom": "Fonte: Base de Dados Justiça em Números 2026.",
+        "space_after": 12,
+        "recuo_esq": -1.5
+    },
+    
     # --- IMAGENS (Apenas nome do arquivo, o caminho vem do config) ---
     "Figura 01 - Informações sobre o Estado de Minas Gerais.": {
         "tipo": "IMAGEM", "arquivo": "figura_01.png",

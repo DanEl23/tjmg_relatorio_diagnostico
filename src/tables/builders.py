@@ -1482,12 +1482,13 @@ def adicionar_tabela_cidades(document, dados):
                 cell._tc.get_or_add_tcPr().append(shading)
 
 
-def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None):
+def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None, indent_cm=-0.5):
     """ 
     Tabela 13: Justiça em Números 
     - Fonte: Calibri
     - Alinhamento Vertical: Centro
     - Espaçamento: 0pt
+    - indent_cm: Recuo à esquerda (permite valor negativo para tabelas largas)
     """
     if not dados: return
 
@@ -1504,8 +1505,10 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None):
     tblLayout.set(qn('w:type'), 'fixed')
     tblPr.append(tblLayout)
     
+    # --- RECUO À ESQUERDA (FIXED) ---
     tblInd = OxmlElement('w:tblInd')
-    tblInd.set(qn('w:w'), str(int(Cm(-1.15).twips)))
+    # Agora 'indent_cm' existe porque foi definido lá em cima no 'def'
+    tblInd.set(qn('w:w'), str(int(Cm(indent_cm).twips))) 
     tblInd.set(qn('w:type'), 'dxa')
     tblPr.append(tblInd)
     
@@ -1535,7 +1538,7 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None):
             c.text = vals[0]
             
             # Formatação
-            set_cell_vertical_alignment(c, 'center') # <--- ALINHAMENTO VERTICAL
+            set_cell_vertical_alignment(c, 'center') 
             shading = OxmlElement('w:shd')
             shading.set(qn('w:fill'), '44546A')
             c._tc.get_or_add_tcPr().append(shading)
@@ -1547,7 +1550,7 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None):
             
             if p.runs:
                 run = p.runs[0]
-                run.font.name = 'Calibri' # <--- FONTE CALIBRI
+                run.font.name = 'Calibri' 
                 run.font.size = Pt(11)
                 run.font.color.rgb = RGBColor(255,255,255)
                 run.bold = True
@@ -1560,7 +1563,7 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None):
                 c = row.cells[j]
                 c.text = vals[j]
                 
-                set_cell_vertical_alignment(c, 'center') # <--- ALINHAMENTO VERTICAL
+                set_cell_vertical_alignment(c, 'center') 
                 shading = OxmlElement('w:shd')
                 shading.set(qn('w:fill'), 'EEEEEE')
                 c._tc.get_or_add_tcPr().append(shading)
@@ -1573,7 +1576,7 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None):
 
                 if p.runs:
                     run = p.runs[0]
-                    run.font.name = 'Calibri' # <--- FONTE CALIBRI
+                    run.font.name = 'Calibri' 
                     run.font.size = Pt(11)
                     run.bold = True
                 
@@ -1587,7 +1590,7 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None):
                 c = row.cells[j]
                 c.text = vals[j]
                 
-                set_cell_vertical_alignment(c, 'center') # <--- ALINHAMENTO VERTICAL
+                set_cell_vertical_alignment(c, 'center') 
                 remove_all_borders(c)
                 
                 if data_idx % 2 != 0:
@@ -1602,7 +1605,7 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None):
                 
                 if p.runs:
                     run = p.runs[0]
-                    run.font.name = 'Calibri' # <--- FONTE CALIBRI
+                    run.font.name = 'Calibri' 
                     run.font.size = Pt(11)
 
     # Legenda Dinâmica
@@ -1610,9 +1613,8 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None):
         p_legenda = document.add_paragraph(texto_legenda, style='Caption')
         p_legenda.alignment = WD_ALIGN_PARAGRAPH.LEFT
     else:
-        # Fallback caso não seja passado texto
-        document.add_paragraph("Tabela 12 - Dados estatísticos do Relatório Justiça em Números. Fonte: CNJ", style='Caption')
-
+        document.add_paragraph("Fonte: Base de Dados Justiça em Números.", style='Caption')
+        
 
 def adicionar_tabela_generica(document, titulo_tabela, dados, fonte=None):
     """
