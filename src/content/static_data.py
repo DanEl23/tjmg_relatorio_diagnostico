@@ -584,7 +584,7 @@ MAPA_RECURSOS = {
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 12.50
     },
-    "Figura 09 - : Percentual de magistrados(as) na Justiça Estadual.": {
+    "Figura 09 - Percentual de magistrados(as) na Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "figura_09.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 12.50
@@ -719,6 +719,12 @@ MAPA_RECURSOS = {
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
+    },
+    "Figura XX - Percentual de servidores lotados na área administrativa.": {
+        "tipo": "IMAGEM", "arquivo": "figura_XX.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1
     },
 }
 
