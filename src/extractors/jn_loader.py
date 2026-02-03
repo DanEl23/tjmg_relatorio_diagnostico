@@ -9,7 +9,9 @@ class CarregadorJN:
         self.df = None
         self.df_manual = None
         
-        # Mapa de Métricas (Chave Amigável -> Coluna no CSV ou Manual)
+        # =================================================================
+        # MAPA DE MÉTRICAS ATUALIZADO (SUA VERSÃO)
+        # =================================================================
         self.mapa_metricas = {
             # --- ESTRUTURA ---
             "municipios": "comarca",
@@ -17,16 +19,16 @@ class CarregadorJN:
             "unidades_jud": "varaje",
             "ranking_tjmg": "ranking_manual", # Manual (Direto)
             "magistrados": "mag",
-            "forca_trabalho": ["tf", "tfaux"],
+            "forca_trabalho": ["ts", "tfaux"], # ATENÇÃO: Mudou de tf para ts
             "despesa_total": "dpj",
             "despesa_hab": "g7",
-            "custo_magistrado": "g10a",
-            "custo_servidor": "g10b",
-            "perc_cargos_vagos_mag": ("magv", "mag"), # Cálculo automático
+            "custo_magistrado": "custo_magistrado", # Agora busca coluna direta
+            "custo_servidor": "custo_servidor",     # Agora busca coluna direta
+            "perc_cargos_vagos_mag": ("magv", "mag"), 
             "perc_serv_adm": "servadmseti",
             
             # --- MOVIMENTAÇÃO ---
-            "casos_novos": "cnnjud",
+            "casos_novos": "cn",
             "casos_pendentes": "cp",
             "cn_100k_hab": "ch",
             "ipm": "ipm",
@@ -35,7 +37,7 @@ class CarregadorJN:
             "iad": "iad",
             
             # --- DIGITAL ---
-            "perc_eletr": ("cnelet", "cn"), # Cálculo automático
+            "perc_eletr": ("cnelet", "cn"), 
             "perc_unidades_j100": "j100_perc", # Manual (Direto)
             "nucleos_40": "n4", # Manual (Direto)
             "balcao_virtual": "bv", # Manual (Direto)
@@ -83,11 +85,11 @@ class CarregadorJN:
             "ic_geral": "ic",
             "ic_1": "ic1",
             "ic_2": "ic2",
-            "tempo_sent_1": "tpsent1m",
-            "tempo_sent_2": "tpdec2m",
-            "tempo_giro": "t_giro",      # Manual
-            "tempo_fisico": "tm_fis",    # Manual
-            "tempo_eletr": "tm_elet",    # Manual
+            "tempo_sent_1": "tempo_sent_1", # Agora busca coluna direta
+            "tempo_sent_2": "tempo_sent_2", # Agora busca coluna direta
+            "tempo_giro": "t_giro",     # Manual
+            "tempo_fisico": "tm_fis",   # Manual
+            "tempo_eletr": "tm_elet",   # Manual
             "cn_crim": "cncrim",
             "cp_crim": "cpcrim",
             "ipc_jus": "eff",
@@ -98,24 +100,16 @@ class CarregadorJN:
             "tcl_meta": ["tcl", "tcltarget"]
         }
 
-
     def carregar(self):
         """ Versão Ultra-Resiliente: Detecta separadores e encodings automaticamente """
-        
         # 1. Carregando dados do CNJ
         if self.caminho_dados.exists():
             try:
-                # sep=None com engine='python' faz o Pandas detectar se é , ou ; sozinho
                 self.df = pd.read_csv(
-                    self.caminho_dados, 
-                    sep=None, 
-                    engine='python', 
-                    encoding='latin1', 
-                    on_bad_lines='skip'
+                    self.caminho_dados, sep=None, engine='python', encoding='latin1', on_bad_lines='skip'
                 )
                 self.df.columns = self.df.columns.str.strip().str.lower()
                 
-                # Limpeza de números (trata pontos e vírgulas de milhar/decimal)
                 cols_num = self.df.columns.drop(['justica', 'sigla', 'uf'], errors='ignore')
                 for col in cols_num:
                     if self.df[col].dtype == object:
@@ -124,24 +118,17 @@ class CarregadorJN:
                 
                 if 'ano' in self.df.columns:
                     self.df['ano'] = pd.to_numeric(self.df['ano'], errors='coerce').fillna(0).astype(int)
-                
-                print(f"✅ Base CNJ carregada: {self.df.shape[0]} linhas detectadas.")
-            except Exception as e:
-                print(f"❌ Erro ao carregar CNJ: {e}")
+                    
+            except Exception as e: print(f"❌ Erro ao carregar CNJ: {e}")
 
         # 2. Carregando dados MANUAIS
         if self.caminho_manual.exists():
             try:
                 self.df_manual = pd.read_csv(
-                    self.caminho_manual, 
-                    sep=None, 
-                    engine='python', 
-                    encoding='latin1', 
-                    on_bad_lines='skip'
+                    self.caminho_manual, sep=None, engine='python', encoding='latin1', on_bad_lines='skip'
                 )
-                
-                # Limpeza agressiva de nomes de colunas e índices
                 self.df_manual.columns = [str(c).strip().lower() for c in self.df_manual.columns]
+                
                 if 'ano' not in self.df_manual.columns:
                     self.df_manual = self.df_manual.reset_index()
                     self.df_manual.columns = [str(c).strip().lower() for c in self.df_manual.columns]
@@ -150,14 +137,12 @@ class CarregadorJN:
                     self.df_manual['ano'] = pd.to_numeric(self.df_manual['ano'], errors='coerce').fillna(0).astype(int)
                     print(f"✅ Dados manuais carregados. Colunas: {list(self.df_manual.columns)}")
                 else:
-                    print(f"⚠️ Alerta: Coluna 'ano' não encontrada no manual. Colunas: {list(self.df_manual.columns)}")
-            except Exception as e:
-                print(f"❌ Erro ao carregar Manual: {e}")
-
+                    print(f"⚠️ Alerta: Coluna 'ano' não encontrada no manual.")
+            except Exception as e: print(f"❌ Erro ao carregar Manual: {e}")
 
     def _obter_valor(self, df_ano, coluna):
         ano_alvo = df_ano.iloc[0]['ano']
-        # 1. Busca no Manual primeiro
+        # 1. Busca no Manual
         if self.df_manual is not None:
             row_m = self.df_manual[self.df_manual['ano'] == ano_alvo]
             if not row_m.empty and coluna in row_m.columns:
@@ -169,46 +154,94 @@ class CarregadorJN:
             return val if pd.notna(val) else 0
         return 0
 
-
     def _formatar(self, valor, is_percent=False):
-        if pd.isna(valor) or valor == np.inf or valor == -np.inf or valor == 0:
-            return "-"
+        """ Formata para padrão BR (1.000,00) """
+        if pd.isna(valor) or valor == np.inf or valor == -np.inf: return "-"
+        if valor == 0: return "-"
+        
         try:
+            val_float = float(valor)
+            
+            # Caso 1: Porcentagem (Sempre 1 casa decimal)
             if is_percent:
-                return "{:,.1f}%".format(valor).replace('.', ',')
-            if float(valor).is_integer():
-                return "{:,.0f}".format(valor).replace(',', '.')
-            return "{:,.1f}".format(valor).replace(',', '.')
-        except: return str(valor)
+                texto = "{:,.1f}".format(val_float) 
+                texto = texto.replace(',', 'X').replace('.', ',').replace('X', '.')
+                return texto + "%"
 
+            # Caso 2: Inteiro puro
+            if val_float.is_integer():
+                texto = "{:,.0f}".format(val_float)
+                return texto.replace(',', '.')
+
+            # Caso 3: Decimal (1 casa)
+            else:
+                texto = "{:,.1f}".format(val_float)
+                texto = texto.replace(',', 'X').replace('.', ',').replace('X', '.')
+                return texto
+
+        except: return str(valor)
 
     def _calcular_composto(self, df_ano, chave):
         regra = self.mapa_metricas.get(chave, chave)
         
+        # 1. Soma (Força Trabalho: TS + TFAUX)
+        if chave == "forca_trabalho" and isinstance(regra, list):
+            v1 = self._obter_valor(df_ano, regra[0])
+            v2 = self._obter_valor(df_ano, regra[1])
+            return self._formatar(v1 + v2)
+
+        # 2. Tupla (Divisão -> % ou Média)
         if isinstance(regra, tuple):
             v_num = self._obter_valor(df_ano, regra[0])
             v_den = self._obter_valor(df_ano, regra[1])
             if v_den == 0: return "-"
-            return self._formatar((v_num / v_den) * 100, is_percent=True)
+            
+            # Métricas que são MÉDIA (divisão simples) e não porcentagem
+            metricas_media = ['cn_mag_1', 'cn_mag_2']
+            
+            if chave in metricas_media:
+                return self._formatar(v_num / v_den, is_percent=False)
+            else:
+                return self._formatar((v_num / v_den) * 100, is_percent=True)
 
+        # 3. Lista (Concatenação)
         elif isinstance(regra, list):
-            vals = [self._formatar(self._obter_valor(df_ano, col)) for col in regra]
+            vals = []
+            for col in regra:
+                val = self._obter_valor(df_ano, col)
+                # Multiplica decimais se necessário
+                if col in ['tcl', 'tcltarget', 'ipm', 'ipmtarget', 'ips', 'ipstarget', 'iad']:
+                    if col in ['tcl', 'tcltarget', 'iad'] and val is not None and val <= 1.5:
+                         val = val * 100
+                vals.append(self._formatar(val))
             return " / ".join(vals)
 
+        # 4. Valor Direto
         else:
             val = self._obter_valor(df_ano, regra)
-            # Lista de colunas que devem ser exibidas com %
-            pcts = ['pop_sede_perc', 'serv1_perc', 'j100_perc', 'tc', 'tcl', 'iad', 'rin', 'rx', 'ic', 'eff', 'tc1', 'tc2']
-            is_pct = regra in pcts or "perc" in regra
+            
+            # Multiplica se for decimal pequeno (0.77 -> 77)
+            colunas_decimais = [
+                'iad', 'iad1', 'iad2', 'tc', 'tcl', 'tc1', 'tc2',
+                'tcc1', 'tcex1', 'tcextfisc1', 'rin', 'rx', 'rin1', 'rin2', 
+                'rx1', 'rx2', 'ic', 'ic1', 'ic2', 'eff', 'eff1', 'eff2'
+            ]
+            if regra in colunas_decimais and val is not None and val <= 1.5 and val > 0:
+                val = val * 100
+            
+            # Adiciona %
+            colunas_pct = ['pop_sede_perc', 'serv1_perc', 'j100_perc', 'perc_serv_adm'] + colunas_decimais
+            is_pct = regra in colunas_pct or "perc" in regra
+            
             return self._formatar(val, is_percent=is_pct)
-
 
     def obter_dados_tabela(self, tribunal_sigla, lista_metricas_amigaveis, anos, titulos_linhas=None):
         if self.df is None: self.carregar()
         if self.df is None: return []
-        df_trib = self.df[self.df['sigla'].str.upper() == tribunal_sigla.upper()].copy()
         
+        df_trib = self.df[self.df['sigla'].str.upper() == tribunal_sigla.upper()].copy()
         dados_saida = []
+        
         header = ['SUB_HEADER', 'Indicador'] + [str(a) for a in anos]
         dados_saida.append(header + [""] * (8 - len(header)))
 
@@ -219,4 +252,5 @@ class CarregadorJN:
                 df_ano = df_trib[df_trib['ano'] == ano]
                 linha.append(self._calcular_composto(df_ano, chave) if not df_ano.empty else "-")
             dados_saida.append(linha + [""] * (8 - len(linha)))
+            
         return dados_saida

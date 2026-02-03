@@ -269,96 +269,154 @@ def processar_recurso(doc, chave, item, loader_jn=None):
         # 1. LISTA DE MÉTRICAS (CHAVES INTERNAS DO LOADER)
         # Importante: A ordem aqui deve ser IDÊNTICA à ordem da lista de títulos abaixo.
         metricas = [
-            "municipios", "pop_sede_perc", "unidades_jud", "ranking_tjmg", 
-            "magistrados", "forca_trabalho", "despesa_total", "despesa_hab",
-            "custo_magistrado", "custo_servidor", "perc_cargos_vagos_mag", "perc_serv_adm",
-            "casos_novos", "casos_pendentes", "cn_100k_hab", "ipm", "ips",
-            "perc_serv_jud_1grau", "iad", "perc_eletr", "perc_unidades_j100",
-            "nucleos_40", "balcao_virtual", "cn_mag_1", "cn_mag_2", "cn_serv_1", "cn_serv_2",
-            "carga_mag_1", "carga_mag_2", "carga_serv_1", "carga_serv_2",
-            "ipm_1", "ipm_2", "ips_1", "ips_2", "ind_cn_eletr", "perc_eletr_1", "perc_eletr_2",
-            "iad_1", "iad_2", "tc_total", "tc_liq", "tc_1", "tc_2", "tc_conhec", "tc_exec",
-            "rin_geral", "rx_geral", "rin_1", "rin_2", "rx_1", "rx_2",
-            "perc_pend_exec_estoque", "pend_exec_fiscal", "tc_exec_fiscal", "cejusc",
-            "ic_geral", "ic_1", "ic_2", "tempo_sent_1", "tempo_sent_2",
-            "tempo_giro", "tempo_fisico", "tempo_eletr", "cn_crim", "cp_crim",
-            "ipc_jus", "ipc_jus_1", "ipc_jus_2", "ipm_meta", "ips_meta", "tcl_meta"
+            "municipios", #1
+            "pop_sede_perc", #2 
+            "unidades_jud", #3
+            "ranking_tjmg", #4
+            "magistrados", #5
+            "forca_trabalho", #6 
+            "despesa_total", #7
+            "despesa_hab", #8
+            "custo_magistrado", #9 
+            "custo_servidor", #10
+            "perc_cargos_vagos_mag", #11
+            "perc_serv_adm", #12
+            "casos_novos", #13 
+            "casos_pendentes", #14 
+            "cn_100k_hab", #15
+            "ipm", #16
+            "ipsjud", #17
+            "perc_serv_jud_1grau", #18 
+            "iad", #19
+            "perc_eletr", #20 
+            "perc_unidades_j100", #21
+            "nucleos_40", #22 
+            "balcao_virtual", #23 
+            "cn_mag_1", #24
+            "cn_mag_2", #25
+            "cn_serv_1", #26
+            "cn_serv_2", #27
+            "carga_mag_1", #28
+            "carga_mag_2", #29
+            "carga_serv_1", #30
+            "carga_serv_2", #31
+            "ipm_1", #32
+            "ipm_2", #33
+            "ips_1", #34
+            "ips_2", #35
+            "ind_cn_eletr", #36 
+            "perc_eletr_1", #37
+            "perc_eletr_2", #38
+            "iad_1", #39
+            "iad_2", #40
+            "tc_total", #41
+            "tc_liq", #42
+            "tc_1", #43
+            "tc_2", #44
+            "tc_conhec", #45 
+            "tc_exec", #46
+            "rin_geral", #47
+            "rx_geral", #48
+            "rin_1", #49
+            "rin_2", #50
+            "rx_1", #51
+            "rx_2", #52
+            "perc_pend_exec_estoque", #53 
+            "pend_exec_fiscal", #54
+            "tc_exec_fiscal", #55
+            "cejusc", #56
+            "ic_geral", #57
+            "ic_1", #58
+            "ic_2", #59
+            "tempo_sent_1", #60
+            "tempo_sent_2", #61
+            "tempo_giro", #62
+            "tempo_fisico", #63
+            "tempo_eletr", #64
+            "cn_crim", #65
+            "cp_crim", #66
+            "ipc_jus", #67
+            "ipc_jus_1", #68
+            "ipc_jus_2", #69
+            "ipm_meta", #70
+            "ips_meta", #71
+            "tcl_meta"#72
         ]
         
         # 2. LISTA DE TÍTULOS (NOMES QUE SERÃO IMPRESSOS NO WORD)
         titulos = [
-            "Nº de municípios-sede",
-            "Percentual da população em munícipios-sede",
-            "Nº de unidades judiciárias (Estrutura de 1º grau)",
-            "Classificação do TJMG dentro do Grupo ‘Grande Porte’",
-            "Nº de magistrados",
-            "Força de trabalho (servidores e auxiliares) (*)",
-            "Despesa total da justiça (Bilhões)",
-            "Despesa total por habitante, incluindo custo com inativos (Reais)",
-            "Custo médio mensal com magistrados (Milhões)",
-            "Custo médio mensal com servidores (Milhões)",
-            "Percentual de cargos vagos de magistrados",
-            "Percentual de servidores lotados na área administrativa",
-            "Casos novos",
-            "Casos pendentes",
-            "Casos novos por 100 mil habitantes",
-            "Índice de produtividade dos magistrados",
-            "Índice de produtividade de servidores da área judiciária",
-            "Percentual de servidores (as) na área judiciária de primeiro grau",
-            "Índice de atendimento à demanda (Geral)",
-            "Percentual de casos novos eletrônicos",
-            "Percentual de unidades judiciárias de primeiro grau com Juízo 100% Digital",
-            "Quantidade de Núcleos de Justiça 4.0",
-            "Quantidade de Balcões Virtuais instalados",
-            "Casos novos por magistrados - 1º grau",
-            "Casos novos por magistrados - 2º grau",
-            "Casos novos por servidor da área judiciária – 1º grau",
-            "Casos novos por servidor da área judiciária – 2º grau",
-            "Carga de trabalho do magistrado – 1º grau",
-            "Carga de trabalho do magistrado – 2º grau",
-            "Carga de trabalho do servidor da área judiciária – 1º grau",
-            "Carga de trabalho do servidor da área judiciária – 2º grau",
-            "Índice de produtividade dos magistrados – 1º grau",
-            "Índice de produtividade dos magistrados – 2º grau",
-            "Índice de produtividade dos servidores da área judiciária – 1º grau",
-            "Índice de produtividade dos servidores da área judiciária – 2º grau",
-            "Índice de casos novos eletrônicos",
-            "Índice de casos novos eletrônicos – 1º grau",
-            "Índice de casos novos eletrônicos – 2º grau",
-            "Índice de atendimento à demanda – 1º grau",
-            "Índice de atendimento à demanda – 2º grau",
-            "Taxa de congestionamento Total",
-            "Taxa de congestionamento líquida",
-            "Taxa de congestionamento – 1º grau",
-            "Taxa de congestionamento – 2º grau",
-            "Taxa de congestionamento na fase de conhecimento",
-            "Taxa de congestionamento na fase de execução",
-            "Índice de recorribilidade interna (Geral)",
-            "Índice de recorribilidade externa (Geral)",
-            "Recorribilidade interna – 1º grau (Conhecimento)",
-            "Recorribilidade interna – 2º grau (**)",
-            "Recorribilidade externa – 1º grau (Conhecimento)",
-            "Recorribilidade externa – 2º grau (**)",
-            "Percentual de casos pendentes de execução em relação ao estoque total de processos",
-            "Total de execuções fiscais pendentes",
-            "Taxa de congestionamento na execução fiscal",
-            "Centros judiciários de solução de conflitos na justiça estadual",
-            "Índice de conciliação",
-            "Índice de conciliação, 1º grau",
-            "Índice de conciliação 2º grau",
-            "Tempo médio até a sentença no 1º grau",
-            "Tempo médio até a sentença no 2º grau",
-            "Tempo de giro do acervo",
-            "Tempo médio dos processos físicos pendentes",
-            "Tempo médio dos processos eletrônicos pendentes",
-            "Casos novos criminais, excluídas as execuções penais",
-            "Casos pendentes criminais, excluídas as execuções penais",
-            "Resultado do IPC-Jus total por tribunal (incluída a área administrativa)",
-            "Resultado do IPC-Jus da área judiciária, por instância e tribunal. 1º grau",
-            "Resultado do IPC-Jus da área judiciária, por instância e tribunal. 2º grau",
-            "Índice de produtividade dos magistrados (IPM) realizado x necessário para que tribunal atinja IPC-Jus de 100%.",
-            "Índice de produtividade dos servidores (IPS) realizado x necessário para que tribunal atinja IPC-Jus de 100%.",
-            "Taxa de congestionamento líquida (TCL) realizado x resultado da consequência se tribunal atingisse IPC-Jus 100%. TCL realizado"
+            "Nº de municípios-sede", #1
+            "Percentual da população em munícipios-sede", #2
+            "Nº de unidades judiciárias (Estrutura de 1º grau)", #3
+            "Classificação do TJMG dentro do Grupo ‘Grande Porte’", #4
+            "Nº de magistrados", #5
+            "Força de trabalho (servidores e auxiliares) (*)", #6
+            "Despesa total da justiça (Bilhões)", #7
+            "Despesa total por habitante, incluindo custo com inativos (Reais)", #8
+            "Custo médio mensal com magistrados (Milhões)", #9
+            "Custo médio mensal com servidores (Milhões)", #10
+            "Percentual de cargos vagos de magistrados", #11
+            "Percentual de servidores lotados na área administrativa", #12
+            "Casos novos", #13
+            "Casos pendentes", #14
+            "Casos novos por 100 mil habitantes", #15
+            "Índice de produtividade dos magistrados", #16
+            "Índice de produtividade de servidores da área judiciária", #17
+            "Percentual de servidores (as) na área judiciária de primeiro grau", #18
+            "Índice de atendimento à demanda (Geral)", #19
+            "Percentual de casos novos eletrônicos", #20
+            "Percentual de unidades judiciárias de primeiro grau com Juízo 100% Digital", #21
+            "Quantidade de Núcleos de Justiça 4.0", #22
+            "Quantidade de Balcões Virtuais instalados", #23
+            "Casos novos por magistrados - 1º grau", #24
+            "Casos novos por magistrados - 2º grau", #25
+            "Casos novos por servidor da área judiciária – 1º grau", #26
+            "Casos novos por servidor da área judiciária – 2º grau", #27
+            "Carga de trabalho do magistrado – 1º grau", #28
+            "Carga de trabalho do magistrado – 2º grau", #29
+            "Carga de trabalho do servidor da área judiciária – 1º grau", #30
+            "Carga de trabalho do servidor da área judiciária – 2º grau", #31
+            "Índice de produtividade dos magistrados – 1º grau", #32
+            "Índice de produtividade dos magistrados – 2º grau", #33
+            "Índice de produtividade dos servidores da área judiciária – 1º grau", #34
+            "Índice de produtividade dos servidores da área judiciária – 2º grau", #35
+            "Índice de casos novos eletrônicos", #36
+            "Índice de casos novos eletrônicos – 1º grau", #37
+            "Índice de casos novos eletrônicos – 2º grau", #38
+            "Índice de atendimento à demanda – 1º grau", #39
+            "Índice de atendimento à demanda – 2º grau", #40
+            "Taxa de congestionamento Total", #41
+            "Taxa de congestionamento líquida", #42
+            "Taxa de congestionamento – 1º grau", #43
+            "Taxa de congestionamento – 2º grau", #44
+            "Taxa de congestionamento na fase de conhecimento", #45
+            "Taxa de congestionamento na fase de execução", #46
+            "Índice de recorribilidade interna (Geral)", #47
+            "Índice de recorribilidade externa (Geral)", #48
+            "Recorribilidade interna – 1º grau (Conhecimento)", #49
+            "Recorribilidade interna – 2º grau (**)", #50
+            "Recorribilidade externa – 1º grau (Conhecimento)", #51
+            "Recorribilidade externa – 2º grau (**)", #52
+            "Percentual de casos pendentes de execução em relação ao estoque total de processos", #53
+            "Total de execuções fiscais pendentes", #54
+            "Taxa de congestionamento na execução fiscal", #55
+            "Centros judiciários de solução de conflitos na justiça estadual", #56
+            "Índice de conciliação", #57
+            "Índice de conciliação, 1º grau", #58
+            "Índice de conciliação 2º grau", #59
+            "Tempo médio até a sentença no 1º grau", #60
+            "Tempo médio até a sentença no 2º grau", #61
+            "Tempo de giro do acervo", #62
+            "Tempo médio dos processos físicos pendentes", #63
+            "Tempo médio dos processos eletrônicos pendentes", #64
+            "Casos novos criminais, excluídas as execuções penais", #65
+            "Casos pendentes criminais, excluídas as execuções penais", #66
+            "Resultado do IPC-Jus total por tribunal (incluída a área administrativa)", #67
+            "Resultado do IPC-Jus da área judiciária, por instância e tribunal. 1º grau", #68
+            "Resultado do IPC-Jus da área judiciária, por instância e tribunal. 2º grau", #69
+            "Índice de produtividade dos magistrados (IPM) realizado x necessário para que tribunal atinja IPC-Jus de 100%.", #70
+            "Índice de produtividade dos servidores (IPS) realizado x necessário para que tribunal atinja IPC-Jus de 100%.", #71
+            "Taxa de congestionamento líquida (TCL) realizado x resultado da consequência se tribunal atingisse IPC-Jus 100%. TCL realizado" #72
         ]
         
         # 3. GERAÇÃO DA TABELA

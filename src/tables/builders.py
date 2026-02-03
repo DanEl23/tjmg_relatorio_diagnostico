@@ -1,6 +1,6 @@
 from docx.shared import Pt, RGBColor, Cm
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.enum.table import WD_TABLE_ALIGNMENT
+from docx.enum.table import WD_TABLE_ALIGNMENT, WD_ALIGN_VERTICAL
 from docx.oxml.shared import OxmlElement
 from docx.oxml.ns import qn
 
@@ -1482,20 +1482,19 @@ def adicionar_tabela_cidades(document, dados):
                 cell._tc.get_or_add_tcPr().append(shading)
 
 
-def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None, indent_cm=-0.5):
+def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None, indent_cm=-0.5, fonte=None):
     """ 
     Tabela 13: Justiça em Números 
-    - Fonte: Calibri
-    - Alinhamento Vertical: Centro
-    - Espaçamento: 0pt
-    - indent_cm: Recuo à esquerda (permite valor negativo para tabelas largas)
+    - Estrutura: XML Fixed (Mantida intacta)
+    - Legenda: Rodapé unificado (Título + Fonte) estilo Normal/Calibri 8pt.
     """
     if not dados: return
 
+    # --- 1. CRIAÇÃO DA ESTRUTURA DA TABELA (CÓDIGO XML INTACTO) ---
     table = document.add_table(rows=0, cols=7)
     tbl = table._tbl
     
-    # Configuração da Tabela (XML)
+    # Configuração da Tabela
     tblPr = tbl.tblPr
     if tblPr is None:
         tblPr = OxmlElement('w:tblPr')
@@ -1505,13 +1504,13 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None, indent
     tblLayout.set(qn('w:type'), 'fixed')
     tblPr.append(tblLayout)
     
-    # --- RECUO À ESQUERDA (FIXED) ---
+    # Recuo
     tblInd = OxmlElement('w:tblInd')
-    # Agora 'indent_cm' existe porque foi definido lá em cima no 'def'
     tblInd.set(qn('w:w'), str(int(Cm(indent_cm).twips))) 
     tblInd.set(qn('w:type'), 'dxa')
     tblPr.append(tblInd)
     
+    # Larguras
     tblGrid = OxmlElement('w:tblGrid')
     widths = [Cm(5.5)] + [Cm(2.25)]*6
     for w in widths:
@@ -1520,6 +1519,7 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None, indent
         tblGrid.append(gc)
     tbl.insert(1, tblGrid)
     
+    # Preenchimento
     data_idx = 0
     for row_data in dados:
         tipo = row_data[0]
@@ -1532,88 +1532,94 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None, indent
         if tipo.startswith("HEADER") or tipo.startswith("SUB"):
             trPr.append(OxmlElement('w:tblHeader'))
             
-        # --- HEADER PRINCIPAL MESCLADO ---
+        # Header Mesclado
         if tipo == "HEADER_MERGE":
             c = row.cells[0].merge(row.cells[6])
             c.text = vals[0]
-            
-            # Formatação
             set_cell_vertical_alignment(c, 'center') 
             shading = OxmlElement('w:shd')
             shading.set(qn('w:fill'), '44546A')
             c._tc.get_or_add_tcPr().append(shading)
-            
             p = c.paragraphs[0]
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
             p.paragraph_format.space_before = Pt(0)
             p.paragraph_format.space_after = Pt(0)
-            
             if p.runs:
                 run = p.runs[0]
                 run.font.name = 'Calibri' 
                 run.font.size = Pt(11)
                 run.font.color.rgb = RGBColor(255,255,255)
                 run.bold = True
-            
             remove_all_borders(c)
 
-        # --- SUBTÍTULOS ---
+        # Subtítulos
         elif tipo in ["SUB_HEADER", "SUB_HEADER_SECONDARY"]:
             for j in range(7):
                 c = row.cells[j]
                 c.text = vals[j]
-                
                 set_cell_vertical_alignment(c, 'center') 
                 shading = OxmlElement('w:shd')
                 shading.set(qn('w:fill'), 'EEEEEE')
                 c._tc.get_or_add_tcPr().append(shading)
                 remove_all_borders(c)
-                
                 p = c.paragraphs[0]
                 p.paragraph_format.space_before = Pt(0)
                 p.paragraph_format.space_after = Pt(0)
                 p.alignment = WD_ALIGN_PARAGRAPH.CENTER if j > 0 else WD_ALIGN_PARAGRAPH.LEFT
-
                 if p.runs:
                     run = p.runs[0]
                     run.font.name = 'Calibri' 
                     run.font.size = Pt(11)
                     run.bold = True
-                
                 if tipo == "SUB_HEADER_SECONDARY":
                     set_cell_bottom_border(c)
                     
-        # --- DADOS ---
+        # Dados
         elif tipo == "DATA_ROW":
             data_idx += 1
             for j in range(7):
                 c = row.cells[j]
                 c.text = vals[j]
-                
                 set_cell_vertical_alignment(c, 'center') 
                 remove_all_borders(c)
-                
                 if data_idx % 2 != 0:
                     shading = OxmlElement('w:shd')
                     shading.set(qn('w:fill'), 'D9D9D9')
                     c._tc.get_or_add_tcPr().append(shading)
-                
                 p = c.paragraphs[0]
                 p.paragraph_format.space_before = Pt(0)
                 p.paragraph_format.space_after = Pt(0)
                 p.alignment = WD_ALIGN_PARAGRAPH.CENTER if j > 0 else WD_ALIGN_PARAGRAPH.LEFT
-                
                 if p.runs:
                     run = p.runs[0]
                     run.font.name = 'Calibri' 
                     run.font.size = Pt(11)
 
-    # Legenda Dinâmica
-    if texto_legenda:
-        p_legenda = document.add_paragraph(texto_legenda, style='Caption')
-        p_legenda.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    else:
-        document.add_paragraph("Fonte: Base de Dados Justiça em Números.", style='Caption')
+    # --- 2. AQUI ESTÁ A LÓGICA DA LEGENDA (IGUAL TABELA ESTRUTURA) ---
+    # Unifica Título + Fonte em um único parágrafo pequeno abaixo da tabela.
+    
+    if texto_legenda or fonte:
+        p = document.add_paragraph(style='Normal')
+        p.paragraph_format.space_before = Pt(6)
+        p.paragraph_format.space_after = Pt(12)
+        
+        # Define um texto padrão se a fonte não vier preenchida
+        texto_fonte = fonte if fonte else "Fonte: Base de Dados Justiça em Números."
+        
+        # Concatenação Inteligente: Título + Ponto + Fonte
+        if texto_legenda:
+            # Garante que não fique ponto duplo (.. ou . .)
+            titulo_limpo = texto_legenda.strip()
+            if titulo_limpo.endswith('.'):
+                titulo_limpo = titulo_limpo[:-1]
+                
+            texto_final = f"{titulo_limpo}. {texto_fonte}"
+        else:
+            texto_final = texto_fonte
+            
+        run = p.add_run(texto_final)
+        run.font.name = 'Calibri'
+        run.font.size = Pt(8)
         
 
 def adicionar_tabela_generica(document, titulo_tabela, dados, fonte=None):
