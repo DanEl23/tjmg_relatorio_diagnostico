@@ -250,6 +250,55 @@ def processar_recurso(doc, chave, item, loader_jn=None):
             numero_tabela=item.get("num", "09"),
             titulo_custom=item.get("titulo")
         )
+    elif tipo == "TABELA_SIMPLES_3COL":
+            recuo_custom = item.get("recuo_esq", 0)
+            fonte_custom = item.get("fonte_custom") # Pega a fonte do static_data
+
+            builders.adicionar_tabela_simples_3col(
+                doc, 
+                item['dados'], 
+                titulo_custom=titulo_real, # Passa o nome da tabela
+                indent_cm=recuo_custom,
+                fonte=fonte_custom          # Passa a fonte para o builder juntar
+            )
+
+    elif tipo == "TABELA_4COL_SIMPLES":
+            recuo_custom = item.get("recuo_esq", 0)
+            fonte_custom = item.get("fonte_custom")
+            larguras_custom = item.get("larguras") # Pega se existir
+
+            builders.adicionar_tabela_4col_simples(
+                doc, 
+                item['dados'], 
+                titulo_custom=titulo_real,
+                indent_cm=recuo_custom,
+                fonte=fonte_custom,
+                larguras=larguras_custom # Passa para o builder
+            )
+
+    elif tipo == "TABELA_6COL_SIMPLES":
+            recuo_custom = item.get("recuo_esq", 0)
+            fonte_custom = item.get("fonte_custom")
+
+            builders.adicionar_tabela_6col_simples(
+                doc, 
+                item['dados'], 
+                titulo_custom=titulo_real,
+                indent_cm=recuo_custom,
+                fonte=fonte_custom
+            )
+
+    elif tipo == "TABELA_COMPARATIVO_TEMAS":
+            recuo_custom = item.get("recuo_esq", 0)
+            fonte_custom = item.get("fonte_custom")
+
+            builders.adicionar_tabela_comparativo_temas(
+                doc, 
+                item['dados'], 
+                titulo_custom=titulo_real,
+                indent_cm=recuo_custom,
+                fonte=fonte_custom
+            )
 
     # === TABELAS ESPECÍFICAS (Manuais) ===
     elif tipo == "TABELA_PROCESSOS": builders.adicionar_tabela_processos(doc, dados, texto_legenda=titulo_real)
@@ -593,11 +642,15 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
             p.paragraph_format.first_line_indent = Cm(-0.63)
             
         elif em_lista_marcadores:
-            try: p.style = 'List Bullet'
+            try: p.style = 'List Bullet' # Tenta aplicar o estilo de bolinha padrão
             except: pass
             p.alignment = WD_ALIGN_PARAGRAPH.LEFT
             p.paragraph_format.line_spacing = 1.5 
-            p.paragraph_format.left_indent = Cm(1.27)
+            if "[MARK_NIVEL_DOIS]" in texto:
+                texto = texto.replace("[MARK_NIVEL_DOIS]", "").strip()
+                p.paragraph_format.left_indent = Cm(2.54)
+            else:
+                p.paragraph_format.left_indent = Cm(1.27)
             p.paragraph_format.first_line_indent = Cm(-0.63)
 
         else:
@@ -605,6 +658,18 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
             p.paragraph_format.line_spacing = 1.5  
             p.paragraph_format.space_after = Pt(10) 
         
+        if "[ICON_CHECK]" in texto:
+            # 1. Remove a tag do texto
+            texto = texto.replace("[ICON_CHECK]", "").strip()
+            
+            # 2. Adiciona o ícone visualmente
+            run_icon = p.add_run("\u2714  ") # Checkmark Unicode + espaço
+            run_icon.font.name = "Segoe UI Symbol"
+            run_icon.font.size = Pt(11)
+            run_icon.font.color.rgb = RGBColor(0, 150, 0) # Verde
+        # =================================================================
+
+        # Chama a função que escreve o restante do texto em negrito se precisar
         adicionar_texto_com_negrito(p, texto, cor_rgb=COR_PRETO, tamanho=12)
         
     # 7. SALVAR

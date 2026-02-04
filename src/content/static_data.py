@@ -2,7 +2,13 @@
 # Este arquivo armazena todos os dados brutos (hardcoded)
 # para manter o script principal limpo.
 
-# --- DADOS TABELA 01 (ATOS) ---
+    ########################################################################
+    ########################################################################
+    #########################-------DADOS-------############################
+    ########################################################################
+    ########################################################################
+
+
 dados_tabela_atos = [
     # Cabeçalho
     ("Ato Normativo", "Estrutura"),
@@ -56,7 +62,6 @@ dados_tabela_atos = [
     ("Resolução nº 1140/2026", "Dispõe sobre a estrutura, as atribuições e o funcionamento da Ouvidoria do Tribunal de Justiça do Estado de Minas Gerais.")
 ]
 
-# --- DADOS TABELA 02 (ÁREAS) ---
 dados_tabela_areas = [
     # Tipo, Coluna 1 (Denominação), Coluna 2 (Sigla)
     # Cabeçalho Principal
@@ -457,13 +462,109 @@ dados_tabela_justica_numeros = [
     ("DATA_ROW", "Taxa de congestionamento líquida (TCL) realizado x resultado da consequência se tribunal atingisse IPC-Jus 100%. TCL realizado", "61%, 66%", "58%, 64%", "65%, 71%", "66%, 71%", "64%, 66%", "67%, 56%"),
 ]
 
+dados_tabela_exemplo_3col = [
+    ["HEADER", "PERFORMANCE DO TJMG EM INDICADORES DE ACESSIBILIDADE E INCLUSÃO","",""],
+    ["SUB_HEADER", "Categoria", "Status", "Observação"],
+    ["DATA_ROW", "Capacitação em Libras", "Excelente", "Líder absoluto em servidores e auxiliares treinados."],
+    ["DATA_ROW", "Produção de Vídeos", "Muito Bom", "Alta produção de conteúdo audiovisual acessível."],
+    ["DATA_ROW", "Inclusão de Terceirizados", "Muito Bom", "Maior número de terceirizados PCD entre os tribunais de grande porte."],
+    ["DATA_ROW", "Eventos Acessíveis", "Atenção", "Baixa proporção de eventos com acessibilidade frente ao total."],
+    ["DATA_ROW", "Infraestrutura Física", "Atenção", "Necessidade de capacitar técnicos em normas de acessibilidade."],
+    ]
 
-# --- MAPA DE RECURSOS (TEXTO DO WORD -> O QUE FAZER) ---
-# A chave é o texto EXATO que está no seu Conteudo_Fonte.docx
-# O valor diz qual tipo de elemento inserir e os dados necessários.
+dados_exemplo_4col = [
+    ["HEADER", "RESULTADO TJMG COMPARATIVO 2024 X 2025", "", "", ""],
+    ["SUB_HEADER", "Indicador", "2024", "2025", "Variação"],
+    ["DATA_ROW", "Nota iGovTIC-JUD", "96.19", "84.21", "-11.98"],
+    ["DATA_ROW", "Nível de Maturidade", "Excelência", "Aprimorado", "Queda de Nível"],
+]
+
+dados_igovtic = [
+    ["HEADER", "RESULTADO COMPARATIVO IGOVTIC-JUD NA JUSTIÇA ESTADUAL (GRANDE PORTE)", "", "", "", "", ""],
+    ["SUB_HEADER", "Tribunal", "Nota\n2024", "Nível de\nMaturidade (2024)", "Nota\n2025", "Nível de\nMaturidade (2025)", "Variação"],
+    ["DATA_ROW", "TJPR", "99,28", "Excelência", "94,41", "Excelência", "-4,87"],
+    ["DATA_ROW", "TJSP", "76,67", "Aprimorado", "56,33", "Satisfatório", "-20,34"],
+    ["DATA_ROW", "TJBA", "91,62", "Excelência", "88,99", "Aprimorado", "-2,63"],
+    ["DATA_ROW", "TJRS", "63,96", "Satisfatório", "76,45", "Aprimorado", "+12,49"],
+    ["DATA_ROW", "TJMG", "96,19", "Excelência", "84,21", "Aprimorado", "-11,98"],
+    ["DATA_ROW", "TJRJ", "94,09", "Excelência", "92,36", "Excelência", "-1,73"],
+]
+
+dados_comparativo_temas = [
+    ["HEADER", "COMPARATIVO NA JUSTIÇA ESTADUAL DE GRANDE PORTE DAS NOTAS ALCANÇADAS POR TEMA", "", "", "", "", "", ""],
+    ["SUB_HEADER", "TEMAS", "ESTADUAL", "TJSP", "TJRJ", "TJPR", "TJRS", "TJBA", "TJMG"],
+    ["SECTION_HEADER", "GOVERNANÇA E GESTÃO DE TIC", "", "", "", "", "", "", ""],
+    ["DATA_ROW", "1 - Estruturas Organizacionais e Macroprocessos", "85,56", "50,00", "95,00", "100,00", "81,00", "50,00", "57,50"],
+    ["DATA_ROW", "2 - Políticas e Planejamento", "89,61", "7,20", "85,00", "100,00", "81,40", "77,80", "86,80"],
+    ["DATA_ROW", "3 - Transformação Digital", "93,08", "48,00", "95,00", "81,75", "77,50", "100,00", "98,75"],
+    ["DATA_ROW", "4 - Atendimento e Suporte ao Usuário", "92,52", "100,00", "100,00", "100,00", "64,00", "100,00", "100,00"],
+    ["DATA_ROW", "5 - Pessoas", "70,37", "0,00", "80,00", "80,00", "80,00", "80,00", "42,50"],
+    ["SECTION_HEADER", "Gerenciamento de Serviços de TIC", "", "", "", "", "", "", ""],
+    ["DATA_ROW", "6 - Infraestrutura Tecnológica e Serviços em Nuvem", "89,35", "75,30", "94,90", "99,70", "81,04", "94,30", "99,10"],
+    ["DATA_ROW", "7 - Riscos, Segurança da Informação e Proteção de Dados", "91,44", "66,50", "100,00", "100,00", "52,00", "100,00", "75,00"],
+    ["DATA_ROW", "8 - Sistemas de Informação", "96,54", "73,75", "100,00", "100,00", "73,75", "100,00", "100,00"],
+]
+
+dados_datajud_consistencia = [
+    ["HEADER", "PERCENTUAL DE PROCESSOS CONSISTENTES DO TJMG NO DATAJUD", "", "", ""],
+    ["SUB_HEADER", "Dados básicos", "Total de\nprocessos", "Processos\ninconsistentes", "% de processos\nconsistentes"],
+    ["DATA_ROW", "Flag. Juízo 100% digital", "36.266.191", "9.460.554", "73,91%"],
+    ["DATA_ROW", "Assuntos", "36.266.191", "1.918.539", "94,71%"],
+    ["DATA_ROW", "Classe processual", "36.266.191", "919.387", "97,46%"],
+    ["DATA_ROW", "Identificador procEI", "36.266.191", "40.282", "99,89%"],
+    ["DATA_ROW", "Órgão julgador", "36.266.191", "19.065", "99,95%"],
+    ["DATA_ROW", "Sistema", "36.266.191", "9.686", "99,97%"],
+    ["DATA_ROW", "Data de ajuizamento", "36.266.191", "7.461", "99,98%"],
+    ["DATA_ROW", "Prioridade", "4.022.371", "635", "99,98%"],
+    ["DATA_ROW", "Custas", "36.266.191", "0", "100,00%"],
+    ["DATA_ROW", "Grau", "36.266.191", "0", "100,00%"],
+    ["DATA_ROW", "Número", "36.266.191", "0", "100,00%"],
+]
+
+dados_desempenho_governanca = [
+    ["HEADER", "TABELA COMPARATIVA DE DESEMPENHO DO EIXO GOVERNANÇA", "", "", ""],
+    ["SUB_HEADER", "Indicador", "Situação\nAtual", "Meta\nCNJ", "Status"],
+    ["DATA_ROW", "IDS (Sustentabilidade)", "62,7%", "> 65%", "⚠️ Crítico"],
+    ["DATA_ROW", "Paridade de Gênero", "40%", "49,5%", "⚠️ Crítico"],
+    ["DATA_ROW", "Capacitação Acessibilidade", "6,74%", "> 10%", "❌ Não pontuou"],
+    ["DATA_ROW", "Inspeções Penais", "93,4%", "100%", "⚠️ Ajuste fino"],
+    ["DATA_ROW", "Iper (Equidade Racial)", "28%", "Alinhamento\ncom metas", "⚠️ Crítico"],
+]
+
+dados_desempenho_produtividade = [
+    ["HEADER", "TABELA COMPARATIVA DE DESEMPENHO DO EIXO PRODUTIVIDADE", "", "", ""],
+    ["SUB_HEADER", "Indicador Crítico", "Valor\nAtual", "Meta para\nPontuar", "Impacto"],
+    ["DATA_ROW", "Meta 1", "99,69%", "100%", "Altíssimo"],
+    ["DATA_ROW", "Medidas Protetivas", "5 dias", "2 dias", "Urgente"],
+    ["DATA_ROW", "Adoção (Prazos)", "53,25%", "80%", "Social/Jurídico"],
+    ["DATA_ROW", "Incidentes Vencidos", "1,93%", "< 0,10%", "Correcional"],
+]
+
+dados_desempenho_transparencia = [
+    ["HEADER", "TABELA COMPARATIVA DE DESEMPENHO DO EIXO TRANSPARÊNCIA", "", "", ""],
+    ["SUB_HEADER", "Indicador", "Status\nAtual", "Meta CNJ\n2025", "Impacto na\nPontuação"],
+    ["DATA_ROW", "Ranking da Transparência", "91,6%", "≥ 95%", "0 pontos (Atualmente)"],
+    ["DATA_ROW", "Gap de Conformidade", "-3,4%", "100%", "Pontuação Máxima"],
+]
+
+dados_desempenho_tecnologia = [
+    ["HEADER", "TABELA COMPARATIVA DE DESEMPENHO DO EIXO DADOS E TECNOLOGIA", "", "", ""],
+    ["SUB_HEADER", "Requisito", "Situação\nAtual", "Meta\nCNJ", "Ação Corretiva"],
+    ["DATA_ROW", "Documentação (CPF/CNPJ)", "84% - 86%", "95%", "Força-tarefa de saneamento no cadastro inicial"],
+    ["DATA_ROW", "Identificação Magistrado", "52%", "90%", "Configuração compulsória de CPF no login/assinatura"],
+    ["DATA_ROW", "Processos Eletrônicos", "97,93%", "98,01%", "Digitalização/Baixa dos últimos acervos físicos"],
+    ["DATA_ROW", "Órgão Colegiado", "1%", "90%", "Parametrização dos sistemas de 2º Grau"],
+    ["DATA_ROW", "Corpo Técnico TI", "205", "234", "Concurso público ou redistribuição de cargos"],
+]
 
 MAPA_RECURSOS = {
-    # --- TABELAS ---
+
+    ########################################################################
+    ########################################################################
+    #########################------TABELAS------############################
+    ########################################################################
+    ########################################################################
+
     "Tabela 01 - Atos Normativos referentes à Estrutura do TJMG.": {
         "tipo": "TABELA_GENERICA",
         "dados": dados_tabela_atos,
@@ -475,15 +576,18 @@ MAPA_RECURSOS = {
     },
     "Tabela 03 - Estrutura para a prestação jurisdicional na Segunda Instância": {
         "tipo": "TABELA_ESTRUTURA",
-        "dados": dados_tabela_estrutura
+        "dados": dados_tabela_estrutura,
+        "space_after": 24
     },
     "Tabela 04 - Estrutura para a prestação jurisdicional na Primeira Instância. Listagem das Comarcas Instaladas em Minas Gerais": {
         "tipo": "TABELA_COMARCAS",
-        "dados": dados_tabela_comarcas
+        "dados": dados_tabela_comarcas,
+        "space_after": 48
     },
     "Tabela 05 - Relação dos Núcleos de Justiça 4.0 da Primeira Instância": {
         "tipo": "TABELA_NUCLEOS",
-        "dados": dados_tabela_nucleos
+        "dados": dados_tabela_nucleos,
+        "space_after": 48
     },
     "Tabela 06 - Número de processos distribuídos": {
         "tipo": "TABELA_PROCESSOS",
@@ -502,14 +606,16 @@ MAPA_RECURSOS = {
         "dados": dados_tabela_orcamento,
         "num": "09",
         "fonte_custom": "Armazém de Informações - BO SIAFI/MG",
-        "titulo": TITULO_TABELA_ORCAMENTO_1
+        "titulo": TITULO_TABELA_ORCAMENTO_1,
+        "space_after": 24
     },
     "Tabela 10 - Despesa realizada por ação (Unidade 4031)": {
         "tipo": "TABELA_ORCAMENTO", # Ou usar TABELA_ORCAMENTO com num="11"
         "dados": dados_tabela_orcamento_acao,
         "num": "09",
         "fonte_custom": "Armazém de Informações - BO SIAFI/MG",
-        "titulo": TITULO_TABELA_ORCAMENTO_2
+        "titulo": TITULO_TABELA_ORCAMENTO_2,
+        "space_after": 24
     },
     "Tabela 11 - Orçamento 2026 por ação orçamentária": {
         "tipo": "TABELA_ORCAMENTO_CONJUNTO", # Ou usar TABELA_ORCAMENTO com num="11"
@@ -539,8 +645,80 @@ MAPA_RECURSOS = {
         "space_after": 12,
         "recuo_esq": -1.5
     },
-    
-    # --- IMAGENS (Apenas nome do arquivo, o caminho vem do config) ---
+    "Tabela 14: Performance do TJMG em indicadores de acessibilidade e inclusão.": {
+        "tipo": "TABELA_SIMPLES_3COL", 
+        "dados": dados_tabela_exemplo_3col,
+        "fonte_custom": "Fonte: Painel de Sustentabilidade do CNJ.",
+        "recuo_esq": 0, 
+        "space_after": 12
+    },
+    "Tabela 15: Resultado TJMG comparativo 2024 X 2025.": {
+        "tipo": "TABELA_4COL_SIMPLES", 
+        "dados": dados_exemplo_4col,
+        "fonte_custom": "Fonte: Painel iGovTIC-JUD CNJ.",
+        "recuo_esq": -0.5, 
+        "space_after": 12
+    },
+    "Tabela 16 - Resultado comparativo do iGovTIC-JUD na Justiça Estadual de grande porte.": {
+        "tipo": "TABELA_6COL_SIMPLES",
+        "dados": dados_igovtic,
+        "fonte_custom": "Fonte: Levantamento de Governança, Gestão e Infraestrutura de TIC do Poder Judiciário – agosto 2025/CNJ.",
+        "recuo_esq": -0.5, # Um pequeno recuo para a esquerda ajuda tabelas largas
+        "space_after": 30
+    },
+    "Tabela 17 - Comparativo na Justiça Estadual de Grande Porte das notas alcançadas por tema.": {
+        "tipo": "TABELA_COMPARATIVO_TEMAS",
+        "dados": dados_comparativo_temas,
+        "fonte_custom": "Fonte: Levantamento de Governança, Gestão e Infraestrutura de TIC do Poder Judiciário – agosto 2025/CNJ.",
+        "recuo_esq": -0.5, # Ajuste para caber bem na página
+        "space_after": 30
+    },
+    "Tabela 18 - Tabela percentual de processos consistentes do TJMG no Datajud.": {
+        "tipo": "TABELA_4COL_SIMPLES",
+        "dados": dados_datajud_consistencia,
+        "fonte_custom": "Fonte Painel Qualidade dos dados/ CNJ atualizado em 01/02/2026",
+        "recuo_esq": -0.5, # Ajuste para caber bem na página
+        "space_after": 30
+    },
+    "Tabela 19 - Tabela comparativa de Desempenho do Eixo Governança.": {
+        "tipo": "TABELA_4COL_SIMPLES",
+        "dados": dados_desempenho_governanca,
+        "fonte_custom": "Fonte: Painel de resultados do Prêmio/ CNJ.",
+        "recuo_esq": -0.5,
+        "space_after": 12
+    },
+    "Tabela 20 - Tabela comparativa de Desempenho do Eixo Produtividade.": {
+        "tipo": "TABELA_4COL_SIMPLES",
+        "dados": dados_desempenho_produtividade,
+        "fonte_custom": "Fonte: Painel de resultados do Prêmio/ CNJ.",
+        "recuo_esq": -0.5,
+        "space_after": 12
+    },
+    "Tabela 21 - Tabela comparativa de Desempenho do Eixo Transparência.": {
+        "tipo": "TABELA_4COL_SIMPLES",
+        "dados": dados_desempenho_transparencia,
+        "fonte_custom": "Fonte: Painel de resultados do Prêmio CNJ.",
+        "recuo_esq": -0.5,
+        "space_after": 12
+    },
+    "Tabela 22 - Tabela comparativa de Desempenho do Eixo Dados e Tecnologia.": {
+        "tipo": "TABELA_4COL_SIMPLES",
+        "dados": dados_desempenho_tecnologia,
+        "fonte_custom": "Fonte: Painel de resultados do Prêmio CNJ.",
+        "recuo_esq": -0.5,
+        "space_after": 12,
+        "larguras": [2400, 1300, 1300, 4600] 
+    },
+
+
+    ########################################################################
+    ########################################################################
+    #########################------IMAGENS------############################
+    ########################################################################
+    ########################################################################
+
+
+    # --- (Apenas nome do arquivo, o caminho vem do config) --- #
     "Figura 01 - Informações sobre o Estado de Minas Gerais.": {
         "tipo": "IMAGEM", "arquivo": "figura_01.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
@@ -551,7 +729,8 @@ MAPA_RECURSOS = {
         "tipo": "IMAGEM", "arquivo": "figura_02.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
         "largura": 17.69,
-        "recuo_esq": -0.85
+        "recuo_esq": -0.85,
+        "space_after": 12
     },
     "Figura 03 - Novas estruturas na área fim.": {
         "tipo": "IMAGEM", "arquivo": "figura_03.png",
@@ -562,7 +741,8 @@ MAPA_RECURSOS = {
     "Figura 04 - Força de Trabalho.": {
         "tipo": "IMAGEM", "arquivo": "figura_04.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
-        "largura": 17.00
+        "largura": 17.00,
+        "space_after": 24
     },
     "Figura 05 - Colaboradores da Justiça.": {
         "tipo": "IMAGEM", "arquivo": "figura_05.png",
@@ -624,38 +804,40 @@ MAPA_RECURSOS = {
         "tipo": "IMAGEM", "arquivo": "figura_16.png",
         "fonte" : "Sigplan",
         "largura": 18.0,
-        "recuo_esq": -0.75
-       
+        "recuo_esq": -0.75,
+        "space_after": 30
     },
     "Figura 17 - Identidade organizacional do TJMG/DIRCOM": {
         "tipo": "IMAGEM", "arquivo": "figura_17.png",
         "fonte" : "Sigplan",
-        "largura": 13.0
+        "largura": 13.0,
+        "space_after": 30
     },
     "Figura 18 - Mapa Estratégico do TJMG/ DIRCOM": {
         "tipo": "IMAGEM", "arquivo": "figura_18.png",
         "fonte" : "Sigplan",
-        "largura": 13.0
+        "largura": 13.0,
+        "space_after": 30
     },
     "Figura 19 - Classificação dos tribunais da Justiça Estadual segundo o porte, ano-base 2024.": {
         "tipo": "IMAGEM", "arquivo": "figura_19.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
-        "recuo_esq": -1.1
+        "recuo_esq": -1.1,
+        "space_after": 30
     },
-    "Figura 20 - Casos novos por mil habitantes por Tribunal de Justiça.": {
+    "Figura 20 - Percentual de servidores lotados na área administrativa.": {
         "tipo": "IMAGEM", "arquivo": "figura_20.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
-        "recuo_esq": -1.1,
-        "space_after": 12
+        "recuo_esq": -1.1
     },
     "Figura 21 - Valores arrecadados em relação ao número de processos ingressados sujeitos a cobrança.": {
         "tipo": "IMAGEM", "arquivo": "figura_21.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 12
+        "space_after": 0
     },
     "Figura 22 - Índice de conciliação por Tribunal de Justiça.": {
         "tipo": "IMAGEM", "arquivo": "figura_22.png",
@@ -669,7 +851,7 @@ MAPA_RECURSOS = {
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 24
+        "space_after": 30
     },
     "Figura 24 - Índice de Conciliação de processos de execução de títulos extrajudiciais não fiscais por Tribunal de Justiça.": {
         "tipo": "IMAGEM", "arquivo": "figura_24.png",
@@ -685,47 +867,103 @@ MAPA_RECURSOS = {
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 26 - Índice de atendimento a demanda (IAD).": {
+    "Figura 26 - Resultado do IPC-Jus da área judiciária por instância e Tribunal de Justiça.": {
         "tipo": "IMAGEM", "arquivo": "figura_26.png",
-        "fonte" : "Base de dados Justiça em Números – 2025/CNJ.",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 27 - Resultado do IPC-Jus por Tribunal de Justiça incluída a área administrativa.": {
+    "Figura 27 - Tempo de giro do acervo, por tribunal de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "figura_27.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 28 - Resultado do IPC-Jus da área judiciária por instância e Tribunal de Justiça.": {
+    "Figura 28 - Tempo médio de tramitação dos processos pendentes e baixados, por Tribunal de Justiça.": {
         "tipo": "IMAGEM", "arquivo": "figura_28.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 29 - Índice de Produtividade dos(as) magistrados(as) (IPM).": {
+    "Figura 29 - Taxa de congestionamento, por tribunal de justiça de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "figura_29.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 30 - Índice de Produtividade dos(as) Servidores(as) (IPS).": {
+    "Figura 30 - Taxa de congestionamento na execução fiscal, por tribunal de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "figura_30.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura XX - Percentual de servidores lotados na área administrativa.": {
-        "tipo": "IMAGEM", "arquivo": "figura_XX.png",
+    "Figura 31 - Índice de produtividade dos magistrados, por tribunal de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "figura_31.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
-        "recuo_esq": -1.1
+        "recuo_esq": -1.1,
+        "space_after": 24
+    },
+    "Figura 32 - Índice de produtividade dos servidores da área judiciária, por tribunal de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "figura_32.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 24
+    },
+    "Figura 33 - Custo médio mensal nos Tribunais de Justiça com magistrados(as) e servidores(as).": {
+        "tipo": "IMAGEM", "arquivo": "figura_33.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 24
+    },
+    "Figura 34 - Ranking da Transparência na Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "figura_34.png",
+        "fonte" : "Painel com resultado final de todos os tribunais e conselhos/ CNJ",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 24
+    },
+    "Figura 35 - Desempenho no Prêmio CNJ de Qualidade 2025.": {
+        "tipo": "IMAGEM", "arquivo": "figura_35.png",
+        "fonte" : "",
+        "largura": 7.5,
+        "recuo_esq": 4.0,
+        "space_after": 24
+    },
+    "Figura 36 - Performance do TJMG no Prêmio CNJ de Qualidade - Governança.": {
+        "tipo": "IMAGEM", "arquivo": "figura_36.png",
+        "fonte" : "Painel de resultados do prêmio/ CNJ.",
+        "largura": 14.0,
+        "recuo_esq": -0.7,
+        "space_after": 24
+    },
+    "Figura 37 - Performance do TJMG no Prêmio CNJ de Qualidade - Produtividade.": {
+        "tipo": "IMAGEM", "arquivo": "figura_37.png",
+        "fonte" : "Painel de resultados do prêmio/ CNJ.",
+        "largura": 14.0,
+        "recuo_esq": -0.7,
+        "space_after": 24
+    },
+    "Figura 38 - Performance do TJMG no Prêmio CNJ de Qualidade - Dados e Tecnologia.": {
+        "tipo": "IMAGEM", "arquivo": "figura_38.png",
+        "fonte" : "Painel de resultados do prêmio/ CNJ.",
+        "largura": 14.0,
+        "recuo_esq": -0.7,
+        "space_after": 24
+    },
+    "Figura 39 - Performance do TJMG no Prêmio CNJ de Qualidade - Transparência.": {
+        "tipo": "IMAGEM", "arquivo": "figura_39.png",
+        "fonte" : "Painel de resultados do prêmio/ CNJ.",
+        "largura": 14.0,
+        "recuo_esq": -0.7,
+        "space_after": 24
     },
 }
-
 
