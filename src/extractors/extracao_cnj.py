@@ -77,7 +77,22 @@ class GrayColorDetector:
         Args:
             min_color: Cor mínima em hex (ex: 0x808080)
             max_color: Cor máxima em hex (ex: 0xBFBFBF)
+            
+        Raises:
+            ValueError: Se as cores não representarem tons de cinza válidos
         """
+        # Valida que ambas as cores são cinza (R ≈ G ≈ B)
+        for color in [min_color, max_color]:
+            r = (color >> 16) & 0xFF
+            g = (color >> 8) & 0xFF
+            b = color & 0xFF
+            max_diff = max(abs(r-g), abs(r-b), abs(g-b))
+            if max_diff > 30:
+                raise ValueError(
+                    f"Color #{color:06X} is not grayscale (R={r}, G={g}, B={b}). "
+                    f"RGB values must be within 30 points of each other."
+                )
+        
         self.gray_ranges.append((min_color, max_color))
 
 
@@ -246,10 +261,13 @@ def extrair_imagens_cnj(
                         elif is_gray:
                             stats["legendas_cinza"] += 1
                     
-                    # Extrai o ID da legenda (ex: "Figura 01")
+                    # Extrai o ID da legenda usando o mesmo padrão do TextSearcher
+                    # Reutiliza o primeiro match para consistência
+                    pattern_idx, match = matches[0]
+                    # Extrai apenas o identificador (ex: "Figura 01")
                     match_id = re.search(
                         r"((?:Figura|Gráfico|Quadro|Tabela)\s+\d+)", 
-                        texto, 
+                        match.group(0), 
                         re.IGNORECASE
                     )
                     

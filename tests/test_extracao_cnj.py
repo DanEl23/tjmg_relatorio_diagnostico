@@ -60,6 +60,7 @@ def test_gray_color_detector():
     custom_color = 0xF5F5F5
     initial_result = detector.is_gray(custom_color)
     print(f"  ✓ Cor #{custom_color:06X} inicialmente detectada como cinza: {initial_result}")
+    assert initial_result == False, f"Cor {custom_color:06X} deveria ser False antes de adicionar intervalo"
     
     # Adiciona um intervalo específico para cores muito claras
     detector.add_gray_range(0xF0F0F0, 0xFFFFFF)
@@ -67,6 +68,14 @@ def test_gray_color_detector():
     print(f"  ✓ Intervalo customizado (0xF0F0F0-0xFFFFFF) adicionado")
     print(f"  ✓ Cor #{custom_color:06X} agora detectada: {new_result}")
     assert new_result == True, f"Cor {custom_color:06X} deveria ser detectada após adicionar intervalo"
+    
+    # Teste 4: Validação de cores não-cinza
+    print("\n⚠️  Testando validação de cores não-cinza:")
+    try:
+        detector.add_gray_range(0xFF0000, 0xFF00FF)  # Vermelho a roxo - não é cinza
+        assert False, "Deveria ter lançado ValueError"
+    except ValueError as e:
+        print(f"  ✓ ValueError corretamente lançado: {str(e)[:60]}...")
     
     print("\n✅ Todos os testes do GrayColorDetector passaram!")
 
