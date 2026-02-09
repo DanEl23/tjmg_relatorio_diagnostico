@@ -178,7 +178,7 @@ def extrair_imagens(usar_filtro_cor=False, cores_legendas=None):
                 "pagina": page_num + 1,
                 "caminho_completo": str(caminho_completo),
                 "status": "encontrado",
-                "cor_texto": legenda_info["cor"] if usar_filtro_cor else None
+                "cor_texto": legenda_info["cor"]  # Sempre inclui informação de cor
             }
             
             cor_info = f" (cor: {legenda_info['cor']})" if usar_filtro_cor else ""

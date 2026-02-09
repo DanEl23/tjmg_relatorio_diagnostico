@@ -52,9 +52,9 @@ def adicionar_tabela_atos(document, dados):
     """
     
     # --- Parâmetros ---
-    # CORRIGIDO: Usa cores do sistema centralizado
-    COR_CABECALHO_HEX = Colors.GRAY_DARK       # Era: Colors.GRAY_DARK
-    COR_CINZA_CLARO_HEX = Colors.GRAY_VERY_LIGHT  # Era: Colors.GRAY_VERY_LIGHT
+    # CORRIGIDO: Usa cores do sistema centralizado (antes eram hardcoded)
+    COR_CABECALHO_HEX = Colors.GRAY_DARK       # Antes: '7F7F7F'
+    COR_CINZA_CLARO_HEX = Colors.GRAY_VERY_LIGHT  # Antes: 'EEEEEE'
     COR_BRANCO_RGB = RGBColor(255, 255, 255)       
     COR_PRETO_RGB = RGBColor(0, 0, 0) 
     

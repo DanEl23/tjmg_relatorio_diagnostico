@@ -55,10 +55,10 @@ class Colors:
     GRAY_VERY_LIGHT = "EEEEEE" # Cinza muito claro (Fundo alternado de linhas)
     
     # Aliases para compatibilidade com código existente
-    HEADER_GRAY = GRAY_DARK           # Cinza médio (Atos, Áreas) 
-    HEADER_LIGHT_GRAY = GRAY_LIGHT    # Cinza claro (Sub-cabeçalhos)
-    ZEBRA_STRIPE = GRAY_VERY_LIGHT    # Fundo alternado de linhas
-    TOTAL_ROW = GRAY_MEDIUM           # Linha de totais
+    HEADER_GRAY = GRAY_DARK           # Alias: Cinza escuro (Atos, Áreas) 
+    HEADER_LIGHT_GRAY = GRAY_LIGHT    # Alias: Cinza claro (Sub-cabeçalhos)
+    ZEBRA_STRIPE = GRAY_VERY_LIGHT    # Alias: Fundo alternado de linhas
+    TOTAL_ROW = GRAY_MEDIUM           # Alias: Linha de totais
     
     # Cores Base
     WHITE = "FFFFFF"
