@@ -4,6 +4,9 @@ from docx.enum.table import WD_TABLE_ALIGNMENT, WD_ALIGN_VERTICAL
 from docx.oxml.shared import OxmlElement
 from docx.oxml.ns import qn
 
+# CORRIGIDO: Importa Colors para suporte a múltiplas cores de cinza
+from src.config import Colors
+
 from .utils import (
     set_cell_vertical_alignment, set_row_height_at_least, 
     set_row_height_flexible, set_cell_bottom_border, set_group_top_border, 
@@ -44,12 +47,14 @@ def aplicar_recuo_tabela(table, recuo_cm):
 def adicionar_tabela_atos(document, dados):
     """ 
     Tabela 01: Atos Normativos 
+    CORRIGIDO: Usa cores centralizadas do sistema de múltiplas cores de cinza.
     Fidelidade Visual: Ajuste fino de espaçamentos (0pt antes, 1.15 entrelinhas no header).
     """
     
     # --- Parâmetros ---
-    COR_CABECALHO_HEX = '7F7F7F'                  
-    COR_CINZA_CLARO_HEX = 'EEEEEE'                 
+    # CORRIGIDO: Usa cores do sistema centralizado
+    COR_CABECALHO_HEX = Colors.GRAY_DARK       # Era: Colors.GRAY_DARK
+    COR_CINZA_CLARO_HEX = Colors.GRAY_VERY_LIGHT  # Era: Colors.GRAY_VERY_LIGHT
     COR_BRANCO_RGB = RGBColor(255, 255, 255)       
     COR_PRETO_RGB = RGBColor(0, 0, 0) 
     
@@ -324,7 +329,7 @@ def adicionar_tabela_areas(document, dados):
             
             # Fundo Cinza Escuro
             shading = OxmlElement('w:shd')
-            shading.set(qn('w:fill'), '7F7F7F')
+            shading.set(qn('w:fill'), Colors.GRAY_DARK)
             c1._tc.get_or_add_tcPr().append(shading)
             
             c1.text = ""
@@ -341,7 +346,7 @@ def adicionar_tabela_areas(document, dados):
             for j, (cell, texto) in enumerate([(c1, col1), (c2, col2)]):
                 # Fundo Cinza Claro
                 shading = OxmlElement('w:shd')
-                shading.set(qn('w:fill'), 'D9D9D9')
+                shading.set(qn('w:fill'), Colors.GRAY_LIGHT)
                 cell._tc.get_or_add_tcPr().append(shading)
                 
                 # Borda Superior Preta (Importante!)
@@ -362,7 +367,7 @@ def adicionar_tabela_areas(document, dados):
             set_width(c1, LARGURA_TOTAL)
             
             shading = OxmlElement('w:shd')
-            shading.set(qn('w:fill'), 'D9D9D9')
+            shading.set(qn('w:fill'), Colors.GRAY_LIGHT)
             c1._tc.get_or_add_tcPr().append(shading)
             
             adicionar_borda_topo(c1)
@@ -384,7 +389,7 @@ def adicionar_tabela_areas(document, dados):
             # Zebrado
             if data_row_index % 2 == 0:
                 shading = OxmlElement('w:shd')
-                shading.set(qn('w:fill'), 'EEEEEE')
+                shading.set(qn('w:fill'), Colors.GRAY_VERY_LIGHT)
                 c1._tc.get_or_add_tcPr().append(shading)
                 
             c1.text = ""
@@ -398,7 +403,7 @@ def adicionar_tabela_areas(document, dados):
         # Caso 5: Dados Divididos (Linhas normais)
         elif tipo == "DATA_SPLIT":
             data_row_index += 1
-            cor_fundo = 'EEEEEE' if data_row_index % 2 == 0 else 'auto'
+            cor_fundo = Colors.GRAY_VERY_LIGHT if data_row_index % 2 == 0 else 'auto'
             
             for j, (cell, texto) in enumerate([(c1, col1), (c2, col2)]):
                 if cor_fundo != 'auto':
@@ -527,7 +532,7 @@ def adicionar_tabela_estrutura(document, dados):
         
         if tipo == "HEADER_MAIN":
             shading = OxmlElement('w:shd')
-            shading.set(qn('w:fill'), '7F7F7F')
+            shading.set(qn('w:fill'), Colors.GRAY_DARK)
             cell._tc.get_or_add_tcPr().append(shading)
             
             p = cell.paragraphs[0]
@@ -538,7 +543,7 @@ def adicionar_tabela_estrutura(document, dados):
             
         elif tipo == "HEADER_GROUP_MERGED":
             shading = OxmlElement('w:shd')
-            shading.set(qn('w:fill'), 'D9D9D9')
+            shading.set(qn('w:fill'), Colors.GRAY_LIGHT)
             cell._tc.get_or_add_tcPr().append(shading)
             set_group_top_border(cell)
             cell.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.LEFT
@@ -660,12 +665,12 @@ def adicionar_tabela_comarcas(document, dados):
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER
             
             shading = OxmlElement('w:shd')
-            shading.set(qn('w:fill'), '7F7F7F')
+            shading.set(qn('w:fill'), Colors.GRAY_DARK)
             cell._tc.get_or_add_tcPr().append(shading)
             
         elif tipo == "DATA_4_COL":
             data_idx += 1
-            cor_fundo = 'D9D9D9' if data_idx % 2 != 0 else 'auto'
+            cor_fundo = Colors.GRAY_LIGHT if data_idx % 2 != 0 else 'auto'
             
             for j in range(4):
                 cell = row.cells[j]
@@ -797,7 +802,7 @@ def adicionar_tabela_nucleos(document, dados):
         
         if tipo == "HEADER_GROUP_MERGED":
             shading = OxmlElement('w:shd')
-            shading.set(qn('w:fill'), 'D9D9D9')
+            shading.set(qn('w:fill'), Colors.GRAY_LIGHT)
             cell._tc.get_or_add_tcPr().append(shading)
             
             adicionar_borda_topo(cell)
@@ -843,9 +848,9 @@ def adicionar_tabela_processos(document, dados, texto_legenda=None):
     FONTE_TAM = Pt(12)
     ESPACAMENTO_LINHA = 1.15
     
-    COR_TITULO_BG = '7F7F7F'      
+    COR_TITULO_BG = Colors.GRAY_DARK      
     COR_SUB_BG = 'FFFFFF'         
-    COR_ZEBRADO = 'D9D9D9'        
+    COR_ZEBRADO = Colors.GRAY_LIGHT        
     COR_TOTAL_BG = 'D0CECE'       
     COR_DEST_HEADER = '44546A'    
     COR_DEST_DADOS = 'D5DCE4'     
@@ -1034,7 +1039,7 @@ def adicionar_tabela_orcamento(document, titulo_vindo_do_word, dados, numero_tab
     LARGURA_TOTAL = 9922 
     ALTURA_LINHA = 340 
     FONTE_NOME = 'Calibri'; FONTE_TAM = Pt(12); ESPACAMENTO_LINHA = 1.15
-    COR_HEADER_BG = '7F7F7F'; COR_TOTAL_BG = 'BFBFBF'; COR_DADOS_BG = 'FFFFFF'
+    COR_HEADER_BG = Colors.GRAY_DARK; COR_TOTAL_BG = Colors.GRAY_MEDIUM; COR_DADOS_BG = 'FFFFFF'
     
     # Variável de Recuo (Default 0)
     RECUO_TABELA = 0 
@@ -1203,9 +1208,9 @@ def adicionar_tabela_orcamento_conjunto(document, dados):
     FONTE_NOME = 'Calibri'
     TAMANHO_FONTE = Pt(12)
     ALTURA_LINHA_TWIPS = '340' 
-    COR_GROUP_BG = '7F7F7F'    
-    COR_SUB_BG = 'D9D9D9'      
-    COR_TOTAL_BG = 'BFBFBF'    
+    COR_GROUP_BG = Colors.GRAY_DARK    
+    COR_SUB_BG = Colors.GRAY_LIGHT      
+    COR_TOTAL_BG = Colors.GRAY_MEDIUM    
     
     # Cria a Tabela
     table = document.add_table(rows=0, cols=2)
@@ -1339,7 +1344,7 @@ def adicionar_tabela_orcamento_detalhada(document, dados):
     
     # Configurações Visuais
     FONTE_NOME = 'Calibri'; TAMANHO_FONTE = Pt(11); ALTURA_LINHA_TWIPS = '340'
-    COR_GROUP_BG = '7F7F7F'; COR_SUB_BG = 'D9D9D9'; COR_TOTAL_BG = 'BFBFBF'
+    COR_GROUP_BG = Colors.GRAY_DARK; COR_SUB_BG = Colors.GRAY_LIGHT; COR_TOTAL_BG = Colors.GRAY_MEDIUM
 
     # ==========================================================================
     # 2. HELPERS
@@ -1478,7 +1483,7 @@ def adicionar_tabela_cidades(document, dados):
             
             if tipo == "DATA_ROW" and data_idx % 2 != 0:
                 shading = OxmlElement('w:shd')
-                shading.set(qn('w:fill'), 'D9D9D9')
+                shading.set(qn('w:fill'), Colors.GRAY_LIGHT)
                 cell._tc.get_or_add_tcPr().append(shading)
 
 
@@ -1559,7 +1564,7 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None, indent
                 c.text = vals[j]
                 set_cell_vertical_alignment(c, 'center') 
                 shading = OxmlElement('w:shd')
-                shading.set(qn('w:fill'), 'EEEEEE')
+                shading.set(qn('w:fill'), Colors.GRAY_VERY_LIGHT)
                 c._tc.get_or_add_tcPr().append(shading)
                 remove_all_borders(c)
                 p = c.paragraphs[0]
@@ -1584,7 +1589,7 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None, indent
                 remove_all_borders(c)
                 if data_idx % 2 != 0:
                     shading = OxmlElement('w:shd')
-                    shading.set(qn('w:fill'), 'D9D9D9')
+                    shading.set(qn('w:fill'), Colors.GRAY_LIGHT)
                     c._tc.get_or_add_tcPr().append(shading)
                 p = c.paragraphs[0]
                 p.paragraph_format.space_before = Pt(0)
@@ -1637,7 +1642,7 @@ def adicionar_tabela_generica(document, titulo_tabela, dados, fonte=None):
     
     FONTE_NOME = 'Calibri'
     ESPACAMENTO_LINHA = 1.0  
-    COR_HEADER_BG = '7F7F7F'
+    COR_HEADER_BG = Colors.GRAY_DARK
 
     # --- Tabela ---
     table = document.add_table(rows=0, cols=2)
@@ -1806,9 +1811,9 @@ def adicionar_tabela_simples_3col(document, dados, titulo_custom=None, indent_cm
     ESPACAMENTO_LINHA = 1.15
     
     COR_HEADER_BG = '44546A'
-    COR_SUBHEADER_BG = 'D9D9D9'
+    COR_SUBHEADER_BG = Colors.GRAY_LIGHT
     COR_DADOS_BG_PAR = 'F2F2F2' 
-    COR_DADOS_BG_IMPAR = 'D9D9D9'
+    COR_DADOS_BG_IMPAR = Colors.GRAY_LIGHT
 
     # --- (REMOVIDO: TÍTULO SUPERIOR) ---
     # O título agora será inserido apenas no final.
@@ -1914,7 +1919,7 @@ def adicionar_tabela_simples_3col(document, dados, titulo_custom=None, indent_cm
                 bottom = OxmlElement('w:bottom')
                 bottom.set(qn('w:val'), 'single')
                 bottom.set(qn('w:sz'), '4')
-                bottom.set(qn('w:color'), 'D9D9D9')
+                bottom.set(qn('w:color'), Colors.GRAY_LIGHT)
                 tcBorders.append(bottom)
                 tcPr.append(tcBorders)
             
@@ -1978,9 +1983,9 @@ def adicionar_tabela_4col_simples(document, dados, titulo_custom=None, indent_cm
     
     # Cores
     COR_HEADER_BG = '44546A'    
-    COR_SUBHEADER_BG = 'D9D9D9' 
+    COR_SUBHEADER_BG = Colors.GRAY_LIGHT 
     COR_DADOS_BG_PAR = 'F2F2F2' 
-    COR_DADOS_BG_IMPAR = 'D9D9D9' 
+    COR_DADOS_BG_IMPAR = Colors.GRAY_LIGHT 
 
     # --- 2. ESTRUTURA DA TABELA ---
     table = document.add_table(rows=0, cols=NUM_COLUNAS)
@@ -2079,7 +2084,7 @@ def adicionar_tabela_4col_simples(document, dados, titulo_custom=None, indent_cm
                 bg_color = COR_DADOS_BG_PAR if data_idx % 2 == 0 else COR_DADOS_BG_IMPAR
                 shading.set(qn('w:fill'), bg_color)
                 bottom.set(qn('w:sz'), '4')
-                bottom.set(qn('w:color'), 'D9D9D9')
+                bottom.set(qn('w:color'), Colors.GRAY_LIGHT)
             
             tcBorders.append(bottom)
             tcPr.append(tcBorders)
@@ -2139,9 +2144,9 @@ def adicionar_tabela_6col_simples(document, dados, titulo_custom=None, indent_cm
     ESPACAMENTO_LINHA = 1.15
     
     COR_HEADER_BG = '44546A'    
-    COR_SUBHEADER_BG = 'D9D9D9' 
+    COR_SUBHEADER_BG = Colors.GRAY_LIGHT 
     COR_DADOS_BG_PAR = 'F2F2F2' 
-    COR_DADOS_BG_IMPAR = 'D9D9D9' 
+    COR_DADOS_BG_IMPAR = Colors.GRAY_LIGHT 
 
     # --- 2. ESTRUTURA XML ---
     table = document.add_table(rows=0, cols=NUM_COLUNAS)
@@ -2243,7 +2248,7 @@ def adicionar_tabela_6col_simples(document, dados, titulo_custom=None, indent_cm
                 bg_color = COR_DADOS_BG_PAR if data_idx % 2 == 0 else COR_DADOS_BG_IMPAR
                 shading.set(qn('w:fill'), bg_color)
                 bottom.set(qn('w:sz'), '4')
-                bottom.set(qn('w:color'), 'D9D9D9')
+                bottom.set(qn('w:color'), Colors.GRAY_LIGHT)
             
             tcBorders.append(bottom)
             tcPr.append(tcBorders)
@@ -2307,10 +2312,10 @@ def adicionar_tabela_comparativo_temas(document, dados, titulo_custom=None, inde
     
     # Cores
     COR_HEADER_BG = '44546A'    
-    COR_SUBHEADER_BG = 'D9D9D9' 
+    COR_SUBHEADER_BG = Colors.GRAY_LIGHT 
     COR_SECTION_BG = 'D0CECE'   
     COR_DADOS_BG_PAR = 'F2F2F2' 
-    COR_DADOS_BG_IMPAR = 'D9D9D9' 
+    COR_DADOS_BG_IMPAR = Colors.GRAY_LIGHT 
 
     # --- 2. ESTRUTURA XML ---
     table = document.add_table(rows=0, cols=NUM_COLUNAS)
@@ -2443,7 +2448,7 @@ def adicionar_tabela_comparativo_temas(document, dados, titulo_custom=None, inde
                 bg_color = COR_DADOS_BG_PAR if data_idx % 2 == 0 else COR_DADOS_BG_IMPAR
                 shading.set(qn('w:fill'), bg_color)
                 bottom.set(qn('w:sz'), '4')
-                bottom.set(qn('w:color'), 'D9D9D9')
+                bottom.set(qn('w:color'), Colors.GRAY_LIGHT)
             
             tcBorders.append(bottom)
             tcPr.append(tcBorders)
