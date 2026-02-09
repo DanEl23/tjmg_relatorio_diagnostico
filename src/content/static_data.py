@@ -557,6 +557,47 @@ dados_desempenho_tecnologia = [
     ["DATA_ROW", "Corpo Técnico TI", "205", "234", "Concurso público ou redistribuição de cargos"],
 ]
 
+
+HISTORICO_METAS_CNJ = {
+    "Meta 1": {
+        "descricao": "Julgar mais processos que os distribuídos",
+        "objetivo": ">100%",
+        "dados_passados": {
+            # Listas agora com 4 valores (2021, 2022, 2023, 2024)
+            "Total": ["101,27%", "99,19%", "204,83%", "117,70%"],
+            "1º Grau":          ["98,03%", "97,90%", "260,77%", "129,50%"],
+            "2º Grau":          ["101,41%", "108,86%", "126,72%", "90,09%"],
+            "Juizado Especial": ["117,38%", "102,67%", "199,01%", "132,57%"],
+            "Turma Recursal":   ["70,37%", "70,05%", "171,62%", "84,76%"]
+        }
+    },
+    "Meta 2": {
+        "descricao": "Julgar processos mais antigos",
+        "objetivos_anos": [
+            "80% 1º Grau\n90% Demais", 
+            "80% 1º Grau\n90% Demais", 
+            "80% 1º Grau\n90% Demais", 
+            "80% 1º Grau\n90% Demais\n100% Mais antigos",
+            "80% 1º Grau\n90% Demais\n100% Mais antigos"
+        ],
+        "dados_passados": {
+            "1º Grau":          ["104,81%", "89,52%", "122,78%", "105,83%"],
+            "2º Grau":          ["122,96%", "122,64%", "109,70%", "85,54%"],
+            "Juizado Especial": ["107,79%", "102,79%", "109,29%", "101,82%"],
+            "Turma Recursal":   ["104,25%", "68,02%", "110,29%", "106,96%"],
+            "Mais antigos":     ["-", "-", "-", "38,06%"]
+        }
+    },
+    "Meta 3": {
+        "descricao": "Estimular a conciliação",
+        # Omitimos 'objetivo' pois não há linha de meta fixa
+        "dados_passados": {
+            # Histórico de 2021 a 2024
+            "Tribunal": ["93,64%", "105,04%", "100,00%", "100,00%"]
+        }
+    },
+}
+
 MAPA_RECURSOS = {
 
     ########################################################################
@@ -709,6 +750,21 @@ MAPA_RECURSOS = {
         "space_after": 12,
         "larguras": [2400, 1300, 1300, 4600] 
     },
+    "Meta 1": {
+    "tipo": "TABELA_METAS_DINAMICA",
+    "recuo_esq": -1.4,
+    "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
+    },
+    "Meta 2": {
+        "tipo": "TABELA_METAS_DINAMICA",
+        "recuo_esq": -1.4,
+        "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
+    },
+    "Meta 3": {
+        "tipo": "TABELA_METAS_DINAMICA",
+        "recuo_esq": -1.4,
+        "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
+    },
 
 
     ########################################################################
@@ -717,8 +773,6 @@ MAPA_RECURSOS = {
     ########################################################################
     ########################################################################
 
-
-    # --- (Apenas nome do arquivo, o caminho vem do config) --- #
     "Figura 01 - Informações sobre o Estado de Minas Gerais.": {
         "tipo": "IMAGEM", "arquivo": "figura_01.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",

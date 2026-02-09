@@ -1,5 +1,6 @@
 import re
 import logging
+import pandas as pd
 from pathlib import Path
 from docx import Document
 from docx.shared import Pt, RGBColor, Cm
@@ -220,6 +221,54 @@ def adicionar_pagina_sumario_visual(doc, doc_orig):
 # PROCESSAMENTO DE RECURSOS (TABELAS, IMAGENS)
 # =============================================================================
 
+def preparar_dados_tabela_metas(nome_meta):
+    import pandas as pd
+    from src.content import static_data
+    
+    try:
+        df_2025 = pd.read_excel("exports/resultados_cnj.xlsx")
+        # Busca flexível pela meta (ex: Meta 3)
+        df_filtrado = df_2025[df_2025['Meta'].astype(str).str.contains(nome_meta, na=False)]
+    except:
+        df_filtrado = pd.DataFrame()
+
+    info_meta = static_data.HISTORICO_METAS_CNJ.get(nome_meta)
+    if not info_meta: return []
+
+    # Cabeçalhos padrão
+    dados_finais = [
+        ["HEADER_TOP", "META", "DESCRIÇÃO", "INSTÂNCIA", "HISTÓRICO"],
+        ["HEADER_YEARS", "", "", "", "2021", "2022", "2023", "2024", "2025*"]
+    ]
+
+    # --- LÓGICA: SÓ ADICIONA LINHA CINZA SE HOUVER OBJETIVO DEFINIDO ---
+    if 'objetivo' in info_meta or 'objetivos_anos' in info_meta:
+        if 'objetivos_anos' in info_meta:
+            lista_objetivos = info_meta['objetivos_anos']
+        else:
+            lista_objetivos = [info_meta['objetivo']] * 5
+            
+        linha_meta = ["DATA_ROW_START", nome_meta, info_meta['descricao'], ""] + lista_objetivos
+        dados_finais.append(linha_meta)
+
+    # --- PROCESSAMENTO DOS DADOS ---
+    for instancia, valores_anos in info_meta['dados_passados'].items():
+        valor_2025 = "---"
+        if not df_filtrado.empty:
+            # Tenta achar pela categoria (Tribunal ou Total)
+            match = df_filtrado[
+                (df_filtrado['Categoria'].astype(str).str.strip() == instancia) |
+                (df_filtrado['Categoria'].astype(str).str.strip() == "Total")
+            ]
+            if not match.empty:
+                valor_2025 = str(match.iloc[0]['Resultado'])
+
+        linha_dado = ["DATA_ROW", nome_meta, info_meta['descricao'], instancia] + valores_anos + [valor_2025]
+        dados_finais.append(linha_dado)
+
+    return dados_finais
+
+
 def processar_recurso(doc, chave, item, loader_jn=None):
     """ Processa tabelas, imagens e gráficos baseado no mapa de recursos """
     tipo = item["tipo"]
@@ -299,6 +348,19 @@ def processar_recurso(doc, chave, item, loader_jn=None):
                 indent_cm=recuo_custom,
                 fonte=fonte_custom
             )
+
+    elif tipo == "TABELA_METAS_DINAMICA":
+            # O nome_recurso seria "Meta 1"
+            dados_processados = preparar_dados_tabela_metas(titulo_real)
+            
+            if dados_processados:
+                builders.adicionar_tabela_metas_final(
+                    doc, 
+                    dados_processados, 
+                    titulo_custom=item.get("titulo_legenda", titulo_real),
+                    indent_cm=item.get("recuo_esq", 0),
+                    fonte=item.get("fonte_custom")
+                )
 
     # === TABELAS ESPECÍFICAS (Manuais) ===
     elif tipo == "TABELA_PROCESSOS": builders.adicionar_tabela_processos(doc, dados, texto_legenda=titulo_real)
@@ -582,6 +644,17 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
         if "[INICIAR_LISTA_MARCADORES]" in texto: em_lista_marcadores = True; continue
         if "[FINALIZAR_LISTA_MARCADORES]" in texto: em_lista_marcadores = False; continue
         if "[QUEBRA_PAGINA]" in texto: doc_final.add_page_break(); continue
+        if texto.startswith("#"):
+            texto_titulo = texto.lstrip("#").strip()
+            p_novo = doc_final.add_paragraph()
+            p_novo.paragraph_format.space_before = Pt(12)
+            run = p_novo.add_run(texto_titulo)
+            run.font.name = 'Calibri'  # Nome da fonte desejada
+            run._element.rPr.rFonts.set(qn('w:ascii'), 'Calibri') # Garante a aplicação no Word
+            run.font.color.rgb = RGBColor(162, 22, 18) 
+            run.font.bold = True
+            run.font.size = Pt(12)
+            continue
 
         # --- RECURSOS VISUAIS ---
         if texto in mapa:
@@ -626,7 +699,7 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
             p = doc_final.add_paragraph(texto_limpo)
             p.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
             run = p.runs[0] if p.runs else p.add_run(texto_limpo)
-            run.font.name = 'Calibri'; run.font.size = Pt(12)
+            run.font.name = 'Calibri'; run.font.size = Pt(18)
             run.bold = True; run.font.color.rgb = COR_VINHO
             continue
 

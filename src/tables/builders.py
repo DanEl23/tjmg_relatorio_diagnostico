@@ -10,6 +10,60 @@ from .utils import (
     set_cell_all_borders, remove_all_borders, limpar_espacamento_lista
 )
 
+def estilizar_celula(cell, texto, largura, bold, bg_color, align, font_white, remove_bottom=False):
+    """Auxiliar para aplicar largura, fundo, bordas pretas e texto."""
+    tcPr = cell._element.get_or_add_tcPr()
+    
+    # Largura
+    tcW = OxmlElement('w:tcW')
+    tcW.set(qn('w:w'), str(largura))
+    tcW.set(qn('w:type'), 'dxa')
+    tcPr.append(tcW)
+    
+    # Cor de Fundo
+    shading = OxmlElement('w:shd')
+    shading.set(qn('w:fill'), bg_color)
+    tcPr.append(shading)
+    
+    # Bordas (Sempre Pretas)
+    tcBorders = OxmlElement('w:tcBorders')
+    for border in ['top', 'left', 'bottom', 'right', 'insideH', 'insideV']:
+        el = OxmlElement(f'w:{border}')
+        # Lógica para remover borda inferior (caso das metas)
+        if border == 'bottom' and remove_bottom:
+            el.set(qn('w:val'), 'nil')
+        else:
+            el.set(qn('w:val'), 'single')
+            el.set(qn('w:sz'), '4')
+            el.set(qn('w:color'), '000000') # Preto
+        tcBorders.append(el)
+    tcPr.append(tcBorders)
+
+    # Conteúdo do Texto
+    cell.text = texto
+    p = cell.paragraphs[0]
+    
+    if align == 'center': p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    elif align == 'left': p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    
+    p.paragraph_format.space_before = Pt(2)
+    p.paragraph_format.space_after = Pt(2)
+    p.paragraph_format.left_indent = Pt(4)
+
+    run = p.runs[0] if p.runs else p.add_run(texto)
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    run.font.bold = bold
+    run.font.color.rgb = RGBColor(255, 255, 255) if font_white else RGBColor(0, 0, 0)
+
+
+def set_vertical_align(cell, align):
+    """Auxiliar para centralizar o texto verticalmente na célula."""
+    tcPr = cell._element.get_or_add_tcPr()
+    tcValign = OxmlElement('w:vAlign')
+    tcValign.set(qn('w:val'), align)
+    tcPr.append(tcValign)
+
 
 def aplicar_recuo_tabela(table, recuo_cm):
     """
@@ -2474,4 +2528,136 @@ def adicionar_tabela_comparativo_temas(document, dados, titulo_custom=None, inde
         run.font.name = 'Calibri'
         run.font.size = Pt(9)
         run.font.color.rgb = RGBColor(0, 0, 0)
+
+
+def adicionar_tabela_metas_final(document, dados, titulo_custom=None, indent_cm=0, fonte=None):
+    if not dados: return
+
+    # --- 1. CONFIGURAÇÕES VISUAIS (SUAS LARGURAS EXATAS) ---
+    NUM_COLUNAS = 8
+    LARGURAS = [901, 1338, 1644, 1360, 1360, 1360, 1360, 1360]
+    LARGURA_TOTAL_REAL = sum(LARGURAS)
+    ALTURA_LINHA = 392
+    
+    COR_CINZA_ESCURO     = '595959' 
+    COR_HEADER_HISTORICO = COR_CINZA_ESCURO
+    COR_HEADER_MERGED    = COR_CINZA_ESCURO
+    COR_HEADER_YEARS     = COR_CINZA_ESCURO
+    COR_META_TARGET      = 'D9D9D9' 
+    COR_DADOS_PAR        = 'F2F2F2'
+    COR_DADOS_IMPAR      = 'FFFFFF'
+    COR_DESTAQUE_HEADER = '44546a'
+    COR_DESTAQUE_ROW = 'D5DCE4'
+
+    # --- 2. ESTRUTURA DA TABELA ---
+    table = document.add_table(rows=0, cols=NUM_COLUNAS)
+    table.autofit = False 
+    table.alignment = WD_TABLE_ALIGNMENT.LEFT
+
+    tbl = table._tbl
+    tblPr = tbl.tblPr if tbl.tblPr is not None else OxmlElement('w:tblPr')
+    
+    # Trava a largura total para evitar redimensionamento automático
+    tblW = OxmlElement('w:tblW')
+    tblW.set(qn('w:w'), str(LARGURA_TOTAL_REAL))
+    tblW.set(qn('w:type'), 'dxa')
+    tblPr.append(tblW)
+    
+    tblLayout = OxmlElement('w:tblLayout')
+    tblLayout.set(qn('w:type'), 'fixed')
+    tblPr.append(tblLayout)
+
+    # --- APLICAÇÃO DO RECUO À ESQUERDA ---
+    if indent_cm != 0:
+        tblInd = OxmlElement('w:tblInd')
+        tblInd.set(qn('w:w'), str(int(Cm(indent_cm).twips)))
+        tblInd.set(qn('w:type'), 'dxa')
+        tblPr.append(tblInd)
+
+    # --- 3. PROCESSAMENTO DAS LINHAS ---
+    indices_inicio_bloco = [] 
+    row_header_top = None
+    row_header_years = None
+
+    for i, row_data in enumerate(dados):
+        tipo = row_data[0]
+        vals = [str(x) for x in row_data[1:]]
+        while len(vals) < NUM_COLUNAS: vals.append("")
+        vals = vals[:NUM_COLUNAS]
+
+        row = table.add_row()
+        trPr = row._tr.get_or_add_trPr()
+        trH = OxmlElement('w:trHeight')
+        trH.set(qn('w:val'), str(ALTURA_LINHA))
+        trH.set(qn('w:hRule'), 'atLeast') 
+        trPr.append(trH)
+
+        if tipo == "HEADER_TOP":
+            row_header_top = row
+            for j in range(3):
+                estilizar_celula(row.cells[j], vals[j], LARGURAS[j], True, COR_HEADER_MERGED, 'center', True)
+            c_hist = row.cells[3].merge(row.cells[7]) 
+            estilizar_celula(c_hist, vals[3], sum(LARGURAS[3:]), True, COR_HEADER_HISTORICO, 'center', True)
+            continue
+
+        if tipo == "HEADER_YEARS":
+            row_header_years = row
+            for j in range(3):
+                estilizar_celula(row.cells[j], "", LARGURAS[j], True, COR_HEADER_MERGED, 'center', True)
+            for j in range(3, 8):
+                estilizar_celula(row.cells[j], vals[j], LARGURAS[j], True, COR_HEADER_YEARS, 'center', True)
+            
+            if row_header_top and row_header_years:
+                for col_idx in range(3):
+                    txt_orig = row_header_top.cells[col_idx].text
+                    merged = row_header_top.cells[col_idx].merge(row_header_years.cells[col_idx])
+                    estilizar_celula(merged, txt_orig, LARGURAS[col_idx], True, COR_HEADER_MERGED, 'center', True)
+                    set_vertical_align(merged, 'center')
+            continue
+
+        if "DATA_ROW" in tipo:
+            if tipo == "DATA_ROW_START":
+                indices_inicio_bloco.append(len(table.rows) - 1)
+            
+            idx_real = len(table.rows) - 1
+            bg = COR_DADOS_PAR if idx_real % 2 == 0 else COR_DADOS_IMPAR
+            
+            for i, row_data in enumerate(dados):
+                for j, cell in enumerate(row.cells):
+                    txt, bold, align, remove_bottom = vals[j], False, 'center', False
+                    if j == 1 or j == 2: align = 'center' 
+
+                    if tipo == "DATA_ROW_START" and j > 2:
+                        bg, remove_bottom, bold = COR_META_TARGET, True, True
+                    elif tipo == "DATA_ROW_END" and j == 7:
+                        bg, remove_bottom, bold = COR_DESTAQUE_HEADER, False, True                    
+                    if i == 7 and j == 7:
+                        bg = COR_DESTAQUE_ROW
+                    
+                    estilizar_celula(cell, txt, LARGURAS[j], bold, bg, align, False, remove_bottom=remove_bottom)
+
+    # --- 4. MESCLAGEM DOS BLOCOS ---
+    indices_inicio_bloco.append(len(table.rows))
+    for k in range(len(indices_inicio_bloco) - 1):
+        s, e = indices_inicio_bloco[k], indices_inicio_bloco[k+1] - 1
+        if s < e:
+            txt_m, txt_d = table.rows[s].cells[0].text, table.rows[s].cells[1].text
+            c_m = table.rows[s].cells[0].merge(table.rows[e].cells[0])
+            estilizar_celula(c_m, txt_m, LARGURAS[0], True, 'FFFFFF', 'center', False)
+            set_vertical_align(c_m, 'center')
+            c_d = table.rows[s].cells[1].merge(table.rows[e].cells[1])
+            estilizar_celula(c_d, txt_d, LARGURAS[1], False, 'FFFFFF', 'left', False)
+            set_vertical_align(c_d, 'center')
+
+    # --- 5. LEGENDA INFERIOR ---
+    if titulo_custom or fonte:
+        p = document.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        p.paragraph_format.space_before = Pt(6)
+        texto = f"{str(titulo_custom).strip().rstrip('.')}. " if titulo_custom else ""
+        texto += (fonte if fonte else "Fonte: CNJ.")
+        run = p.add_run(texto)
+        run.font.name, run.font.size, run.font.color.rgb = 'Calibri', Pt(9), RGBColor(0, 0, 0)
+
+
 
