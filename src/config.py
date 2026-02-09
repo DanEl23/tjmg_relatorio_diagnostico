@@ -40,21 +40,57 @@ LARGURA_MAXIMA_IMAGEM = 16.0 # cm
 # 2. ESTILOS VISUAIS (TJMG & RELATÓRIO)
 # =============================================================================
 class Colors:
-    """Códigos Hexadecimais usados nas tabelas e estilos."""
+    """Códigos Hexadecimais usados nas tabelas e estilos.
+    
+    CORRIGIDO: Suporte a múltiplas cores de cinza - Sistema centralizado com
+    todas as tonalidades de cinza usadas no projeto.
+    """
     # Cores Institucionais / Cabeçalhos
     TJMG_BLUE = "44546A"       # Azul escuro (Cabeçalhos principais)
-    HEADER_GRAY = "7F7F7F"     # Cinza médio (Atos, Áreas)
-    HEADER_LIGHT_GRAY = "D9D9D9" # Cinza claro (Sub-cabeçalhos)
     
-    # Cores de Conteúdo
-    ZEBRA_STRIPE = "EEEEEE"    # Fundo alternado de linhas
-    TOTAL_ROW = "BFBFBF"       # Linha de totais
+    # Sistema de Cores de Cinza (do mais escuro ao mais claro)
+    GRAY_DARK = "7F7F7F"       # Cinza escuro (Cabeçalhos principais de tabelas)
+    GRAY_MEDIUM = "BFBFBF"     # Cinza médio (Linhas de totais)
+    GRAY_LIGHT = "D9D9D9"      # Cinza claro (Sub-cabeçalhos, linhas zebradas)
+    GRAY_VERY_LIGHT = "EEEEEE" # Cinza muito claro (Fundo alternado de linhas)
+    
+    # Aliases para compatibilidade com código existente
+    HEADER_GRAY = GRAY_DARK           # Cinza médio (Atos, Áreas) 
+    HEADER_LIGHT_GRAY = GRAY_LIGHT    # Cinza claro (Sub-cabeçalhos)
+    ZEBRA_STRIPE = GRAY_VERY_LIGHT    # Fundo alternado de linhas
+    TOTAL_ROW = GRAY_MEDIUM           # Linha de totais
+    
+    # Cores Base
     WHITE = "FFFFFF"
     BLACK = "000000"
     
     # Cores de Fonte Especiais
     HEADING_RED = (162, 22, 18) # RGB para Títulos H1, H2, H3
     PDF_LEGEND_GREEN = 37509    # Cor decimal usada na extração do PDF (aprox #009285)
+    
+    @classmethod
+    def get_all_grays(cls):
+        """Retorna todas as tonalidades de cinza disponíveis."""
+        return {
+            'dark': cls.GRAY_DARK,
+            'medium': cls.GRAY_MEDIUM,
+            'light': cls.GRAY_LIGHT,
+            'very_light': cls.GRAY_VERY_LIGHT
+        }
+    
+    @classmethod
+    def get_gray_by_intensity(cls, intensity):
+        """
+        Retorna uma cor de cinza baseada na intensidade desejada.
+        
+        Args:
+            intensity (str): 'dark', 'medium', 'light', 'very_light'
+            
+        Returns:
+            str: Código hexadecimal da cor
+        """
+        grays = cls.get_all_grays()
+        return grays.get(intensity, cls.GRAY_LIGHT)
 
 class Fonts:
     MAIN = "Calibri"
