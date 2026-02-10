@@ -131,7 +131,7 @@ def configurar_estilos_tjmg(document):
         except: pass
 
     # Heading 1: Tamanho 16, Recuo de 1.25 cm
-    criar_ou_atualizar_estilo('Heading 1', 16, 1.25, 18)
+    criar_ou_atualizar_estilo('Heading 1', 18, 1.25, 18)
     
     # Heading 2 e 3: Tamanho 16, Sem recuo
     criar_ou_atualizar_estilo('Heading 2', 16, 0.0, 12)
@@ -225,9 +225,9 @@ def preparar_dados_tabela_metas(nome_meta):
     import pandas as pd
     from src.content import static_data
     
+    # 1. Carregamento do Excel
     try:
         df_2025 = pd.read_excel("exports/resultados_cnj.xlsx")
-        # Busca flexível pela meta (ex: Meta 3)
         df_filtrado = df_2025[df_2025['Meta'].astype(str).str.contains(nome_meta, na=False)]
     except:
         df_filtrado = pd.DataFrame()
@@ -235,38 +235,83 @@ def preparar_dados_tabela_metas(nome_meta):
     info_meta = static_data.HISTORICO_METAS_CNJ.get(nome_meta)
     if not info_meta: return []
 
-    # Cabeçalhos padrão
-    dados_finais = [
-        ["HEADER_TOP", "META", "DESCRIÇÃO", "INSTÂNCIA", "HISTÓRICO"],
-        ["HEADER_YEARS", "", "", "", "2021", "2022", "2023", "2024", "2025*"]
-    ]
-
-    # --- LÓGICA: SÓ ADICIONA LINHA CINZA SE HOUVER OBJETIVO DEFINIDO ---
-    if 'objetivo' in info_meta or 'objetivos_anos' in info_meta:
-        if 'objetivos_anos' in info_meta:
-            lista_objetivos = info_meta['objetivos_anos']
-        else:
-            lista_objetivos = [info_meta['objetivo']] * 5
+    # --- CASO A: META COM SUBGRUPOS (Ex: Meta 4) ---
+    if 'grupos' in info_meta:
+        # Cabeçalho para 9 colunas
+        dados_finais = [
+            ["HEADER_TOP", "META", "DESCRIÇÃO", "GRUPO", "INSTÂNCIA", "HISTÓRICO"],
+            ["HEADER_YEARS", "", "", "", "", "2021", "2022", "2023", "2024", "2025*"]
+        ]
+        
+        for grupo in info_meta['grupos']:
+            nome_visual = grupo['nome']
+            chave_excel = grupo.get('chave_busca', nome_visual)
             
-        linha_meta = ["DATA_ROW_START", nome_meta, info_meta['descricao'], ""] + lista_objetivos
-        dados_finais.append(linha_meta)
+            # --- CORREÇÃO AQUI: Lógica para pegar Lista ou Valor Único ---
+            if 'objetivos_anos' in grupo:
+                lista_objs = grupo['objetivos_anos'] # Usa a lista de 5 anos
+            elif 'objetivo' in grupo:
+                lista_objs = [grupo['objetivo']] * 5 # Repete o valor único
+            else:
+                lista_objs = ["---"] * 5 # Preenche com traços se não houver meta
+            
+            # Adiciona a linha de Meta (Cinza) com os objetivos corretos
+            dados_finais.append(["DATA_ROW_START", nome_meta, info_meta['descricao'], nome_visual, "Meta"] + lista_objs)
+            
+            # Processamento dos resultados (Instâncias)
+            for instancia, valores_anos in grupo['dados'].items():
+                valor_2025 = "---"
+                if not df_filtrado.empty:
+                    inst_busca = "Total" if instancia == "Geral" else instancia
+                    termo_busca = f"{inst_busca} - {chave_excel}"
+                    
+                    match = df_filtrado[df_filtrado['Categoria'].astype(str).str.strip() == termo_busca]
+                    if not match.empty:
+                        valor_2025 = str(match.iloc[0]['Resultado'])
+                
+                # Monta a linha de dados
+                dados_finais.append(["DATA_ROW", nome_meta, info_meta['descricao'], nome_visual, instancia] + valores_anos + [valor_2025])
+        
+        return dados_finais
 
-    # --- PROCESSAMENTO DOS DADOS ---
-    for instancia, valores_anos in info_meta['dados_passados'].items():
-        valor_2025 = "---"
-        if not df_filtrado.empty:
-            # Tenta achar pela categoria (Tribunal ou Total)
-            match = df_filtrado[
-                (df_filtrado['Categoria'].astype(str).str.strip() == instancia) |
-                (df_filtrado['Categoria'].astype(str).str.strip() == "Total")
-            ]
-            if not match.empty:
-                valor_2025 = str(match.iloc[0]['Resultado'])
+    # --- CASO B: META SIMPLES (Ex: Meta 1, 2, 3) ---
+    else:
+        # Cabeçalho para 8 colunas
+        dados_finais = [
+            ["HEADER_TOP", "META", "DESCRIÇÃO", "INSTÂNCIA", "HISTÓRICO"],
+            ["HEADER_YEARS", "", "", "", "2021", "2022", "2023", "2024", "2025*"]
+        ]
 
-        linha_dado = ["DATA_ROW", nome_meta, info_meta['descricao'], instancia] + valores_anos + [valor_2025]
-        dados_finais.append(linha_dado)
+        if 'objetivos_anos' in info_meta:
+            lista_objs = info_meta['objetivos_anos']
+        elif 'objetivo' in info_meta:
+            lista_objs = [info_meta['objetivo']] * 5
+        else:
+            lista_objs = None # Para metas sem objetivo explícito (Meta 3)
 
-    return dados_finais
+        if lista_objs:
+            dados_finais.append(["DATA_ROW_START", nome_meta, info_meta['descricao'], ""] + lista_objs)
+
+        for instancia, valores_anos in info_meta.get('dados_passados', {}).items():
+            valor_2025 = "---"
+            if not df_filtrado.empty:
+                # 1. Definição do termo de busca exato
+                termo_busca = instancia
+                # Pequeno ajuste de compatibilidade: se no static for "Geral", busca "Total" no Excel
+                if instancia == "Geral": termo_busca = "Total"
+
+                # 2. Busca Estrita (Removemos o 'OR Total')
+                # Isso garante que 1º Grau só pegue dados de 1º Grau.
+                match = df_filtrado[
+                    df_filtrado['Categoria'].astype(str).str.strip() == termo_busca
+                ]
+                
+                if not match.empty:
+                    valor_2025 = str(match.iloc[0]['Resultado'])
+            
+            dados_finais.append(["DATA_ROW", nome_meta, info_meta['descricao'], instancia] + valores_anos + [valor_2025])
+            
+        return dados_finais        
 
 
 def processar_recurso(doc, chave, item, loader_jn=None):

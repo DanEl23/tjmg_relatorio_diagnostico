@@ -2533,12 +2533,25 @@ def adicionar_tabela_comparativo_temas(document, dados, titulo_custom=None, inde
 def adicionar_tabela_metas_final(document, dados, titulo_custom=None, indent_cm=0, fonte=None):
     if not dados: return
 
-    # --- 1. CONFIGURAÇÕES VISUAIS (SUAS LARGURAS EXATAS) ---
-    NUM_COLUNAS = 8
-    LARGURAS = [901, 1338, 1644, 1360, 1360, 1360, 1360, 1360]
+    # --- 1. DETECÇÃO DINÂMICA DE COLUNAS ---
+    # O primeiro elemento de cada linha em 'dados' é o tipo (HEADER, DATA, etc)
+    # Portanto, o número de colunas reais da tabela é len(dados[0]) - 1
+    NUM_COLUNAS = len(dados[1]) - 1
+
+    # Define as larguras e o índice onde o histórico começa baseado no número de colunas
+    if NUM_COLUNAS == 9:
+        # Layout para Meta 4 (com coluna 'Grupo/Agregação')
+        LARGURAS = [790, 1590, 1530, 1247, 1120, 1120, 1120, 1120, 1120]
+        IDX_HISTORICO = 4 # Histórico começa na 5ª coluna
+    else:
+        # Layout para Metas 1, 2, 3 (padrão 8 colunas)
+        LARGURAS = [901, 1338, 1644, 1360, 1360, 1360, 1360, 1360]
+        IDX_HISTORICO = 3 # Histórico começa na 4ª coluna
+
     LARGURA_TOTAL_REAL = sum(LARGURAS)
     ALTURA_LINHA = 392
     
+    # Suas cores padronizadas
     COR_CINZA_ESCURO     = '595959' 
     COR_HEADER_HISTORICO = COR_CINZA_ESCURO
     COR_HEADER_MERGED    = COR_CINZA_ESCURO
@@ -2546,10 +2559,10 @@ def adicionar_tabela_metas_final(document, dados, titulo_custom=None, indent_cm=
     COR_META_TARGET      = 'D9D9D9' 
     COR_DADOS_PAR        = 'F2F2F2'
     COR_DADOS_IMPAR      = 'FFFFFF'
-    COR_DESTAQUE_HEADER = '44546a'
-    COR_DESTAQUE_ROW = 'D5DCE4'
+    COR_DESTAQUE_HEADER  = '91A2B9'
+    COR_DESTAQUE_ROW     = 'D5DCE4'
 
-    # --- 2. ESTRUTURA DA TABELA ---
+# --- 2. ESTRUTURA DA TABELA ---
     table = document.add_table(rows=0, cols=NUM_COLUNAS)
     table.autofit = False 
     table.alignment = WD_TABLE_ALIGNMENT.LEFT
@@ -2557,7 +2570,6 @@ def adicionar_tabela_metas_final(document, dados, titulo_custom=None, indent_cm=
     tbl = table._tbl
     tblPr = tbl.tblPr if tbl.tblPr is not None else OxmlElement('w:tblPr')
     
-    # Trava a largura total para evitar redimensionamento automático
     tblW = OxmlElement('w:tblW')
     tblW.set(qn('w:w'), str(LARGURA_TOTAL_REAL))
     tblW.set(qn('w:type'), 'dxa')
@@ -2567,7 +2579,6 @@ def adicionar_tabela_metas_final(document, dados, titulo_custom=None, indent_cm=
     tblLayout.set(qn('w:type'), 'fixed')
     tblPr.append(tblLayout)
 
-    # --- APLICAÇÃO DO RECUO À ESQUERDA ---
     if indent_cm != 0:
         tblInd = OxmlElement('w:tblInd')
         tblInd.set(qn('w:w'), str(int(Cm(indent_cm).twips)))
@@ -2594,21 +2605,25 @@ def adicionar_tabela_metas_final(document, dados, titulo_custom=None, indent_cm=
 
         if tipo == "HEADER_TOP":
             row_header_top = row
-            for j in range(3):
+            for j in range(IDX_HISTORICO):
                 estilizar_celula(row.cells[j], vals[j], LARGURAS[j], True, COR_HEADER_MERGED, 'center', True)
-            c_hist = row.cells[3].merge(row.cells[7]) 
-            estilizar_celula(c_hist, vals[3], sum(LARGURAS[3:]), True, COR_HEADER_HISTORICO, 'center', True)
+            
+            c_hist = row.cells[IDX_HISTORICO].merge(row.cells[NUM_COLUNAS - 1]) 
+            estilizar_celula(c_hist, vals[IDX_HISTORICO], sum(LARGURAS[IDX_HISTORICO:]), True, COR_HEADER_HISTORICO, 'center', True)
             continue
 
         if tipo == "HEADER_YEARS":
             row_header_years = row
-            for j in range(3):
+            for j in range(IDX_HISTORICO):
                 estilizar_celula(row.cells[j], "", LARGURAS[j], True, COR_HEADER_MERGED, 'center', True)
-            for j in range(3, 8):
+            
+            for j in range(IDX_HISTORICO, NUM_COLUNAS):
                 estilizar_celula(row.cells[j], vals[j], LARGURAS[j], True, COR_HEADER_YEARS, 'center', True)
+                # CORREÇÃO 1: Adicionado alinhamento vertical também no cabeçalho
+                set_vertical_align(row.cells[j], 'center') 
             
             if row_header_top and row_header_years:
-                for col_idx in range(3):
+                for col_idx in range(IDX_HISTORICO):
                     txt_orig = row_header_top.cells[col_idx].text
                     merged = row_header_top.cells[col_idx].merge(row_header_years.cells[col_idx])
                     estilizar_celula(merged, txt_orig, LARGURAS[col_idx], True, COR_HEADER_MERGED, 'center', True)
@@ -2620,44 +2635,91 @@ def adicionar_tabela_metas_final(document, dados, titulo_custom=None, indent_cm=
                 indices_inicio_bloco.append(len(table.rows) - 1)
             
             idx_real = len(table.rows) - 1
-            bg = COR_DADOS_PAR if idx_real % 2 == 0 else COR_DADOS_IMPAR
+            bg_base = COR_DADOS_PAR if idx_real % 2 == 0 else COR_DADOS_IMPAR
             
-            for i, row_data in enumerate(dados):
-                for j, cell in enumerate(row.cells):
-                    txt, bold, align, remove_bottom = vals[j], False, 'center', False
-                    if j == 1 or j == 2: align = 'center' 
+            for j, cell in enumerate(row.cells):
+                txt, bold, align, remove_bottom, bg = vals[j], False, 'center', False, bg_base
+                
+                if tipo == "DATA_ROW_START" and j >= IDX_HISTORICO:
+                    bg, remove_bottom, bold = COR_META_TARGET, True, True
+                
+                if j == 1 or j == 2: align = 'center' 
 
-                    if tipo == "DATA_ROW_START" and j > 2:
-                        bg, remove_bottom, bold = COR_META_TARGET, True, True
-                    elif tipo == "DATA_ROW_END" and j == 7:
-                        bg, remove_bottom, bold = COR_DESTAQUE_HEADER, False, True                    
-                    if i == 7 and j == 7:
-                        bg = COR_DESTAQUE_ROW
+                if tipo == "DATA_ROW_START" and j == NUM_COLUNAS - 1:
+                    bg = COR_DESTAQUE_HEADER
+                elif j == NUM_COLUNAS - 1:
+                    bg = COR_DESTAQUE_ROW
+                    bold = True
+                
+                estilizar_celula(cell, txt, LARGURAS[j], bold, bg, align, False, remove_bottom=remove_bottom)
+                # Garante centralização em todas as células de dados
+                set_vertical_align(cell, 'center')
+
+# --- 4. MESCLAGEM VERTICAL ---
+    # As linhas de dados começam no índice 2 (pois 0=HEADER_TOP e 1=HEADER_YEARS)
+    start_row = 2
+    end_row = len(table.rows) - 1
+
+    if end_row >= start_row:
+        # A. MESCLAGEM TOTAL (Colunas 0 e 1: Meta e Descrição)
+        # Elas são mescladas da primeira até a última linha, ignorando grupos internos
+        for col_idx in [0, 1]:
+            # Pega o texto da primeira célula de dados para preservar
+            txt = table.rows[start_row].cells[col_idx].text
+            
+            # Mescla da linha 2 até a última linha da tabela
+            merged_cell = table.rows[start_row].cells[col_idx].merge(table.rows[end_row].cells[col_idx])
+            
+            # Configura Estilos
+            align_h = 'center' if col_idx == 0 else 'left' # Meta centralizada, Desc esquerda
+            bold = True if col_idx == 0 else False
+            
+            estilizar_celula(merged_cell, txt, LARGURAS[col_idx], bold, 'FFFFFF', align_h, False)
+            set_vertical_align(merged_cell, 'center')
+
+        # B. MESCLAGEM INTELIGENTE POR GRUPO (Coluna 2 - Apenas se for 9 colunas)
+        if NUM_COLUNAS == 9:
+            curr_gp = None
+            gp_start = start_row
+            
+            for r in range(start_row, end_row + 1):
+                txt_gp = table.rows[r].cells[2].text
+                
+                # Se o texto do grupo mudou (ex: de "Crimes..." para "Improbidade")
+                if txt_gp != curr_gp:
+                    # Se não for a primeira passagem, fecha e mescla o grupo anterior
+                    if curr_gp is not None:
+                        c_g = table.rows[gp_start].cells[2].merge(table.rows[r-1].cells[2])
+                        estilizar_celula(c_g, curr_gp, LARGURAS[2], True, 'FFFFFF', 'center', False)
+                        set_vertical_align(c_g, 'center')
                     
-                    estilizar_celula(cell, txt, LARGURAS[j], bold, bg, align, False, remove_bottom=remove_bottom)
+                    # Inicia o rastreamento do novo grupo
+                    curr_gp = txt_gp
+                    gp_start = r
+            
+            # Mescla o último grupo que sobrou no loop (até o final da tabela)
+            if gp_start <= end_row:
+                c_g = table.rows[gp_start].cells[2].merge(table.rows[end_row].cells[2])
+                estilizar_celula(c_g, curr_gp, LARGURAS[2], True, 'FFFFFF', 'center', False)
+                set_vertical_align(c_g, 'center')
+                
+    # --- 5. LEGENDA COM ESPAÇAMENTO (CORREÇÃO 2) ---
+    # Removemos o space_after da tabela e aplicamos na legenda (Space Before)
+    # Isso evita que o texto da última célula seja empurrado para cima
+    
+    p = document.add_paragraph() # Cria o parágrafo da legenda
+    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    
+    # Aplica o espaçamento de 20pt AQUI, simulando o "space after" da tabela
+    p.paragraph_format.space_before = Pt(6) # Espaço visual pequeno entre tabela e legenda
+    
+    # Adicionamos um espaçamento extra APÓS a legenda para separar do próximo conteúdo
+    p.paragraph_format.space_after = Pt(20) 
 
-    # --- 4. MESCLAGEM DOS BLOCOS ---
-    indices_inicio_bloco.append(len(table.rows))
-    for k in range(len(indices_inicio_bloco) - 1):
-        s, e = indices_inicio_bloco[k], indices_inicio_bloco[k+1] - 1
-        if s < e:
-            txt_m, txt_d = table.rows[s].cells[0].text, table.rows[s].cells[1].text
-            c_m = table.rows[s].cells[0].merge(table.rows[e].cells[0])
-            estilizar_celula(c_m, txt_m, LARGURAS[0], True, 'FFFFFF', 'center', False)
-            set_vertical_align(c_m, 'center')
-            c_d = table.rows[s].cells[1].merge(table.rows[e].cells[1])
-            estilizar_celula(c_d, txt_d, LARGURAS[1], False, 'FFFFFF', 'left', False)
-            set_vertical_align(c_d, 'center')
-
-    # --- 5. LEGENDA INFERIOR ---
-    if titulo_custom or fonte:
-        p = document.add_paragraph()
-        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-        p.paragraph_format.space_before = Pt(6)
-        texto = f"{str(titulo_custom).strip().rstrip('.')}. " if titulo_custom else ""
-        texto += (fonte if fonte else "Fonte: CNJ.")
-        run = p.add_run(texto)
-        run.font.name, run.font.size, run.font.color.rgb = 'Calibri', Pt(9), RGBColor(0, 0, 0)
+    texto = f"{str(titulo_custom).strip().rstrip('.')}. " if titulo_custom else ""
+    texto += (fonte if fonte else "Fonte: CNJ.")
+    run = p.add_run(texto)
+    run.font.name, run.font.size, run.font.color.rgb = 'Calibri', Pt(9), RGBColor(0, 0, 0)
 
 
 

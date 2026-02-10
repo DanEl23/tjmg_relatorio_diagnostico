@@ -596,6 +596,125 @@ HISTORICO_METAS_CNJ = {
             "Tribunal": ["93,64%", "105,04%", "100,00%", "100,00%"]
         }
     },
+    "Meta 4": {
+        "descricao": "Priorizar o julgamento dos processos relativos aos crimes contra a Administração Pública, à improbidade administrativa e aos ilícitos eleitorais",
+        "grupos": [
+            {
+                "nome": "Crimes Contra Administração Pública",
+                "objetivos_anos": ["70%", "70%", "60%", "65%", "65%"],
+                "chave_busca": "Crimes Contra Adm.",
+                "dados": {
+                    "Geral":            ["102,44%", "130,38%", "149,81%", "133,80%"],
+                    "1º Grau":          ["102,36%", "125,31%", "149,19%", "125,64%"],
+                    "2º Grau":          ["114,64%", "163,52%", "151,75%", "151,06%"],
+                    "Juizado Especial": ["142,86%", "166,67%", "151,65%", "141,50%"],
+                    "Turma Recursal":   [ "-", "-", "153,85%", "149,82%"]                }
+            },
+            {
+                "nome": "Improbidade Administrativa",
+                "chave_busca": "Improbidade",
+                "objetivos_anos": ["-", "-", "-", "-", "100%"],
+                "dados": {
+                    "Geral":            ["-", "-", "-", "-"],
+                    "1º Grau":          ["-", "-", "-", "-"],
+                    "2º Grau":          ["-", "-", "-", "-"],
+                    "Juizado Especial": ["-", "-", "-", "-"],
+                    "Turma Recursal":   ["-", "-", "-", "-"]                }
+            }
+        ]
+    },
+    "Meta 5": {
+        "descricao": "Reduzir a taxa de congestionamento",
+        "objetivos_anos": [
+            "Redução 2%", 
+            "Redução 0,5%", 
+            "Redução 0,5%", 
+            "Redução 0,5%",
+            "Redução 0,5%"
+        ],
+        "dados_passados": {
+            "Total":              ["117,48%", "102,63%", "**", "84,41%"],
+            "1º Grau":            ["-", "-", "**", "86,70%"],
+            "2º Grau":            ["-", "-", "**", "72,57%"],
+            "Juizado Especial":   ["-", "-", "**", "85,92%"],
+            "Turma Recursal":     ["-", "-", "**", "60,88%"]
+        }
+    },
+    "Meta 6": {
+        "descricao": "Priorizar o julgamento das ações ambientais",
+        "objetivos_anos": [
+            "-", 
+            "-", 
+            "-", 
+            "-", 
+            "50%"
+        ],
+        "dados_passados": {
+            "Total":              ["-", "-", "-", "-"],
+            "1º Grau":            ["-", "-", "-", "-"],
+            "2º Grau":            ["-", "-", "-", "-"],
+            "Juizado Especial":   ["-", "-", "-", "-"],
+            "Turma Recursal":     ["-", "-", "-", "-"]
+        }
+    },
+    "Meta 7": {
+        "descricao": "Priorizar o julgamento dos processos relacionados aos indígenas e quilombolas",
+        "objetivos_anos": [
+            "-", 
+            "-", 
+            "-", 
+            "35%", 
+            "50%"
+        ],
+        "dados_passados": {
+            "Total Indígenas":    ["-", "-", "-", "-"],
+            "Total Quilombola":  ["-", "-", "-", "285,71%"]        }
+    },
+    "Meta 8": {
+        "descricao": "Priorizar o julgamento dos processos relacionados ao feminicídio e à violência doméstica e familiar contra as mulheres",
+        "grupos": [
+            {
+                "nome": "Violência Doméstica",
+                "objetivos_anos": ["50%", "50%", "50%", "75%", "75%"],
+                "chave_busca": "Violência Doméstica",
+                "dados": {
+                    "Total":            ["140,37%", "110,83%", "195,14%", "109,26%"],
+                    "1º Grau":          ["138,97%", "68,87%", "193,46%", "95,18%"],
+                    "2º Grau":          ["200,00%", "198,04%", "151,75%", "130,48%"]     }
+            },
+            {
+                "nome": "Feminicídio",
+                "chave_busca": "Feminicídio",
+                "objetivos_anos": ["50%", "50%", "60%", "90%", "90%"],
+                "dados": {
+                    "Total":            ["128,38%", "143,51%", "162,74%", "92,15%"],
+                    "1º Grau":          ["124,06%", "143,11%", "162,65%", "91,53%"],
+                    "2º Grau":          ["199,69%", "165,67%", "166,04%", "107,76%"],
+                    "Juizado Especial": ["-", "-", "156,49%", "79,27%"]                }
+            }
+        ]
+    },
+    "Meta 9": {
+        "descricao": "Estimular a inovação no Poder Judiciário",
+        # Omitimos 'objetivo' pois não há linha de meta fixa
+        "dados_passados": {
+            # Histórico de 2021 a 2024
+            "Tribunal": ["100,00%", "100,00%", "100,00%", "100,00%"]
+        }
+    },
+    "Meta 10": {
+        "descricao": "Promover os direitos da criança e do adolescente",
+        "objetivos_anos": [
+            "-", 
+            "80% 1º Grau \n95% 2º Grau", 
+            "80% 1º Grau \n95% 2º Grau", 
+            "90% 1º Grau \n100% 2º Grau", 
+            "90% 1º Grau \n100% 2º Grau"
+        ],
+        "dados_passados": {
+            "1º Grau":    ["-", "-", "118,63%", "82,74%"],
+            "2º Grau":    ["-", "101,98%", "104,49%", "97,13%"]        }
+    },
 }
 
 MAPA_RECURSOS = {
@@ -750,6 +869,13 @@ MAPA_RECURSOS = {
         "space_after": 12,
         "larguras": [2400, 1300, 1300, 4600] 
     },
+
+    ########################################################################
+    ########################################################################
+    ####################-------METAS NACIONAIS-------#######################
+    ########################################################################
+    ########################################################################
+
     "Meta 1": {
     "tipo": "TABELA_METAS_DINAMICA",
     "recuo_esq": -1.4,
@@ -765,7 +891,41 @@ MAPA_RECURSOS = {
         "recuo_esq": -1.4,
         "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
     },
-
+    "Meta 4": {
+        "tipo": "TABELA_METAS_DINAMICA",
+        "recuo_esq": -1.6,
+        "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
+    },
+    "Meta 5": {
+        "tipo": "TABELA_METAS_DINAMICA",
+        "recuo_esq": -1.4,
+        "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
+    },
+    "Meta 6": {
+        "tipo": "TABELA_METAS_DINAMICA",
+        "recuo_esq": -1.4,
+        "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
+    },
+    "Meta 7": {
+        "tipo": "TABELA_METAS_DINAMICA",
+        "recuo_esq": -1.4,
+        "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
+    },
+    "Meta 8": {
+        "tipo": "TABELA_METAS_DINAMICA",
+        "recuo_esq": -1.4,
+        "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
+    },
+    "Meta 9": {
+        "tipo": "TABELA_METAS_DINAMICA",
+        "recuo_esq": -1.4,
+        "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
+    },
+    "Meta 10": {
+        "tipo": "TABELA_METAS_DINAMICA",
+        "recuo_esq": -1.6,
+        "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
+    },
 
     ########################################################################
     ########################################################################
@@ -808,216 +968,417 @@ MAPA_RECURSOS = {
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
         "largura": 17.00
     },
-    "Figura 07 - Perfil racial no Poder Judiciário.": {
+    "Figura 07 - Grandes Litigantes Polo Passivo.": {
         "tipo": "IMAGEM", "arquivo": "figura_07.png",
-        "fonte" : "Diagnóstico Étnico-Racial no Poder Judiciário.",
+        "fonte" : "Painel Litigantes do CNJ",
         "largura": 12.50
     },
-    "Figura 08 - Percentual de magistrados(as) negros(as) na Justiça Estadual.": {
+    "Figura 08 - Grandes Litigantes Polo Ativo.": {
         "tipo": "IMAGEM", "arquivo": "figura_08.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Painel Litigantes do CNJ",
         "largura": 12.50
     },
-    "Figura 09 - Percentual de magistrados(as) na Justiça Estadual.": {
+    "Figura 09 - Instalações prediais do TJMG.": {
         "tipo": "IMAGEM", "arquivo": "figura_09.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
-        "largura": 12.50
-    },
-    "Figura 10 - Percentual de Desembargadoras na Justiça Estadual.": {
-        "tipo": "IMAGEM", "arquivo": "figura_10.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
-        "largura": 12.50
-    },
-    "Figura 11 - Grandes Litigantes Polo Passivo.": {
-        "tipo": "IMAGEM", "arquivo": "figura_11.png",
-        "fonte" : "Painel Litigantes do CNJ",
-        "largura": 12.50
-    },
-    "Figura 12 - Grandes Litigantes Polo Ativo.": {
-        "tipo": "IMAGEM", "arquivo": "figura_12.png",
-        "fonte" : "Painel Litigantes do CNJ",
-        "largura": 12.50
-    },
-    "Figura 13 - Instalações prediais do TJMG.": {
-        "tipo": "IMAGEM", "arquivo": "figura_13.png",
         "fonte" : "Fonte: Centro de Informações para a Gestão Institucional – CEINFO"
     },
-    "Figura 14 - Desempenho da ação por programa (Unidade 1031).": {
-        "tipo": "IMAGEM", "arquivo": "figura_14.png",
+    "Figura 10 - Desempenho da ação por programa (Unidade 1031).": {
+        "tipo": "IMAGEM", "arquivo": "figura_10.png",
         "fonte" : "Sigplan",
         "largura": 19.0,
         "recuo_esq": -1.85
     },
-    "Figura 15 - Desempenho da ação por programa (Unidade 4031).": {
-        "tipo": "IMAGEM", "arquivo": "figura_15.png",
+    "Figura 11 - Desempenho da ação por programa (Unidade 4031).": {
+        "tipo": "IMAGEM", "arquivo": "figura_11.png",
         "fonte" : "Sigplan",
         "largura": 19.0,
         "recuo_esq": -1.85
     },
-    "Figura 16 - Esquema do Plano Estratégico 2025.": {
-        "tipo": "IMAGEM", "arquivo": "figura_16.png",
+    "Figura 12 - Esquema do Plano Estratégico 2025.": {
+        "tipo": "IMAGEM", "arquivo": "figura_12.png",
         "fonte" : "Sigplan",
         "largura": 18.0,
         "recuo_esq": -0.75,
         "space_after": 30
     },
-    "Figura 17 - Identidade organizacional do TJMG/DIRCOM": {
-        "tipo": "IMAGEM", "arquivo": "figura_17.png",
+    "Figura 13 - Identidade organizacional do TJMG/DIRCOM": {
+        "tipo": "IMAGEM", "arquivo": "figura_13.png",
         "fonte" : "Sigplan",
         "largura": 13.0,
         "space_after": 30
     },
-    "Figura 18 - Mapa Estratégico do TJMG/ DIRCOM": {
-        "tipo": "IMAGEM", "arquivo": "figura_18.png",
+    "Figura 14 - Mapa Estratégico do TJMG/ DIRCOM": {
+        "tipo": "IMAGEM", "arquivo": "figura_14.png",
         "fonte" : "Sigplan",
         "largura": 13.0,
         "space_after": 30
     },
-    "Figura 19 - Classificação dos tribunais da Justiça Estadual segundo o porte, ano-base 2024.": {
+    "Figura 15 - Habitantes por varas e juizado especial da Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "figura_15.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Figura 16 - Receita x Despesa – TJMG e Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "figura_16.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Figura 17 - Classificação dos tribunais da Justiça Estadual segundo o porte, ano-base 2024.": {
         "tipo": "IMAGEM", "arquivo": "figura_19.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 30
+    }, 
+    
+
+
+    ########################################################################
+    ########################################################################
+    ##########################-----GRÁFICOS-----############################
+    ########################################################################
+    ########################################################################
+
+    "Gráfico 01 - Perfil racial no Poder Judiciário.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_01.png",
+        "fonte" : "Diagnóstico Étnico-Racial no Poder Judiciário.",
+        "largura": 12.50
     },
-    "Figura 20 - Percentual de servidores lotados na área administrativa.": {
-        "tipo": "IMAGEM", "arquivo": "figura_20.png",
+    "Gráfico 02 - Percentual de magistrados(as) negros(as) na Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_02.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 12.50
+    },
+    "Gráfico 03 - Percentual de magistrados(as) na Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_03.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 12.50
+    },
+    "Gráfico 04 - Percentual de Desembargadoras na Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_04.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 12.50
+    },
+    "Gráfico 05 - Número de municípios-sede e unidades judiciárias por tribunal de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_05.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 06 - Evolução das receitas totais e das despesas totais do TJMG.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_06.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 07 - Evolução da despesa total com pessoal do TJMG.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_07.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 08 - Custo médio mensal nos Tribunais de Justiça de grande porte com magistrados(as) e servidores(as), incluindo benefícios, encargos, previdência social, diárias, passagens, indenizações judiciais e demais indenizações eventuais e não eventuais.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_08.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 09 - Valores arrecadados em relação ao número de processos ingressados no TJMG e na Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_09.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 10 - Arrecadação com custas x Despesas totais no TJMG e Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_10.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 11 - Assistência Judiciária Gratuita no TJMG e na Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_11.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 12 - Número de CEJUSCs por tribunal de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_12.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 13 - Evolução de casos novos no TJMG.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_13.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 14 - Variação de casos novos – 2023 – 2024 TJMG e Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_14.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 15 - Magistrados por 100 mil habitantes e percentual de cargos vagos de magistrados.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_15.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 16 - Percentual de servidores lotados na área administrativa.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_16.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 17 - IPC-Jus dos tribunais de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_17.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 18 - Análise de cenário para alcançar 100% no IPC-JUS dos tribunais estaduais de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_18.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 19 - Evolução dos processos baixados do TJMG.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_19.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 20 - Ranking de processos baixados em 2024 na Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_20.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 21 - Tempo médio dos processos baixados e pendentes nos tribunais estaduais de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_21.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 22 - Evolução do Índice de Atendimento à Demanda do TJMG.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_22.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 23 - Ranking do índice de Atendimento à Demanda dos tribunais estaduais de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_23.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 24 - Evolução da Taxa de Congestionamento Total e Líquida do TJMG.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_24.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 25 - Taxa de Congestionamento Total na Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_25.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 26 - Taxa de Congestionamento Líquida na Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_26.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 27 - Índice de Conciliação e sua trajetória no tempo para o TJMG e para a Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_27.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 28 - Processos pendentes de execução fiscal e tempo de tramitação na execução fiscal nos tribunais de justiça de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_28.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 29 - Despesa com recursos humanos por tribunais estaduais de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_29.png",
+        "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 30
+    },
+    "Gráfico 30 X - Percentual de servidores lotados na área administrativa.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_30_x.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1
     },
-    "Figura 21 - Valores arrecadados em relação ao número de processos ingressados sujeitos a cobrança.": {
-        "tipo": "IMAGEM", "arquivo": "figura_21.png",
+    "Gráfico 30 Y - Percentual de servidores lotados na área administrativa.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_30_y.png",
+        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1
+    },
+    "Gráfico 31 - Valores arrecadados em relação ao número de processos ingressados sujeitos a cobrança.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_31.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 0
     },
-    "Figura 22 - Índice de conciliação por Tribunal de Justiça.": {
-        "tipo": "IMAGEM", "arquivo": "figura_22.png",
+    "Gráfico 32 - Índice de conciliação por Tribunal de Justiça.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_32.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 20
     },
-    "Figura 23 - Percentual de audiências de conciliação por casos novos por Tribunal de Justiça.": {
-        "tipo": "IMAGEM", "arquivo": "figura_23.png",
+    "Gráfico 33 - Percentual de audiências de conciliação por casos novos por Tribunal de Justiça.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_33.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 30
     },
-    "Figura 24 - Índice de Conciliação de processos de execução de títulos extrajudiciais não fiscais por Tribunal de Justiça.": {
-        "tipo": "IMAGEM", "arquivo": "figura_24.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
-        "largura": 18.0,
-        "recuo_esq": -1.1,
-        "space_after": 42 
-    },
-    "Figura 25 - Percentual de execuções fiscais pendentes em relação ao total de processos pendentes.": {
-        "tipo": "IMAGEM", "arquivo": "figura_25.png",
+    "Gráfico 34 - Percentual de execuções fiscais pendentes em relação ao total de processos pendentes.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_34.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 26 - Resultado do IPC-Jus da área judiciária por instância e Tribunal de Justiça.": {
-        "tipo": "IMAGEM", "arquivo": "figura_26.png",
+    "Gráfico 35 - Resultado do IPC-Jus da área judiciária por instância e Tribunal de Justiça.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_35.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 27 - Tempo de giro do acervo, por tribunal de grande porte.": {
-        "tipo": "IMAGEM", "arquivo": "figura_27.png",
+    "Gráfico 36 - IPC-Jus dos tribunais de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_36.png",
+        "fonte" : "'Justiça em Números 2025' – Ano base 2024/ CNJ.",
+        "largura": 18.0,
+        "recuo_esq": -1.1,
+        "space_after": 24
+    },
+    "Gráfico 37 - Tempo de giro do acervo, por tribunal de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_37.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 28 - Tempo médio de tramitação dos processos pendentes e baixados, por Tribunal de Justiça.": {
-        "tipo": "IMAGEM", "arquivo": "figura_28.png",
+    "Gráfico 38 - Tempo médio de tramitação dos processos pendentes e baixados, por Tribunal de Justiça.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_38.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 29 - Taxa de congestionamento, por tribunal de justiça de grande porte.": {
-        "tipo": "IMAGEM", "arquivo": "figura_29.png",
+    "Gráfico 39 - Taxa de congestionamento, por tribunal de justiça de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_39.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 30 - Taxa de congestionamento na execução fiscal, por tribunal de grande porte.": {
-        "tipo": "IMAGEM", "arquivo": "figura_30.png",
+    "Gráfico 40 - Taxa de congestionamento na execução fiscal, por tribunal de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_40.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 31 - Índice de produtividade dos magistrados, por tribunal de grande porte.": {
-        "tipo": "IMAGEM", "arquivo": "figura_31.png",
+    "Gráfico 41 - Índice de produtividade dos magistrados, por tribunal de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_41.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 32 - Índice de produtividade dos servidores da área judiciária, por tribunal de grande porte.": {
-        "tipo": "IMAGEM", "arquivo": "figura_32.png",
+    "Gráfico 42 - Índice de produtividade dos servidores da área judiciária, por tribunal de grande porte.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_42.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 33 - Custo médio mensal nos Tribunais de Justiça com magistrados(as) e servidores(as).": {
-        "tipo": "IMAGEM", "arquivo": "figura_33.png",
+    "Gráfico 43 - Custo médio mensal nos Tribunais de Justiça com magistrados(as) e servidores(as).": {
+        "tipo": "IMAGEM", "arquivo": "grafico_43.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 34 - Ranking da Transparência na Justiça Estadual.": {
-        "tipo": "IMAGEM", "arquivo": "figura_34.png",
+    "Gráfico 44 - Ranking da Transparência na Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_44.png",
         "fonte" : "Painel com resultado final de todos os tribunais e conselhos/ CNJ",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 24
     },
-    "Figura 35 - Desempenho no Prêmio CNJ de Qualidade 2025.": {
-        "tipo": "IMAGEM", "arquivo": "figura_35.png",
-        "fonte" : "",
-        "largura": 7.5,
-        "recuo_esq": 4.0,
-        "space_after": 24
-    },
-    "Figura 36 - Performance do TJMG no Prêmio CNJ de Qualidade - Governança.": {
-        "tipo": "IMAGEM", "arquivo": "figura_36.png",
+    "Gráfico 45 - Performance do TJMG no Prêmio CNJ de Qualidade - Governança.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_45.png",
         "fonte" : "Painel de resultados do prêmio/ CNJ.",
         "largura": 14.0,
         "recuo_esq": -0.7,
         "space_after": 24
     },
-    "Figura 37 - Performance do TJMG no Prêmio CNJ de Qualidade - Produtividade.": {
-        "tipo": "IMAGEM", "arquivo": "figura_37.png",
+    "Gráfico 46 - Performance do TJMG no Prêmio CNJ de Qualidade - Produtividade.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_46.png",
         "fonte" : "Painel de resultados do prêmio/ CNJ.",
         "largura": 14.0,
         "recuo_esq": -0.7,
         "space_after": 24
     },
-    "Figura 38 - Performance do TJMG no Prêmio CNJ de Qualidade - Dados e Tecnologia.": {
-        "tipo": "IMAGEM", "arquivo": "figura_38.png",
+    "Gráfico 47 - Performance do TJMG no Prêmio CNJ de Qualidade - Dados e Tecnologia.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_47.png",
         "fonte" : "Painel de resultados do prêmio/ CNJ.",
         "largura": 14.0,
         "recuo_esq": -0.7,
         "space_after": 24
     },
-    "Figura 39 - Performance do TJMG no Prêmio CNJ de Qualidade - Transparência.": {
-        "tipo": "IMAGEM", "arquivo": "figura_39.png",
+    "Gráfico 48 - Performance do TJMG no Prêmio CNJ de Qualidade - Transparência.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_48.png",
         "fonte" : "Painel de resultados do prêmio/ CNJ.",
         "largura": 14.0,
         "recuo_esq": -0.7,
         "space_after": 24
     },
+
 }
+
+
+
 
