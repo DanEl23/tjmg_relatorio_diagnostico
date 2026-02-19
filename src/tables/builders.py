@@ -1061,14 +1061,19 @@ def adicionar_tabela_processos(document, dados, texto_legenda=None):
     p_leg = document.add_paragraph()
     p_leg.paragraph_format.space_before = Pt(6)
     
-    titulo_dados = str(novos_dados[0][1]).upper()
-    prefixo = "08"
-    if "PROCESSOS" in titulo_dados: prefixo = "06"
-    elif "JULGAMENTOS" in titulo_dados: prefixo = "07"
-    
-    texto_final = texto_legenda if texto_legenda else novos_dados[0][1]
-    
-    txt_leg = f"Tabela {prefixo} - {texto_final}. Fonte: Centro de Informações para a Gestão Institucional – CEINFO"
+    if texto_legenda:
+            # Se o Word já mandou o título completo (ex: "Tabela 06 - ..."), usamos ele direto
+            texto_final = texto_legenda.strip()
+    else:
+        # Fallback de segurança (caso não venha do Word)
+        titulo_dados = str(novos_dados[0][1]).upper()
+        prefixo = "08"
+        if "PROCESSOS" in titulo_dados: prefixo = "06"
+        elif "JULGAMENTOS" in titulo_dados: prefixo = "07"
+        texto_final = f"Tabela {prefixo} - {novos_dados[0][1]}"
+
+    # Monta a legenda final sem duplicar o prefixo
+    txt_leg = f"{texto_final.rstrip('.')}. Fonte: Centro de Informações para a Gestão Institucional – CEINFO."    
     r_leg = p_leg.add_run(txt_leg); r_leg.font.name = FONTE_NOME; r_leg.font.size = Pt(8)
 
     
@@ -1235,8 +1240,11 @@ def adicionar_tabela_orcamento(document, titulo_vindo_do_word, dados, numero_tab
     p_leg = document.add_paragraph()
     p_leg.alignment = WD_ALIGN_PARAGRAPH.LEFT
     p_leg.paragraph_format.space_before = Pt(6)
-    fonte_final = "Armazém de Informações - BO SIAFI/MG" if str(numero_tabela) == "09" else "LOA"
-    texto_legenda = f"{titulo_vindo_do_word.strip()}. Fonte: {fonte_final}"
+    fonte_final = "Armazém de Informações - BO SIAFI/MG" if str(numero_tabela) in ["09", "10"] else "LOA"
+    titulo_formatado = titulo_vindo_do_word.strip()
+    if not titulo_formatado.upper().startswith("TABELA"):
+        titulo_formatado = f"Tabela {numero_tabela} - {titulo_formatado}"    
+    texto_legenda = f"{titulo_formatado}. Fonte: {fonte_final}"
     r_leg = p_leg.add_run(texto_legenda)
     r_leg.font.name = FONTE_NOME; r_leg.font.size = Pt(8)
 

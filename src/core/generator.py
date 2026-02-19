@@ -786,6 +786,17 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
             run_icon.font.size = Pt(11)
             run_icon.font.color.rgb = RGBColor(0, 150, 0) # Verde
         # =================================================================
+        if texto.startswith('[MARK_NOTA]'):  # <--- SEU NOVO BLOCO AQUI
+            texto_limpo = texto.replace("[MARK_NOTA]", "").strip()
+            p.paragraph_format.line_spacing = 1.0 
+            p.paragraph_format.space_before = Pt(0)
+            p.paragraph_format.space_after = Pt(6) 
+            
+            run = p.add_run(texto_limpo)
+            run.font.size = Pt(10)
+            run.font.name = 'Calibri'  
+            texto = ""     
+
 
         # Chama a função que escreve o restante do texto em negrito se precisar
         adicionar_texto_com_negrito(p, texto, cor_rgb=COR_PRETO, tamanho=12)

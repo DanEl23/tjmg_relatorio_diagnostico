@@ -3,7 +3,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import RGBColor
 from src.config import DIR_CANVAS_IMAGES, LARGURA_MAXIMA_IMAGEM
 
-def adicionar_imagem(document, nome_arquivo, titulo="", fonte="Própria", largura_custom=None, recuo_esq=0):    
+def adicionar_imagem(document, nome_arquivo, titulo="", fonte="Própria", largura_custom=None, recuo_esq=0, space_after=None):    
     """
     Insere imagem com recuo opcional e legenda unificada na parte inferior.
     """
@@ -36,22 +36,23 @@ def adicionar_imagem(document, nome_arquivo, titulo="", fonte="Própria", largur
     run_img = p_imagem.add_run()
     run_img.add_picture(str(caminho_completo), width=Cm(largura_final))
     
-    # --- 2. Legenda Unificada com o mesmo recuo ---
+    # --- 2. Legenda Unificada com recuo padrão do documento ---
     p_legenda = document.add_paragraph()
     
-    # Aplica o mesmo recuo da imagem na legenda para ficarem alinhadas
-    if recuo_esq != 0:
-        p_legenda.paragraph_format.left_indent = Cm(recuo_esq)
+    # Define o alinhamento padrão do documento (Justificado ou à Esquerda)
+    # Não aplicamos mais o 'recuo_esq' aqui, para que ele siga a margem normal da página
+    p_legenda.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
     
-    p_legenda.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p_legenda.paragraph_format.space_before = Pt(0)
+    # Configuração de espaçamento após a legenda
+    espaco_abaixo = space_after if space_after is not None else 12
+    p_legenda.paragraph_format.space_after = Pt(espaco_abaixo)
     
-    # Monta o texto
-    texto_final = titulo.strip()
-    if texto_final and not texto_final.endswith('.'):
-        texto_final += "."
-    texto_final += f" Fonte: {fonte}"
-
-    run = p_legenda.add_run(texto_final)
-    run.font.name = 'Calibri'
-    run.font.size = Pt(8)
+    # 3. Textos da Legenda
+    texto_legenda = f"{titulo}. " if titulo else ""
+    if fonte:
+        texto_legenda += fonte
+        
+    run_leg = p_legenda.add_run(texto_legenda)
+    run_leg.font.name = 'Calibri'
+    run_leg.font.size = Pt(9)
+    run_leg.font.color.rgb = RGBColor(0, 0, 0)

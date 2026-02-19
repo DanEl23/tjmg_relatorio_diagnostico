@@ -772,7 +772,7 @@ MAPA_RECURSOS = {
     "Tabela 10 - Despesa realizada por ação (Unidade 4031)": {
         "tipo": "TABELA_ORCAMENTO", # Ou usar TABELA_ORCAMENTO com num="11"
         "dados": dados_tabela_orcamento_acao,
-        "num": "09",
+        "num": "10",
         "fonte_custom": "Armazém de Informações - BO SIAFI/MG",
         "titulo": TITULO_TABELA_ORCAMENTO_2,
         "space_after": 24
@@ -936,37 +936,42 @@ MAPA_RECURSOS = {
     "Figura 01 - Informações sobre o Estado de Minas Gerais.": {
         "tipo": "IMAGEM", "arquivo": "figura_01.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
-        "largura": 15.07,
-        "recuo_esq": 0
+        "largura": 17.69,
+        "recuo_esq": -0.85,
+        "space_after": 10
     },
     "Figura 02 - Síntese da estrutura na área fim.": {
         "tipo": "IMAGEM", "arquivo": "figura_02.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
         "largura": 17.69,
-        "recuo_esq": -0.85,
+        "recuo_esq": -0.95,
         "space_after": 12
     },
     "Figura 03 - Novas estruturas na área fim.": {
         "tipo": "IMAGEM", "arquivo": "figura_03.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
         "largura": 18.56,
-        "recuo_esq": -1.25
+        "recuo_esq": -1.35
     },
     "Figura 04 - Força de Trabalho.": {
         "tipo": "IMAGEM", "arquivo": "figura_04.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
         "largura": 17.00,
-        "space_after": 24
+        "space_after": 24,
+        "recuo_esq": -1.35
+        
     },
     "Figura 05 - Colaboradores da Justiça.": {
         "tipo": "IMAGEM", "arquivo": "figura_05.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
-        "largura": 17.00
+        "largura": 17.00,
+        "recuo_esq": -1.35
     },
     "Figura 06 – Força de Trabalho e Colaboradores na área de TI.": {
         "tipo": "IMAGEM", "arquivo": "figura_06.png",
         "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
-        "largura": 17.00
+        "largura": 17.00,
+        "recuo_esq": -1.35
     },
     "Figura 07 - Grandes Litigantes Polo Passivo.": {
         "tipo": "IMAGEM", "arquivo": "figura_07.png",
@@ -1016,19 +1021,19 @@ MAPA_RECURSOS = {
     "Figura 15 - Habitantes por varas e juizado especial da Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "figura_15.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
-        "largura": 18.0,
-        "recuo_esq": -1.1,
-        "space_after": 30
+        "largura": 11.0,
+        "recuo_esq": 2.0,
+        "space_after": 40
     },
     "Figura 16 - Receita x Despesa – TJMG e Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "figura_16.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
-        "largura": 18.0,
-        "recuo_esq": -1.1,
+        "largura": 17.0,
+        "recuo_esq": -1.0,
         "space_after": 30
     },
     "Figura 17 - Classificação dos tribunais da Justiça Estadual segundo o porte, ano-base 2024.": {
-        "tipo": "IMAGEM", "arquivo": "figura_19.png",
+        "tipo": "IMAGEM", "arquivo": "figura_17.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
@@ -1074,14 +1079,14 @@ MAPA_RECURSOS = {
         "tipo": "IMAGEM", "arquivo": "grafico_06.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
-        "recuo_esq": -1.1,
+        "recuo_esq": -0.75,
         "space_after": 30
     },
     "Gráfico 07 - Evolução da despesa total com pessoal do TJMG.": {
         "tipo": "IMAGEM", "arquivo": "grafico_07.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
-        "recuo_esq": -1.1,
+        "recuo_esq": -1.0,
         "space_after": 30
     },
     "Gráfico 08 - Custo médio mensal nos Tribunais de Justiça de grande porte com magistrados(as) e servidores(as), incluindo benefícios, encargos, previdência social, diárias, passagens, indenizações judiciais e demais indenizações eventuais e não eventuais.": {
@@ -1102,7 +1107,7 @@ MAPA_RECURSOS = {
         "tipo": "IMAGEM", "arquivo": "grafico_10.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
-        "recuo_esq": -1.1,
+        "recuo_esq": -1.25,
         "space_after": 30
     },
     "Gráfico 11 - Assistência Judiciária Gratuita no TJMG e na Justiça Estadual.": {
@@ -1116,14 +1121,14 @@ MAPA_RECURSOS = {
         "tipo": "IMAGEM", "arquivo": "grafico_12.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
-        "recuo_esq": -1.1,
+        "recuo_esq": -1.25,
         "space_after": 30
     },
     "Gráfico 13 - Evolução de casos novos no TJMG.": {
         "tipo": "IMAGEM", "arquivo": "grafico_13.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
-        "largura": 18.0,
-        "recuo_esq": -1.1,
+        "largura": 17.5,
+        "recuo_esq": -0.85,
         "space_after": 30
     },
     "Gráfico 14 - Variação de casos novos – 2023 – 2024 TJMG e Justiça Estadual.": {
@@ -1164,8 +1169,8 @@ MAPA_RECURSOS = {
     "Gráfico 19 - Evolução dos processos baixados do TJMG.": {
         "tipo": "IMAGEM", "arquivo": "grafico_19.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
-        "largura": 18.0,
-        "recuo_esq": -1.1,
+        "largura": 17.0,
+        "recuo_esq": -0.75,
         "space_after": 30
     },
     "Gráfico 20 - Ranking de processos baixados em 2024 na Justiça Estadual.": {
@@ -1185,8 +1190,8 @@ MAPA_RECURSOS = {
     "Gráfico 22 - Evolução do Índice de Atendimento à Demanda do TJMG.": {
         "tipo": "IMAGEM", "arquivo": "grafico_22.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
-        "largura": 18.0,
-        "recuo_esq": -1.1,
+        "largura": 17.0,
+        "recuo_esq": -0.75,
         "space_after": 30
     },
     "Gráfico 23 - Ranking do índice de Atendimento à Demanda dos tribunais estaduais de grande porte.": {
@@ -1220,8 +1225,8 @@ MAPA_RECURSOS = {
     "Gráfico 27 - Índice de Conciliação e sua trajetória no tempo para o TJMG e para a Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_27.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
-        "largura": 18.0,
-        "recuo_esq": -1.1,
+        "largura": 17.5,
+        "recuo_esq": -0.75,
         "space_after": 30
     },
     "Gráfico 28 - Processos pendentes de execução fiscal e tempo de tramitação na execução fiscal nos tribunais de justiça de grande porte.": {
@@ -1234,21 +1239,16 @@ MAPA_RECURSOS = {
     "Gráfico 29 - Despesa com recursos humanos por tribunais estaduais de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_29.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
-        "largura": 18.0,
-        "recuo_esq": -1.1,
+        "largura": 17.0,
+        "recuo_esq": -0.75,
         "space_after": 30
     },
-    "Gráfico 30 X - Percentual de servidores lotados na área administrativa.": {
-        "tipo": "IMAGEM", "arquivo": "grafico_30_x.png",
+    "Gráfico 30 - Percentual de servidores lotados na área administrativa.": {
+        "tipo": "IMAGEM", "arquivo": "grafico_30.png",
         "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
-        "largura": 18.0,
-        "recuo_esq": -1.1
-    },
-    "Gráfico 30 Y - Percentual de servidores lotados na área administrativa.": {
-        "tipo": "IMAGEM", "arquivo": "grafico_30_y.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
-        "largura": 18.0,
-        "recuo_esq": -1.1
+        "largura": 17.0,
+        "recuo_esq": -0.75,
+        "space_after": 30
     },
     "Gráfico 31 - Valores arrecadados em relação ao número de processos ingressados sujeitos a cobrança.": {
         "tipo": "IMAGEM", "arquivo": "grafico_31.png",
