@@ -1,6 +1,6 @@
 """
 EXTRATOR JIRA - TJMG
-Versão: 3.6 (Integração de Extração Universal + Módulo 3 + Pausa Global)
+Versão: 3.7 (Módulo 4: Processamento Pandas + Extração de Apurações)
 """
 
 from selenium import webdriver
@@ -31,6 +31,7 @@ class Config:
     ARQUIVO_JIRA_SIMPLES = "dados_exportados_jira.xlsx"
     ARQUIVO_JIRA_ANUAL = "dados_exportados_jira_por_ano.xlsx"
     ARQUIVO_METAS_DETALHADO = "dados_detalhados_metas_2025.xlsx"
+    ARQUIVO_APURACAO_FINAL = "dados_apuracao_final_2025.xlsx"
     
     NAVEGADOR = "edge" 
     TIMEOUT = 25
@@ -52,32 +53,22 @@ class ExtratorJira:
         opts = webdriver.EdgeOptions() if self.config.NAVEGADOR == "edge" else webdriver.ChromeOptions()
         opts.add_argument('--start-maximized')
         opts.add_experimental_option('excludeSwitches', ['enable-logging'])
-        
-        if self.config.NAVEGADOR == "edge":
-            self.driver = webdriver.Edge(options=opts)
-        else:
-            self.driver = webdriver.Chrome(options=opts)
-            
+        self.driver = webdriver.Edge(options=opts) if self.config.NAVEGADOR == "edge" else webdriver.Chrome(options=opts)
         self.wait = WebDriverWait(self.driver, self.config.TIMEOUT)
-        print("\n" + "!"*60)
-        print("💡 DICA: Pressione [CTRL + C] no terminal para PAUSAR a qualquer momento.")
-        print("!"*60)
+        print("\n" + "!"*60 + "\n💡 DICA: Pressione [CTRL + C] para PAUSAR a qualquer momento.\n" + "!"*60)
 
     def menu_pausa(self):
-        print("\n" + "="*50 + "\n🛑 AUTOMAÇÃO PAUSADA PELO USUÁRIO\n" + "="*50)
-        print("O navegador está livre para verificação.")
-        print("\nOpções: [ENTER] Continuar | [S] Sair")
-        if input("\nEscolha: ").strip().lower() == 's':
+        print("\n" + "="*50 + "\n🛑 AUTOMAÇÃO PAUSADA\n" + "="*50)
+        if input("\n[ENTER] Continuar | [S] Sair: ").strip().lower() == 's':
             self.fechar()
             sys.exit(0)
-        print("▶️ Retomando...")
 
     def safe_run(self, func, *args, **kwargs):
         while True:
             try: return func(*args, **kwargs)
             except KeyboardInterrupt: self.menu_pausa()
             except Exception as e:
-                print(f"❌ Erro em {func.__name__}: {e}")
+                print(f"❌ Erro: {e}")
                 if input("Tentar novamente? (s/n): ").lower() != 's': raise e
 
     def fechar(self):
@@ -85,11 +76,8 @@ class ExtratorJira:
 
     def login_manual(self):
         self.driver.get(self.config.URL_JIRA)
-        print("\n🔐 Faça o login e pressione ENTER no terminal...")
-        input()
+        input("\n🔐 Faça o login e pressione ENTER aqui...")
         self.janela_principal = self.driver.current_window_handle
-
-    # --- FLUXO DE NAVEGAÇÃO ---
 
     def exportar_detalhes_impressao(self):
         """Abre o menu de exportação e aguarda a nova aba."""
@@ -216,78 +204,97 @@ class ExtratorJira:
             print("↩️  Retornando à aba de controle do Jira.")
             return num_tickets
 
-    # --- MODOS DE OPERAÇÃO ---
-
-    def run_simples(self):
-        self.iniciar_navegador()
-        self.safe_run(self.login_manual)
-        self.safe_run(self.driver.get, f"{self.config.URL_JIRA}issues/?jql={quote_plus(self.config.JQL_BASE)}")
-        if self.safe_run(self.exportar_detalhes_impressao):
-            self.safe_run(self.processar_aba_exportacao)
-        self.salvar_dados(self.config.ARQUIVO_JIRA_SIMPLES)
+    # --- NOVOS MÓDULOS ---
 
     def run_anual(self):
         self.iniciar_navegador()
         self.safe_run(self.login_manual)
         for ano in self.config.ANOS_EXTRACAO:
-            print(f"📅 Processando Ano: {ano}")
-            jql = f'project = ASPLAGMETA AND "Ano da Meta" = {ano} ORDER BY created DESC'
-            self.safe_run(self.driver.get, f"{self.config.URL_JIRA}issues/?jql={quote_plus(jql)}")
-            if self.safe_run(self.exportar_detalhes_impressao):
-                self.safe_run(self.processar_aba_exportacao)
+            print(f"📅 Ano: {ano}")
+            self.safe_run(self.driver.get, f"{self.config.URL_JIRA}issues/?jql={quote_plus(f'project = ASPLAGMETA AND \"Ano da Meta\" = {ano} ORDER BY created DESC')}")
+            if self.safe_run(self.exportar_detalhes_impressao): self.safe_run(self.processar_aba_exportacao)
         self.salvar_dados(self.config.ARQUIVO_JIRA_ANUAL)
 
     def run_detalhado_metas_2025(self):
-        print("\n🔍 Módulo 3: Extração Detalhada Metas 2025")
-        caminho_anual = self.config.PASTA_SAIDA / self.config.ARQUIVO_JIRA_ANUAL
-        if not caminho_anual.exists():
-            print("❌ Erro: O arquivo do Módulo 2 não foi encontrado.")
-            return
-
-        df = pd.read_excel(caminho_anual)
-        # Identificação dinâmica da coluna Ano
+        path_anual = self.config.PASTA_SAIDA / self.config.ARQUIVO_JIRA_ANUAL
+        if not path_anual.exists(): 
+            return print("❌ Execute o Módulo 2 primeiro.")
+            
+        df = pd.read_excel(path_anual)
         col_ano = [c for c in df.columns if 'Ano da Meta' in c][0]
         mask = df[col_ano].astype(str).str.contains('2025', na=False)
-        metas_list = df.loc[mask, 'Resumo'].str.extract(r'(TJMG\s+\d+)', expand=False).dropna().unique().tolist()
+        metas = df.loc[mask, 'Resumo'].str.extract(r'(TJMG\s+\d+)', expand=False).dropna().unique().tolist()
+        
+        self.iniciar_navegador()
+        self.safe_run(self.login_manual)
+        
+        for meta in metas:
+            print(f"🚀 Buscando detalhes: {meta}")
+            q = f'project = ASPLAGMETA AND (summary ~ "{meta}*" OR summary ~ "{meta}") ORDER BY created DESC'
+            self.safe_run(self.driver.get, f"{self.config.URL_JIRA}issues/?jql={quote_plus(q)}")
+            
+            # CORREÇÃO AQUI: Removido os () de exportar_detalhes_impressao
+            if self.safe_run(self.exportar_detalhes_impressao): 
+                self.safe_run(self.processar_aba_exportacao)
+                
+        self.salvar_dados(self.config.ARQUIVO_METAS_DETALHADO)
 
-        if not metas_list:
-            print("⚠️ Nenhuma meta TJMG encontrada para 2025.")
+    def run_apuracao_final_2025(self):
+        """Módulo 4: Tratamento Pandas + Extração de tickets 'Apurado'"""
+        print("\n🔍 Módulo 4: Extração de Apurações Finais")
+        path_2025 = self.config.PASTA_SAIDA / self.config.ARQUIVO_METAS_DETALHADO
+        if not path_2025.exists(): return print("❌ Execute o Módulo 3 primeiro.")
+
+        # 1. TRATAMENTO PANDAS (Conforme solicitado)
+        print("📊 Processando dados das metas de 2025...")
+        colunas_leitura = ['Chave', 'Resumo', 'Data de Apuração', 'Ano da Meta', 'Valor da Meta', 'Valor Apurado']
+        # Verifica quais colunas realmente existem no arquivo para evitar erro de leitura
+        df_cols = pd.read_excel(path_2025, nrows=0).columns.tolist()
+        col_presentes = [c for c in colunas_leitura if c in df_cols]
+        
+        df = pd.read_excel(path_2025, usecols=col_presentes)
+        df['Meta'] = df['Resumo'].str.extract(r'(TJMG\s+\d+)', expand=False).str.strip()
+        chaves_list = df['Chave'].dropna().unique().tolist()
+
+        if not chaves_list:
+            print("⚠️ Nenhuma chave encontrada para buscar apurações.")
             return
 
+        # 2. EXTRAÇÃO JIRA (Filtro "Apurado")
         self.iniciar_navegador()
         self.safe_run(self.login_manual)
 
-        for meta in metas_list:
-            print(f"🚀 Buscando detalhes: {meta}")
-            query = f'project = ASPLAGMETA AND (summary ~ "{meta}*" OR summary ~ "{meta}") ORDER BY created DESC'
+        print(f"🚀 Filtrando apurações para {len(chaves_list)} tickets pai...")
+        # JQL: Busca tickets que contêm "Apurado" no resumo e são filhos das chaves encontradas
+        # Dividimos em blocos de 20 chaves para evitar JQL muito longa/erro de servidor
+        chunk_size = 20
+        for i in range(0, len(chaves_list), chunk_size):
+            chunk = chaves_list[i:i + chunk_size]
+            chaves_jql = ",".join(chunk)
+            # Query focada no resumo "Apurado" vinculada às chaves pai
+            query = f'project = ASPLAGMETA AND summary ~ "\\"Apurado\\"" AND parent in ({chaves_jql}) ORDER BY created DESC'
+            
             self.safe_run(self.driver.get, f"{self.config.URL_JIRA}issues/?jql={quote_plus(query)}")
             if self.safe_run(self.exportar_detalhes_impressao):
                 self.safe_run(self.processar_aba_exportacao)
 
-        self.salvar_dados(self.config.ARQUIVO_METAS_DETALHADO)
+        self.salvar_dados(self.config.ARQUIVO_APURACAO_FINAL)
 
     def salvar_dados(self, nome_arquivo):
         if self.dados_extraidos:
             self.config.PASTA_SAIDA.mkdir(exist_ok=True)
             pd.DataFrame(self.dados_extraidos).to_excel(self.config.PASTA_SAIDA / nome_arquivo, index=False)
-            print(f"💾 Arquivo salvo: {nome_arquivo}")
+            print(f"💾 Salvo: {nome_arquivo}")
             self.dados_extraidos = []
         self.fechar()
 
-# ============================================
-# INTERFACE
-# ============================================
-
 if __name__ == "__main__":
     while True:
-        print("\n" + "="*40 + "\n🎯 EXTRATOR JIRA v3.6\n" + "="*40)
-        print("1. Extração Simples")
-        print("2. Extração Anual")
-        print("3. Extração Detalhada Metas 2025")
-        print("0. Sair")
-        
+        print("\n" + "="*40 + "\n🎯 EXTRATOR JIRA v3.7\n" + "="*40)
+        print("1. Extração Simples\n2. Extração Anual\n3. Extração Detalhada 2025\n4. Módulo Apurações (Apurado)\n0. Sair")
         opt = input("\nEscolha: ").strip()
         if opt == "0": break
         elif opt == "1": ExtratorJira().run_simples()
         elif opt == "2": ExtratorJira().run_anual()
         elif opt == "3": ExtratorJira().run_detalhado_metas_2025()
+        elif opt == "4": ExtratorJira().run_apuracao_final_2025()
