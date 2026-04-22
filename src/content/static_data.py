@@ -927,6 +927,12 @@ MAPA_RECURSOS = {
         "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
     },
 
+    # === TODAS AS METAS INSTITUCIONAIS (SEÇÃO UNIFICADA) ===
+    "METAS_INSTITUCIONAIS": {
+        "tipo": "METAS_INSTITUCIONAIS",
+        "fonte_custom": "Fonte: Painel Metas Nacionais CNJ,  acessado em 28/01/2026. *Dados até 31/12/2025."
+    },
+
     ########################################################################
     ########################################################################
     #########################------IMAGENS------############################

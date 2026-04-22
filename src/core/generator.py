@@ -597,6 +597,10 @@ def processar_recurso(doc, chave, item, loader_jn=None):
     elif tipo == "TABELA_GENERICA":
         builders.adicionar_tabela_generica(doc, titulo_tabela=titulo_real, dados=dados, fonte=fonte_custom)
     
+    # === TODAS AS METAS INSTITUCIONAIS ===
+    elif tipo == "METAS_INSTITUCIONAIS":
+        builders.adicionar_todas_metas_institucionais(doc, loader_jn=loader_jn)
+    
     # Espaçamento final
     espaco_final = item.get("space_after", 6) 
     if doc.paragraphs:

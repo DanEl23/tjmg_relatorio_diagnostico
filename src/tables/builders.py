@@ -2730,4 +2730,592 @@ def adicionar_tabela_metas_final(document, dados, titulo_custom=None, indent_cm=
     run.font.name, run.font.size, run.font.color.rgb = 'Calibri', Pt(9), RGBColor(0, 0, 0)
 
 
+def adicionar_tabela_meta_unica_anos(document, nome_meta, anos, valores_meta, valores_resultado, 
+                                      titulo_custom=None, indent_cm=0, fonte=None):
+    """
+    Adiciona uma tabela de meta única com colunas para cada ano com formatação customizada.
+    
+    Formato:
+    ┌──────────────────┬────────┬────────┬────────┬────────┐
+    │ Ano              │ 2022   │ 2023   │ 2024   │ 2025   │
+    ├──────────────────┼────────┼────────┼────────┼────────┤
+    │ Valor da Meta    │   —    │  70%   │  70%   │  70%   │
+    ├──────────────────┼────────┼────────┼────────┼────────┤
+    │ Resultado        │  60%   │ 64,6%  │  64%   │  65%   │
+    └──────────────────┴────────┴────────┴────────┴────────┘
+    
+    Cores customizadas por linha e coluna:
+    - Linha 1 (Anos): BG RGB(89,89,89), Fonte branca, última coluna RGB(68,84,106)
+    - Linha 2 (Meta): BG RGB(166,166,166), Col1 fonte branca, resto preto, última col RGB(208,206,206)
+    - Linha 3 (Resultado): BG RGB(231,231,231), Fonte preta
+    
+    Args:
+        document: Documento Word
+        nome_meta: Nome da meta (ex: "TJMG 5")
+        anos: Lista de anos as strings (ex: ['2022', '2023', '2024', '2025'])
+        valores_meta: Lista de valores da meta para cada ano (ex: ['—', '70%', '70%', '70%'])
+        valores_resultado: Lista de resultados para cada ano (ex: ['60%', '64.6%', '64%', '65%'])
+        titulo_custom: Título customizado (opcional)
+        indent_cm: Recuo da tabela em cm
+        fonte: Fonte a exibir na legenda
+    """
+    if not anos or not valores_meta or not valores_resultado:
+        return
+    
+    # Cores RGB convertidas para Hex
+    # Linha 1: Header (Anos)
+    COR_HEADER_LINHA1 = '595959'         # RGB(89,89,89) - Cinza escuro
+    COR_FONT_LINHA1 = 'FFFFFF'           # RGB(255,255,255) - Branco
+    COR_ULTIMA_COL_LINHA1 = '445468'     # RGB(68,84,106) - Azul
+    
+    # Linha 2: Valor da Meta
+    COR_HEADER_LINHA2 = 'A6A6A6'         # RGB(166,166,166) - Cinza médio
+    COR_COL1_FONT_L2 = 'FFFFFF'          # RGB(255,255,255) - Branco (col 1)
+    COR_RESTO_FONT_L2 = '000000'         # RGB(0,0,0) - Preto (col 2+)
+    COR_ULTIMA_COL_LINHA2 = 'D0CECE'     # RGB(208,206,206) - Cinza claro
+    
+    # Linha 3: Resultado
+    COR_LINHA3 = 'E7E7E7'                # RGB(231,231,231) - Cinza muito claro
+    COR_FONT_LINHA3 = '000000'           # RGB(0,0,0) - Preto
+    
+    # Número de colunas: 1 (rótulo) + N (anos)
+    NUM_COLUNAS = len(anos) + 1
+    num_anos = len(anos)
+    
+    # Larguras: todas colunas com 3cm (1701 twips = 3cm * 567 twips/cm)
+    LARGURA_COLUNA = 1701  # 3cm
+    LARGURAS = [LARGURA_COLUNA] * NUM_COLUNAS
+    
+    ALTURA_LINHA = 340  # 0.6cm (0.6 * 567 ≈ 340 twips)
+    
+    # --- Cria a tabela ---
+    table = document.add_table(rows=3, cols=NUM_COLUNAS)  # 3 linhas: anos, meta, resultado
+    table.autofit = False
+    table.alignment = WD_TABLE_ALIGNMENT.LEFT
+    
+    # Configura propriedades da tabela
+    tbl = table._tbl
+    tblPr = tbl.tblPr if tbl.tblPr is not None else OxmlElement('w:tblPr')
+    
+    # Define largura fixa
+    tblW = OxmlElement('w:tblW')
+    tblW.set(qn('w:w'), str(sum(LARGURAS)))
+    tblW.set(qn('w:type'), 'dxa')
+    tblPr.append(tblW)
+    
+    tblLayout = OxmlElement('w:tblLayout')
+    tblLayout.set(qn('w:type'), 'fixed')
+    tblPr.append(tblLayout)
+    
+    # Aplica recuo se necessário
+    if indent_cm != 0:
+        tblInd = OxmlElement('w:tblInd')
+        tblInd.set(qn('w:w'), str(int(Cm(indent_cm).twips)))
+        tblInd.set(qn('w:type'), 'dxa')
+        tblPr.append(tblInd)
+    
+    # Insere tblPr no elemento da tabela se não existir
+    if tbl.tblPr is None:
+        tbl.insert(0, tblPr)
+    
+    # --- LINHA 1: ANOS (Header) ---
+    row_anos = table.rows[0]
+    set_row_height_at_least(row_anos, ALTURA_LINHA)
+    
+    # Coluna 1: "Ano" (BG cinza, fonte branca)
+    cell = row_anos.cells[0]
+    _estilizar_cell_tabela_meta_v2(
+        cell, "Ano", LARGURAS[0], True, COR_HEADER_LINHA1, 'left', cor_fonte=COR_FONT_LINHA1
+    )
+    
+    # Colunas 2 a N-1: Anos (BG cinza escuro, fonte branca)
+    for idx in range(1, num_anos):
+        cell = row_anos.cells[idx]
+        _estilizar_cell_tabela_meta_v2(
+            cell, anos[idx-1], LARGURAS[idx], True, COR_HEADER_LINHA1, 'center', cor_fonte=COR_FONT_LINHA1
+        )
+    
+    # Última coluna: Último ano (BG azul, fonte branca)
+    cell = row_anos.cells[num_anos]
+    _estilizar_cell_tabela_meta_v2(
+        cell, anos[-1], LARGURAS[num_anos], True, COR_ULTIMA_COL_LINHA1, 'center', cor_fonte=COR_FONT_LINHA1
+    )
+    
+    # --- LINHA 2: VALOR DA META ---
+    row_meta = table.rows[1]
+    set_row_height_at_least(row_meta, ALTURA_LINHA)
+    
+    # Coluna 1: "Valor da Meta" (BG cinza, fonte branca)
+    cell = row_meta.cells[0]
+    _estilizar_cell_tabela_meta_v2(
+        cell, "Valor da Meta", LARGURAS[0], False, COR_HEADER_LINHA2, 'left', cor_fonte=COR_COL1_FONT_L2
+    )
+    
+    # Colunas 2 a N-1: Valores meta (BG cinza, fonte preta)
+    for idx in range(1, num_anos):
+        cell = row_meta.cells[idx]
+        _estilizar_cell_tabela_meta_v2(
+            cell, valores_meta[idx-1], LARGURAS[idx], False, COR_HEADER_LINHA2, 'center', cor_fonte=COR_RESTO_FONT_L2
+        )
+    
+    # Última coluna: Último valor meta (BG cinza claro, fonte preta)
+    cell = row_meta.cells[num_anos]
+    _estilizar_cell_tabela_meta_v2(
+        cell, valores_meta[-1], LARGURAS[num_anos], False, COR_ULTIMA_COL_LINHA2, 'center', cor_fonte=COR_RESTO_FONT_L2
+    )
+    
+    # --- LINHA 3: RESULTADO ---
+    row_resultado = table.rows[2]
+    set_row_height_at_least(row_resultado, ALTURA_LINHA)
+    
+    # Coluna 1: "Resultado" (BG cinza claro, fonte preta)
+    cell = row_resultado.cells[0]
+    _estilizar_cell_tabela_meta_v2(
+        cell, "Resultado", LARGURAS[0], False, COR_LINHA3, 'left', cor_fonte=COR_FONT_LINHA3
+    )
+    
+    # Colunas 2 a N: Valores resultado (BG cinza claro, fonte preta)
+    for idx in range(1, NUM_COLUNAS):
+        cell = row_resultado.cells[idx]
+        _estilizar_cell_tabela_meta_v2(
+            cell, valores_resultado[idx-1], LARGURAS[idx], False, COR_LINHA3, 'center', cor_fonte=COR_FONT_LINHA3
+        )
+    
+    # --- Legenda ---
+    legenda = document.add_paragraph()
+    legenda.paragraph_format.left_indent = Pt(0)
+    legenda.paragraph_format.space_before = Pt(6)
+    legenda.paragraph_format.space_after = Pt(20)
+    legenda.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    
+    titulo_legenda = f"Tabela - {nome_meta}"
+    if titulo_custom:
+        titulo_legenda = titulo_custom
+    
+    run = legenda.add_run(titulo_legenda + ". ")
+    run.font.name = 'Calibri'
+    run.font.size = Pt(9)
+    run.font.bold = True
+    run.font.color.rgb = RGBColor(0, 0, 0)
+    
+    fonte_texto = fonte if fonte else "Fonte: Dados TJMG"
+    run_fonte = legenda.add_run(fonte_texto)
+    run_fonte.font.name = 'Calibri'
+    run_fonte.font.size = Pt(9)
+    run_fonte.font.color.rgb = RGBColor(0, 0, 0)
+
+
+def _estilizar_cell_tabela_meta_v2(cell, texto, largura_dxa, bold, bg_color, align, cor_fonte='000000'):
+    """
+    Auxiliar para estilizar célula da tabela meta (versão 2 com cor de fonte customizável).
+    
+    Args:
+        cell: Célula da tabela
+        texto: Conteúdo da célula
+        largura_dxa: Largura em twips (dxa)
+        bold: Se o texto deve estar em bold
+        bg_color: Cor de fundo (hex sem #, ex: '595959')
+        align: Alinhamento ('left', 'center', 'right')
+        cor_fonte: Cor de fonte em hex (ex: 'FFFFFF' para branco, '000000' para preto)
+    """
+    # Limpa célula
+    cell.text = ''
+    
+    # Configuração de propriedades
+    tcPr = cell._element.get_or_add_tcPr()
+    
+    # Largura
+    tcW = OxmlElement('w:tcW')
+    tcW.set(qn('w:w'), str(largura_dxa))
+    tcW.set(qn('w:type'), 'dxa')
+    tcPr.append(tcW)
+    
+    # Cor de fundo
+    shading = OxmlElement('w:shd')
+    shading.set(qn('w:fill'), bg_color)
+    tcPr.append(shading)
+    
+    # Bordas brancas com 1/2pt
+    tcBorders = OxmlElement('w:tcBorders')
+    for border_name in ['top', 'left', 'bottom', 'right', 'insideH', 'insideV']:
+        border = OxmlElement(f'w:{border_name}')
+        border.set(qn('w:val'), 'single')
+        border.set(qn('w:sz'), '4')  # 1/2pt
+        border.set(qn('w:space'), '0')
+        border.set(qn('w:color'), 'FFFFFF')  # Branco
+        tcBorders.append(border)
+    tcPr.append(tcBorders)
+    
+    # Alinhamento vertical
+    tcValign = OxmlElement('w:vAlign')
+    tcValign.set(qn('w:val'), 'center')
+    tcPr.append(tcValign)
+    
+    # Conteúdo
+    p = cell.paragraphs[0]
+    
+    # Alinhamento horizontal
+    if align == 'center':
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    elif align == 'right':
+        p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+    else:
+        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    
+    # Espaçamento do parágrafo
+    p.paragraph_format.space_before = Pt(2)
+    p.paragraph_format.space_after = Pt(2)
+    p.paragraph_format.left_indent = Pt(4)
+    p.paragraph_format.right_indent = Pt(4)
+    
+    # Texto com cor customizável
+    run = p.add_run(texto)
+    run.font.name = 'Calibri'
+    run.font.size = Pt(11)
+    run.font.bold = bold
+    
+    # Converte cor hex para RGB
+    r = int(cor_fonte[0:2], 16)
+    g = int(cor_fonte[2:4], 16)
+    b = int(cor_fonte[4:6], 16)
+    run.font.color.rgb = RGBColor(r, g, b)
+
+
+def _estilizar_cell_tabela_meta(cell, texto, largura_dxa, bold, bg_color, align):
+    # Limpa célula
+    cell.text = ''
+    
+    # Configuração de propriedades
+    tcPr = cell._element.get_or_add_tcPr()
+    
+    # Largura
+    tcW = OxmlElement('w:tcW')
+    tcW.set(qn('w:w'), str(largura_dxa))
+    tcW.set(qn('w:type'), 'dxa')
+    tcPr.append(tcW)
+    
+    # Cor de fundo
+    shading = OxmlElement('w:shd')
+    shading.set(qn('w:fill'), bg_color)
+    tcPr.append(shading)
+    
+    # Bordas pretas
+    tcBorders = OxmlElement('w:tcBorders')
+    for border_name in ['top', 'left', 'bottom', 'right', 'insideH', 'insideV']:
+        border = OxmlElement(f'w:{border_name}')
+        border.set(qn('w:val'), 'single')
+        border.set(qn('w:sz'), '12')  # Tamanho padrão
+        border.set(qn('w:space'), '0')
+        border.set(qn('w:color'), '000000')  # Preto
+        tcBorders.append(border)
+    tcPr.append(tcBorders)
+    
+    # Alinhamento vertical
+    tcValign = OxmlElement('w:vAlign')
+    tcValign.set(qn('w:val'), 'center')
+    tcPr.append(tcValign)
+    
+    # Conteúdo
+    p = cell.paragraphs[0]
+    
+    # Alinhamento horizontal
+    if align == 'center':
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    elif align == 'right':
+        p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+    else:
+        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    
+    # Espaçamento do parágrafo
+    p.paragraph_format.space_before = Pt(2)
+    p.paragraph_format.space_after = Pt(2)
+    p.paragraph_format.left_indent = Pt(4)
+    p.paragraph_format.right_indent = Pt(4)
+    
+    # Texto
+    run = p.add_run(texto)
+    run.font.name = 'Calibri'
+    run.font.size = Pt(10)
+    run.font.bold = bold
+    run.font.color.rgb = RGBColor(0, 0, 0)
+
+
+# =============================================================================
+# FUNÇÃO PARA ADICIONAR TODAS AS METAS INSTITUCIONAIS
+# =============================================================================
+
+def adicionar_todas_metas_institucionais(doc, loader_jn=None):
+    """
+    Adiciona todas as 55 metas institucionais do TJMG ao documento.
+    Lê dados do arquivo: exports/metas_institucionais_2025.xlsx
+    
+    Cada meta terá:
+    - Subtítulo (Heading 3) com ID da meta
+    - Descrição (obtida da coluna Nº_Meta)
+    - Tabela com histórico (2022, 2023, 2024, 2025)
+    - Legenda/Fonte
+    """
+    import pandas as pd
+    import os
+    from src.content import static_data
+    from docx.oxml.shared import OxmlElement
+    from docx.oxml.ns import qn
+    
+    def format_cell_meta(cell, bg_color, font_color, border_color='FFFFFF', is_last_col=False, last_col_bg=None, 
+                         bold=False, font_size=10, alignment=WD_ALIGN_PARAGRAPH.CENTER):
+        """Formata célula com cor de fundo, fonte e bordas específicas"""
+        # Cor de fundo
+        tcPr = cell._element.get_or_add_tcPr()
+        shading = OxmlElement('w:shd')
+        
+        if is_last_col and last_col_bg:
+            shading.set(qn('w:fill'), last_col_bg)
+        else:
+            shading.set(qn('w:fill'), bg_color)
+        tcPr.append(shading)
+        
+        # Bordas (1/2pt = 2 "eighths of a point")
+        tcBorders = OxmlElement('w:tcBorders')
+        for border_name in ['top', 'left', 'bottom', 'right']:
+            border = OxmlElement(f'w:{border_name}')
+            border.set(qn('w:val'), 'single')
+            border.set(qn('w:sz'), '4')  # 1/2pt = 4 eighths of a point
+            border.set(qn('w:space'), '0')
+            border.set(qn('w:color'), border_color)
+            tcBorders.append(border)
+        tcPr.append(tcBorders)
+        
+        # Cor da fonte e formatação
+        for paragraph in cell.paragraphs:
+            paragraph.alignment = alignment
+            for run in paragraph.runs:
+                run.font.color.rgb = font_color
+                run.font.bold = bold
+                run.font.size = Pt(font_size)
+                run.font.name = 'Calibri'
+    
+    print("⚡ Adicionando todas as Metas Institucionais do TJMG (55 metas)...")
+    
+    # Caminho do arquivo de metas institucionais
+    arquivo_metas = 'exports/metas_institucionais_2025.xlsx'
+    
+    # Verifica se arquivo existe
+    if not os.path.exists(arquivo_metas):
+        print(f"❌ ERRO: Arquivo {arquivo_metas} não encontrado!")
+        return
+    
+    try:
+        # Lê as duas abas do arquivo
+        df_valores = pd.read_excel(arquivo_metas, sheet_name='Valores Apurados')
+        df_textos = pd.read_excel(arquivo_metas, sheet_name='Textos Metas')
+        
+        fonte_padrao = "Fonte: Metas Institucionais do TJMG 2025. Dados até 31/12/2025."
+        
+        # Cores definidas
+        header_bg = '595959'  # RGB(89,89,89)
+        header_font = RGBColor(255, 255, 255)  # Branco
+        last_col_header = '445A6A'  # RGB(68,84,106)
+        
+        data_row_bg = 'A6A6A6'  # RGB(166,166,166)
+        data_row_font_1col = RGBColor(255, 255, 255)  # Branco
+        data_row_font_rest = RGBColor(0, 0, 0)  # Preto
+        last_col_data = 'D0CECE'  # RGB(208,206,206)
+        
+        other_rows_bg = 'E7E7E7'  # RGB(231,231,231)
+        other_rows_font = RGBColor(0, 0, 0)  # Preto
+        
+        border_color = 'FFFFFF'  # Branco para bordas
+        
+        # Itera pelas metas (coluna 'Meta' em df_valores)
+        for idx, meta_id in enumerate(df_valores['Meta'].values):
+            meta_id = str(meta_id).strip()
+            
+            # Busca informações da meta em df_textos
+            info_texto = df_textos[df_textos['Meta'] == meta_id]
+            
+            if info_texto.empty:
+                print(f"  ⚠ Meta {meta_id} não encontrada em Textos Metas, pulando...")
+                continue
+            
+            descricao = info_texto.iloc[0].get('Nº_Meta', meta_id)
+            valor_meta = info_texto.iloc[0].get('Valor da Meta', '')
+            
+            # --- SUBTÍTULO (Heading 3) ---
+            p_titulo = doc.add_paragraph(meta_id, style='Heading 3')
+            p_titulo.paragraph_format.space_before = Pt(12)
+            p_titulo.paragraph_format.space_after = Pt(6)
+            p_titulo.paragraph_format.keep_with_next = True  # Manter título com próximo parágrafo
+            
+            # Formata o título: cor RGB(162, 22, 18) e tamanho 12pt
+            for run in p_titulo.runs:
+                run.font.color.rgb = RGBColor(162, 22, 18)
+                run.font.size = Pt(12)
+            
+            # --- DESCRIÇÃO ---
+            texto_desc = str(descricao) if pd.notna(descricao) else meta_id
+            p_desc = doc.add_paragraph(texto_desc)
+            p_desc.paragraph_format.space_after = Pt(12)
+            p_desc.paragraph_format.line_spacing = 1.5  # Espaçamento de linha 1,5
+            p_desc.paragraph_format.keep_with_next = True  # Manter descrição com tabela
+            p_desc.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+            
+            # Estiliza o parágrafo: tamanho 12pt
+            for run in p_desc.runs:
+                run.font.name = 'Calibri'
+                run.font.size = Pt(12)
+            
+            # --- TABELA COM HISTÓRICO ---
+            dados_meta = df_valores[df_valores['Meta'] == meta_id].iloc[0]
+            
+            # Monta dados da tabela com 5 colunas (Ano | 2022 | 2023 | 2024 | 2025)
+            # e 3 linhas (Ano/Meta/Resultado, valores de Meta, valores de Resultado)
+            ano_label = 'Ano'
+            meta_label = 'Meta'
+            resultado_label = 'Resultado'
+            
+            # Converte valor_meta para string com percentual
+            valor_meta_str = f"{valor_meta:.0f}%" if pd.notna(valor_meta) else ''
+            
+            # Prepara valores dos anos
+            valor_2022 = float(dados_meta.get(2022, 0))
+            valor_2023 = float(dados_meta.get(2023, 0))
+            valor_2024 = float(dados_meta.get(2024, 0))
+            valor_2025 = float(dados_meta.get(2025, 0))
+            
+            # Monta dados da tabela
+            dados_tabela = [
+                ('HEADER', ano_label, '2022', '2023', '2024', '2025'),  # Linha 1
+                ('DATA', meta_label, valor_meta_str, valor_meta_str, valor_meta_str, valor_meta_str),  # Linha 2 - Meta
+                ('DATA', resultado_label, f'{valor_2022:.1f}', f'{valor_2023:.1f}', f'{valor_2024:.1f}', f'{valor_2025:.1f}'),  # Linha 3 - Resultado
+            ]
+            
+            # Cria tabela com 5 colunas
+            if len(dados_tabela) >= 3:
+                table = doc.add_table(rows=len(dados_tabela), cols=5)
+                table.style = 'Table Grid'
+                table.autofit = False
+                table.allow_autofit = False
+                
+                # Define largura das colunas via tblGrid (mais confiável)
+                tbl = table._element
+                
+                # Adiciona propriedade para evitar quebra de tabela entre páginas
+                tblPr = tbl.tblPr if tbl.tblPr is not None else OxmlElement('w:tblPr')
+                # Não quebra a tabela entre páginas (habilita para cada linha)
+                for row in table.rows:
+                    tr = row._tr
+                    trPr = tr.get_or_add_trPr()
+                    # Evita quebra de linha da tabela
+                    cantSplit = OxmlElement('w:cantSplit')
+                    # Remover se já existir
+                    for existing in trPr.findall(qn('w:cantSplit')):
+                        trPr.remove(existing)
+                    trPr.append(cantSplit)
+                tblGrid = tbl.find(qn('w:tblGrid'))
+                if tblGrid is None:
+                    tblGrid = OxmlElement('w:tblGrid')
+                    tbl.insert(1, tblGrid)
+                else:
+                    # Remove gridCol existentes
+                    for gridCol in tblGrid.findall(qn('w:gridCol')):
+                        tblGrid.remove(gridCol)
+                
+                # Adiciona 5 gridCol de 1701 twips cada (3cm)
+                for i in range(5):
+                    gridCol = OxmlElement('w:gridCol')
+                    gridCol.set(qn('w:w'), '1701')
+                    tblGrid.append(gridCol)
+                
+                # Também define a largura dentro de cada célula
+                for row_idx, row in enumerate(table.rows):
+                    for cell in row.cells:
+                        tcPr = cell._element.get_or_add_tcPr()
+                        tcW = OxmlElement('w:tcW')
+                        tcW.set(qn('w:w'), '1701')
+                        tcW.set(qn('w:type'), 'dxa')
+                        tcPr.insert(0, tcW)
+                    
+                    # Define altura das linhas em twips (precisamente)
+                    # Cabeçalho: 555.59042 twips (arredondado para 556)
+                    # Demais linhas: 340.1574 twips (arredondado para 340)
+                    if row_idx == 0:
+                        set_row_height_flexible(row, 556)  # 555.59042 twips (cabeçalho)
+                    else:
+                        set_row_height_flexible(row, 340)  # 340.1574 twips (demais linhas)
+                
+                # Popula e formata tabela
+                for row_idx, row_data in enumerate(dados_tabela):
+                    row_type = row_data[0]
+                    
+                    for col_idx in range(5):
+                        cell = table.rows[row_idx].cells[col_idx]
+                        cell_text = row_data[col_idx + 1] if col_idx + 1 < len(row_data) else ''
+                        
+                        # Limpa célula e adiciona texto
+                        cell.text = ''
+                        p = cell.paragraphs[0] if cell.paragraphs else cell.add_paragraph()
+                        p.text = str(cell_text)
+                        
+                        is_last_col = (col_idx == 4)
+                        
+                        # Aplica formatação específica por linha
+                        if row_type == 'HEADER':  # Linha 1 (Cabeçalho)
+                            # Cabeçalho: negrito, tamanho 11, fonte branca, alinhado ao centro
+                            if is_last_col:
+                                format_cell_meta(cell, header_bg, header_font, border_color, 
+                                               is_last_col=True, last_col_bg=last_col_header,
+                                               bold=True, font_size=11, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+                            else:
+                                format_cell_meta(cell, header_bg, header_font, border_color,
+                                               bold=True, font_size=11, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+                            
+                            # Centralizar verticalmente o cabeçalho
+                            set_cell_vertical_alignment(cell, 'center')
+                        
+                        elif row_type == 'DATA':  # Linhas 2 e 3 (Dados)
+                            if row_idx == 1:  # Primeira linha de dados (Meta)
+                                # Primeira coluna: branca, alinhada à esquerda
+                                if col_idx == 0:
+                                    format_cell_meta(cell, data_row_bg, data_row_font_1col, border_color,
+                                                   bold=False, font_size=11, alignment=WD_ALIGN_PARAGRAPH.LEFT)
+                                # Última coluna com cor especial
+                                elif is_last_col:
+                                    format_cell_meta(cell, last_col_data, data_row_font_rest, border_color,
+                                                   is_last_col=True, last_col_bg=last_col_data,
+                                                   bold=False, font_size=11, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+                                # Resto das colunas (preta)
+                                else:
+                                    format_cell_meta(cell, data_row_bg, data_row_font_rest, border_color,
+                                                   bold=False, font_size=11, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+                            
+                            else:  # Segunda linha de dados (Resultado)
+                                # Cor de fundo RGB(231,231,231), texto preto
+                                if col_idx == 0:
+                                    format_cell_meta(cell, other_rows_bg, other_rows_font, border_color,
+                                                   bold=False, font_size=11, alignment=WD_ALIGN_PARAGRAPH.LEFT)
+                                else:
+                                    format_cell_meta(cell, other_rows_bg, other_rows_font, border_color,
+                                                   bold=False, font_size=11, alignment=WD_ALIGN_PARAGRAPH.CENTER)
+            
+            # --- LEGENDA/FONTE ---
+            p_fonte = doc.add_paragraph(fonte_padrao, style='Heading 4')
+            p_fonte.paragraph_format.space_before = Pt(6)
+            p_fonte.paragraph_format.space_after = Pt(12)
+            p_fonte.paragraph_format.keep_with_next = False  # Não manter com próximo para permitir quebra após
+            for run in p_fonte.runs:
+                run.font.size = Pt(8)
+                run.font.italic = True
+                run.font.color.rgb = RGBColor(0, 0, 0)
+            
+            # --- ESPAÇAMENTO ENTRE METAS ---
+            p_espaco = doc.add_paragraph()
+            p_espaco.paragraph_format.space_after = Pt(18)
+        
+        print(f"✓ {len(df_valores)} metas institucionais adicionadas com sucesso!")
+        
+    except Exception as e:
+        print(f"❌ ERRO ao processar metas institucionais: {str(e)}")
+        import traceback
+        traceback.print_exc()
+
 

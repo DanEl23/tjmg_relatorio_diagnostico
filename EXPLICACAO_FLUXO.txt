@@ -1,0 +1,200 @@
+═══════════════════════════════════════════════════════════════════════════════
+                FLUXO DE INSERÇÃO DE METAS INSTITUCIONAIS
+═══════════════════════════════════════════════════════════════════════════════
+
+RESPOSTA À PERGUNTA: "Como as tabelas são inseridas no documento final?"
+
+═══════════════════════════════════════════════════════════════════════════════
+PASSO 1: ARQUIVO FONTE COM MARCADOR (data/raw/Conteudo_Fonte.docx)
+═══════════════════════════════════════════════════════════════════════════════
+
+Conteudo_Fonte.docx é processado parágrafo por parágrafo.
+
+Encontrado no parágrafo de índice 846:
+  [Parágrafo 844] [FINALIZAR_LISTA_MARCADORES]
+  [Parágrafo 845] [QUEBRA_PAGINA]
+  [Parágrafo 846] METAS_INSTITUCIONAIS    ← MARCADOR
+  [Parágrafo 847] 12. CONCLUSÃO
+
+
+═══════════════════════════════════════════════════════════════════════════════
+PASSO 2: CORRESPONDÊNCIA COM MAPA_RECURSOS (src/content/static_data.py)
+═══════════════════════════════════════════════════════════════════════════════
+
+Linha 931-932 de static_data.py:
+
+    "METAS_INSTITUCIONAIS": {
+        "tipo": "METAS_INSTITUCIONAIS",
+        "fonte_custom": "Fonte: Painel Metas Nacionais CNJ..."
+    }
+
+A CHAVE do dicionário "METAS_INSTITUCIONAIS" corresponde exatamente ao 
+texto do parágrafo encontrado em Conteudo_Fonte.docx
+
+
+═══════════════════════════════════════════════════════════════════════════════
+PASSO 3: LEITURA E PROCESSAMENTO (src/core/generator.py, linhas 685-714)
+═══════════════════════════════════════════════════════════════════════════════
+
+def gerar_relatorio_completo(...):
+    ...
+    for para in doc_fonte.paragraphs:
+        texto = para.text.strip()
+        
+        if not texto: continue
+        
+        # QUANDO ENCONTRA "METAS_INSTITUCIONAIS":
+        if texto in mapa:  # mapa = MAPA_RECURSOS 
+            # Verifica se "METAS_INSTITUCIONAIS" está em MAPA_RECURSOS
+            # Resultado: SIM!
+            
+            # Chama a função que processa o recurso
+            processar_recurso(doc_final, texto, mapa[texto], loader_jn)
+            continue
+
+O QUE ACONTECE:
+- texto = "METAS_INSTITUCIONAIS"
+- mapa[texto] = {"tipo": "METAS_INSTITUCIONAIS", "fonte_custom": "..."}
+- Chamada: processar_recurso(doc_final, "METAS_INSTITUCIONAIS", {...}, loader_jn)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+PASSO 4: PROCESSAMENTO DO RECURSO (src/core/generator.py, linhas 601-602)
+═══════════════════════════════════════════════════════════════════════════════
+
+def processar_recurso(doc, chave, item, loader_jn=None):
+    tipo = item["tipo"]  # "METAS_INSTITUCIONAIS"
+    
+    # Verifica o tipo e chama a função builder apropriada
+    elif tipo == "METAS_INSTITUCIONAIS":
+        builders.adicionar_todas_metas_institucionais(doc, loader_jn=loader_jn)
+        # ↑ AQUI OCORRE A INSERÇÃO DAS 55 METAS
+
+
+═══════════════════════════════════════════════════════════════════════════════
+PASSO 5: LEITURA DO EXCEL - adicionar_todas_metas_institucionais()
+═══════════════════════════════════════════════════════════════════════════════
+
+Em src/tables/builders.py (linhas ~3046-3290):
+
+def adicionar_todas_metas_institucionais(doc, loader_jn=None):
+    
+    # 1. Lê o Excel
+    df_valores = pd.read_excel("exports/metas_institucionais_2025.xlsx",
+                               sheet_name="Valores Apurados")
+    
+    # 2. Para cada uma das 55 metas:
+    for idx, row in df_valores.iterrows():
+        meta_num = row['Meta']  # Ex: "TJMG 5"
+        
+        # 3. Cria parágrafo com título
+        p_titulo = doc.add_paragraph(meta_num, style='Heading 3')
+        
+        # 4. Cria parágrafo com descrição
+        p_desc = doc.add_paragraph(meta_descricao)
+        
+        # 5. CRIA E FORMATA A TABELA (3 linhas, 5 colunas)
+        table = doc.add_table(rows=3, cols=5)
+        
+        # Linha 1: Cabeçalho (2022, 2023, 2024, 2025, Meta)
+        # Linha 2: Valores históricos
+        # Linha 3: Dados/Resultado
+        
+        # Com formatação:
+        # - Cores RGB específicas
+        # - Alturas: 0.98cm (header), 0.6cm (dados)
+        # - Fontes: 11pt headers, 8pt legend
+        # - Bordas: 1/2pt brancas
+        # - Prevenção de quebra: cantSplit + keep_with_next
+        
+        # 6. Cria legenda
+        p_legenda = doc.add_paragraph("Fonte: Metas Institucionais do TJMG...")
+        
+        # Repete para todas as 55 metas
+
+
+═══════════════════════════════════════════════════════════════════════════════
+PASSO 6: RESULTADO FINAL NO DOCUMENTO (Relatorio_Com_Metas_Final_v2.docx)
+═══════════════════════════════════════════════════════════════════════════════
+
+Ao executar: python main.py --saida Relatorio_Com_Metas_Final_v2.docx
+
+O MARCADOR "METAS_INSTITUCIONAIS" em Conteudo_Fonte.docx é SUBSTITUÍDO por:
+
+    11. METAS INSTITUCIONAIS DO TJMG
+    Apresentação das 55 metas institucionais do TJMG para o ano de 2025...
+    
+    ┌─────────────────────────────────────────┐
+    │ TJMG 5                                  │
+    │ TJMG 5 - Realizar, em 2025, 70%...     │
+    │ ┌── TABELA FORMATADA ──────────────────┐│
+    │ │ 2022  │ 2023  │ 2024  │ 2025  │ Meta  ││
+    │ │───────┼───────┼───────┼───────┼───────││
+    │ │  60%  │  65%  │  68%  │  70%  │  70%  ││
+    │ └──────────────────────────────────────┘│
+    │ Fonte: Metas Institucionais...           │
+    └─────────────────────────────────────────┘
+    
+    ┌─────────────────────────────────────────┐
+    │ TJMG 6                                  │
+    │ TJMG 6 - Realizar, em 2025, 70%...     │
+    │ ┌── TABELA FORMATADA ──────────────────┐│
+    │ │ ...tabela...                         ││
+    │ └──────────────────────────────────────┘│
+    │ Fonte: Metas Institucionais...           │
+    └─────────────────────────────────────────┘
+    
+    ... (mais 53 metas similares)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+RESUMO - POR QUÊ FUNCIONA?
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Conteudo_Fonte.docx contém o MARCADOR "METAS_INSTITUCIONAIS"
+   ↓
+2. MAPA_RECURSOS em static_data.py contém a CHAVE "METAS_INSTITUCIONAIS"
+   ↓
+3. O gerador faz correspondência: texto do parágrafo = chave em MAPA_RECURSOS
+   ↓
+4. Quando encontra correspondência, chama processar_recurso()
+   ↓
+5. processar_recurso() identifica o tipo e chama a função builder apropriada
+   ↓
+6. adicionar_todas_metas_institucionais() lê o Excel e gera as tabelas
+   ↓
+7. As tabelas são adicionadas ao documento final (doc_final)
+   ↓
+8. O MARCADOR é "CONSUMIDO" e substituído pelo conteúdo gerado
+
+
+═══════════════════════════════════════════════════════════════════════════════
+ANALOGIA
+═══════════════════════════════════════════════════════════════════════════════
+
+É semelhante a um sistema de SUBSTITUIÇÃO DE TAGS:
+
+    Conteudo_Fonte.docx:
+    
+    ... Seção 10 ...
+    
+    {METAS_INSTITUCIONAIS}    ← TAG A SER SUBSTITUÍDA
+    
+    Seção 12 ...
+
+    Gerador encontra a TAG, procura em MAPA_RECURSOS, identifica que é do 
+    tipo METAS_INSTITUCIONAIS, chama a função builder que GERA O CONTEÚDO,
+    e insere no lugar da TAG no documento final.
+    
+    Resultado final:
+    
+    ... Seção 10 ...
+    
+    11. METAS INSTITUCIONAIS DO TJMG
+    [Tabela TJMG 5]
+    [Tabela TJMG 6]
+    ... [Tabelas TJMG 7 a 156]
+    
+    Seção 12 ...
+
+═══════════════════════════════════════════════════════════════════════════════
