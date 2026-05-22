@@ -26,7 +26,7 @@ class AutomacaoPainelCNJ:
 
     def acessar_painel(self):
         print("Acessando site do CNJ...")
-        self.driver.get("https://justica-em-numeros.cnj.jus.br/painel-metas/")
+        self.driver.get("https://app.powerbi.com/view?r=eyJrIjoiMzkyNzM3MzctZWY2MC00NzJjLTg4OTItOTAwZmYxNzRlYTM5IiwidCI6ImFkOTE5MGU2LWM0NWQtNDYwMC1iYzVjLWVjYTU1NGNjZjQ5NyIsImMiOjJ9")
         time.sleep(10)
 
 

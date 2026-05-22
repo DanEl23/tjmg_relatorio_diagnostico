@@ -131,11 +131,11 @@ def configurar_estilos_tjmg(document):
         except: pass
 
     # Heading 1: Tamanho 16, Recuo de 1.25 cm
-    criar_ou_atualizar_estilo('Heading 1', 18, 1.25, 18)
+    criar_ou_atualizar_estilo('Heading 1', 18, 1.25, 15)
     
     # Heading 2 e 3: Tamanho 16, Sem recuo
-    criar_ou_atualizar_estilo('Heading 2', 16, 0.0, 12)
-    criar_ou_atualizar_estilo('Heading 3', 16, 0.0, 12)
+    criar_ou_atualizar_estilo('Heading 2', 16, 0.0, 15)
+    criar_ou_atualizar_estilo('Heading 3', 16, 0.0, 15)
 
 
 def inserir_capa(document, pasta_resources):
@@ -731,8 +731,6 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
                 
                 if nivel == 1: texto_final_titulo = f"{num_limpo}. {titulo_texto}"
                 else: texto_final_titulo = f"{num_limpo} {titulo_texto}"
-
-                if nivel == 2: doc_final.add_paragraph() # Espaço antes de H2
 
                 print(f"🔖 Título Detectado: {texto_final_titulo}")
                 h = doc_final.add_heading(texto_final_titulo, level=nivel)

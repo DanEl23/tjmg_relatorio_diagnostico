@@ -240,7 +240,7 @@ def adicionar_tabela_atos(document, dados):
     run_titulo = p_titulo_tabela.add_run("Tabela 01 - Atos Normativos referentes à Estrutura do TJMG. Fonte: Portal TJMG")
     run_titulo.bold = False 
     run_titulo.font.name = FONTE
-    run_titulo.font.size = Pt(8)
+    run_titulo.font.size = Pt(9)
 
 
 def adicionar_tabela_areas(document, dados):
@@ -482,7 +482,7 @@ def adicionar_tabela_areas(document, dados):
     p.paragraph_format.space_after = Pt(12)
     run = p.add_run("Tabela 02 - Principais áreas da Secretaria do TJMG. Fonte: Portal TJMG")
     run.font.name = 'Calibri'
-    run.font.size = Pt(8)
+    run.font.size = Pt(9)
 
     
 def adicionar_tabela_estrutura(document, dados):
@@ -614,7 +614,7 @@ def adicionar_tabela_estrutura(document, dados):
     p.paragraph_format.space_after = Pt(12)
     run = p.add_run("Tabela 03 - Estruturas para a Prestação Jurisdicional na Segunda Instância. Fonte: Portal TJMG")
     run.font.name = 'Calibri'
-    run.font.size = Pt(8)
+    run.font.size = Pt(9)
 
 
 def adicionar_tabela_comarcas(document, dados):
@@ -755,7 +755,7 @@ def adicionar_tabela_comarcas(document, dados):
     p.paragraph_format.space_after = Pt(12)
     run = p.add_run("Tabela 04 - Comarcas Instaladas. Fonte: Infoguia")
     run.font.name = 'Calibri'
-    run.font.size = Pt(8)
+    run.font.size = Pt(9)
             
 
 def adicionar_tabela_nucleos(document, dados):
@@ -875,7 +875,7 @@ def adicionar_tabela_nucleos(document, dados):
     p.paragraph_format.space_after = Pt(12)
     run = p.add_run("Tabela 05 - Relação dos Núcleos de Justiça 4.0. Fonte: Infoguia")
     run.font.name = 'Calibri'
-    run.font.size = Pt(8)
+    run.font.size = Pt(9)
 
 
 def adicionar_tabela_processos(document, dados, texto_legenda=None):
@@ -1074,7 +1074,7 @@ def adicionar_tabela_processos(document, dados, texto_legenda=None):
 
     # Monta a legenda final sem duplicar o prefixo
     txt_leg = f"{texto_final.rstrip('.')}. Fonte: Centro de Informações para a Gestão Institucional – CEINFO."    
-    r_leg = p_leg.add_run(txt_leg); r_leg.font.name = FONTE_NOME; r_leg.font.size = Pt(8)
+    r_leg = p_leg.add_run(txt_leg); r_leg.font.name = FONTE_NOME; r_leg.font.size = Pt(9)
 
     
 def adicionar_tabela_orcamento(document, titulo_vindo_do_word, dados, numero_tabela="09", titulo_custom=None):
@@ -1246,7 +1246,7 @@ def adicionar_tabela_orcamento(document, titulo_vindo_do_word, dados, numero_tab
         titulo_formatado = f"Tabela {numero_tabela} - {titulo_formatado}"    
     texto_legenda = f"{titulo_formatado}. Fonte: {fonte_final}"
     r_leg = p_leg.add_run(texto_legenda)
-    r_leg.font.name = FONTE_NOME; r_leg.font.size = Pt(8)
+    r_leg.font.name = FONTE_NOME; r_leg.font.size = Pt(9)
 
 
 def adicionar_tabela_orcamento_conjunto(document, dados):
@@ -1379,7 +1379,7 @@ def adicionar_tabela_orcamento_conjunto(document, dados):
     p_leg.paragraph_format.space_before = Pt(6)
     r_leg = p_leg.add_run("Tabela 11 - Orçamento 2026 por ação orçamentária. Fonte: Lei Orçamentária Anual nº 25.698, de 14/01/2026.")
     r_leg.font.name = FONTE_NOME
-    r_leg.font.size = Pt(8)
+    r_leg.font.size = Pt(9)
 
 
 def adicionar_tabela_orcamento_detalhada(document, dados):
@@ -1506,7 +1506,7 @@ def adicionar_tabela_orcamento_detalhada(document, dados):
     p_leg.alignment = WD_ALIGN_PARAGRAPH.LEFT
     p_leg.paragraph_format.space_before = Pt(6)
     r_leg = p_leg.add_run("Tabela Orçamentária Detalhada. Fonte: LOA/TJMG")
-    r_leg.font.name = FONTE_NOME; r_leg.font.size = Pt(8)
+    r_leg.font.name = FONTE_NOME; r_leg.font.size = Pt(9)
     
 
 def adicionar_tabela_cidades(document, dados):
@@ -1681,7 +1681,7 @@ def adicionar_tabela_justica_numeros(document, dados, texto_legenda=None, indent
             
         run = p.add_run(texto_final)
         run.font.name = 'Calibri'
-        run.font.size = Pt(8)
+        run.font.size = Pt(9)
         
 
 def adicionar_tabela_generica(document, titulo_tabela, dados, fonte=None):
@@ -1845,7 +1845,7 @@ def adicionar_tabela_generica(document, titulo_tabela, dados, fonte=None):
     
     r_leg = p_leg.add_run(texto_legenda)
     r_leg.font.name = FONTE_NOME
-    r_leg.font.size = Pt(8)
+    r_leg.font.size = Pt(9)
 
 
 def adicionar_tabela_simples_3col(document, dados, titulo_custom=None, indent_cm=0, fonte=None):
@@ -3303,7 +3303,7 @@ def adicionar_todas_metas_institucionais(doc, loader_jn=None):
             p_fonte.paragraph_format.space_after = Pt(12)
             p_fonte.paragraph_format.keep_with_next = False  # Não manter com próximo para permitir quebra após
             for run in p_fonte.runs:
-                run.font.size = Pt(8)
+                run.font.size = Pt(9)
                 run.font.italic = True
                 run.font.color.rgb = RGBColor(0, 0, 0)
             

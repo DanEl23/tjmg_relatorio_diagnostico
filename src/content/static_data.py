@@ -95,23 +95,23 @@ dados_tabela_areas = [
     ("DATA_SPLIT", "Diretoria Executiva de Contratações", "DIRCONT"),
     ("DATA_SPLIT", "Diretoria Executiva de Engenharia e Gestão Predial", "DENGEP"),
     ("DATA_SPLIT", "Diretoria Executiva de Tecnologia da Informação e Comunicação", "DIRTEC"),    # 1ª Vice-Presidência
-    ("HEADER_GROUP_SIGLA", "SUPERINTENDÊNCIA DO 1º VICE-PRESIDENTE", "SIGLA"),
+    ("HEADER_GROUP_SIGLA", "SUPERINTENDÊNCIA JUDICIÁRIA", "SIGLA"),
     ("DATA_SPLIT", "Assessoria da 1ª Vice-Presidência", "1ª ASVIP"),
     ("DATA_SPLIT", "Diretoria Executiva de Suporte à Prestação Jurisdicional", "DIRSUP"),
     ("DATA_SPLIT", "Gabinete da 1ª Vice-Presidência", "1º GAVIP"),
     ("DATA_SPLIT", "Gabinetes dos Desembargadores", "GADES"),
     ("DATA_SPLIT", "Gerências dos Cartórios das Câmaras", "GECART"),
     ("DATA_SPLIT", "Secretaria de Padronização e Acompanhamento da Gestão Judiciária", "SEPAD"),    # 2ª Vice-Presidência
-    ("HEADER_GROUP_SIGLA", "SUPERINTENDÊNCIA DO 2º VICE-PRESIDENTE", "SIGLA"),
+    ("HEADER_GROUP_SIGLA", "SUPERINTENDÊNCIA DA ESCOLA JUDICIAL DESEMBARGADOR EDÉSIO FERNANDES – EJEF", "SIGLA"),
     ("DATA_SPLIT", "Diretoria Executiva de Desenvolvimento de Pessoas", "DIRDEP"),
     ("DATA_SPLIT", "Diretoria Executiva de Gestão da Informação Documental", "DIRGED"),    # 3ª Vice-Presidência
-    ("HEADER_GROUP_SIGLA", "SUPERINTENDÊNCIA DO 3º VICE-PRESIDENTE", "SIGLA"),
+    ("HEADER_GROUP_SIGLA", "SUPERINTENDÊNCIA DA SUPERINTENDÊNCIA DE TRATAMENTO ADEQUADO DOS CONFLITOS DE INTERESSE", "SIGLA"),
     ("DATA_SPLIT", "Assessoria da 3ª Vice-Presidência", "3ª ASVIP"),
     ("DATA_SPLIT", "Comitê de Justiça Restaurativa", "COMJUR"),
     ("DATA_SPLIT", "Diretoria Executiva de Planejamento e Gestão da 3ª Vice-Presidência", "DIRTEVI"),
     ("DATA_SPLIT", "Gabinete da 3ª Vice-Presidência", "3º GAVIP"),
     ("DATA_SPLIT", "Núcleo Permanente de Métodos Consensuais de Solução de Conflitos", "NUPEMEC"),    # Corregedoria
-    ("HEADER_GROUP_SIGLA", "CORREGEDORIA-GERAL DE JUSTIÇA", "SIGLA"),
+    ("HEADER_GROUP_SIGLA", "SUPERINTENDÊNCIA DA SECRETARIA DA CORREGEDORIA-GERAL DE JUSTIÇA E DOS SERVIÇOS JUDICIAIS, NOTARIAIS E DE REGISTRO DO ESTADO", "SIGLA"),
     ("DATA_SPLIT", "Diretoria Executiva da Atividade Correcional", "DIRCOR"),
     ("DATA_SPLIT", "Diretoria Executiva dos Serviços Notariais e de Registro", "DIRNOT"),
     ("DATA_SPLIT", "Secretaria de Suporte ao Planejamento e à Gestão da Primeira Instância", "SEPLAN")
@@ -729,37 +729,42 @@ MAPA_RECURSOS = {
         "tipo": "TABELA_GENERICA",
         "dados": dados_tabela_atos,
         "fonte_custom": "Portal TJMG",
+        "space_after": 20
     },
     "Tabela 02 - Principais áreas da Secretaria do TJMG": {
         "tipo": "TABELA_AREAS",
-        "dados": dados_tabela_areas
+        "dados": dados_tabela_areas,
+        "space_after": 20
     },
     "Tabela 03 - Estrutura para a prestação jurisdicional na Segunda Instância": {
         "tipo": "TABELA_ESTRUTURA",
         "dados": dados_tabela_estrutura,
-        "space_after": 24
+        "space_after": 20
     },
     "Tabela 04 - Estrutura para a prestação jurisdicional na Primeira Instância. Listagem das Comarcas Instaladas em Minas Gerais": {
         "tipo": "TABELA_COMARCAS",
         "dados": dados_tabela_comarcas,
-        "space_after": 48
+        "space_after": 20
     },
     "Tabela 05 - Relação dos Núcleos de Justiça 4.0 da Primeira Instância": {
         "tipo": "TABELA_NUCLEOS",
         "dados": dados_tabela_nucleos,
-        "space_after": 48
+        "space_after": 20
     },
     "Tabela 06 - Número de processos distribuídos": {
         "tipo": "TABELA_PROCESSOS",
-        "dados": dados_tabela_processos
+        "dados": dados_tabela_processos,
+        "space_after": 20
     },
     "Tabela 07 - Julgamentos Realizados": {
         "tipo": "TABELA_PROCESSOS",
-        "dados": dados_tabela_julgamentos
+        "dados": dados_tabela_julgamentos,
+        "space_after": 20
     },
     "Tabela 08 - Dados do Acervo": {
         "tipo": "TABELA_PROCESSOS",
-        "dados": dados_tabela_acervo
+        "dados": dados_tabela_acervo,
+        "space_after": 20
     },
     "Tabela 09 - Despesa realizada por ação (Unidade 1031)": {
         "tipo": "TABELA_ORCAMENTO",
@@ -767,7 +772,7 @@ MAPA_RECURSOS = {
         "num": "09",
         "fonte_custom": "Armazém de Informações - BO SIAFI/MG",
         "titulo": TITULO_TABELA_ORCAMENTO_1,
-        "space_after": 24
+        "space_after": 6
     },
     "Tabela 10 - Despesa realizada por ação (Unidade 4031)": {
         "tipo": "TABELA_ORCAMENTO", # Ou usar TABELA_ORCAMENTO com num="11"
@@ -775,98 +780,102 @@ MAPA_RECURSOS = {
         "num": "10",
         "fonte_custom": "Armazém de Informações - BO SIAFI/MG",
         "titulo": TITULO_TABELA_ORCAMENTO_2,
-        "space_after": 24
+        "space_after": 6
     },
     "Tabela 11 - Orçamento 2026 por ação orçamentária": {
         "tipo": "TABELA_ORCAMENTO_CONJUNTO", # Ou usar TABELA_ORCAMENTO com num="11"
         "dados": dados_tabela_orcamento_2025,
         "fonte_custom": "Fonte: Lei Orçamentária Anual nº 25.698, de 14/01/2026.",
-        "titulo": TITULO_TABELA_ORCAMENTO_ACAO
+        "titulo": TITULO_TABELA_ORCAMENTO_ACAO,
+        "space_after": 20
     },
     "Tabela 12 - Comparativo Orçamento 2025 x 2026 por ação orçamentária": {
         "tipo": "TABELA_ORCAMENTO_CONJUNTO_COMPARACAO",
         "dados": dados_tabela_orcamento_comparacao,
         "fonte_custom": "",
-        "titulo": TITULO_TABELA_ORCAMENTO_ACAO_COMPARACAO
+        "titulo": TITULO_TABELA_ORCAMENTO_ACAO_COMPARACAO,
+        "space_after": 20
     },
     "Tabela - Cidades": {
         "tipo": "TABELA_CIDADES", 
-        "dados": dados_tabela_cidades
+        "dados": dados_tabela_cidades,
+        "space_after": 20
     },
     "Tabela 12 - Dados estatísticos do Relatório Justiça em Números – Edições 2019 a 2024/CNJ.": {
         "tipo": "TABELA_JUSTICA_NUMEROS", 
         "dados": dados_tabela_justica_numeros,
-        "fonte_custom": "Legenda: s/d = Dados não encontrados no Relatório Justiça em Números do Período. (*) O indicador considera: número de servidores(as) (efetivos(as), requisitados(as), cedidos(as) e comissionados(as) sem vínculo efetivo); e número de trabalhadores(as) auxiliares (terceirizados(as), estagiários(as), juízes(as) leigos(as) e conciliadores(as)."
+        "fonte_custom": "Legenda: s/d = Dados não encontrados no Relatório Justiça em Números do Período. (*) O indicador considera: número de servidores(as) (efetivos(as), requisitados(as), cedidos(as) e comissionados(as) sem vínculo efetivo); e número de trabalhadores(as) auxiliares (terceirizados(as), estagiários(as), juízes(as) leigos(as) e conciliadores(as).",
+        "space_after": 20
     },
     "Tabela 13 - Relatório Justiça em Números (CNJ) | Dados do TJMG": {
         "tipo": "TABELA_JUSTICA_NUMEROS",
         "dados": dados_tabela_justica_numeros, # Ensure this variable is defined or available
         "fonte_custom": "Fonte: Base de Dados Justiça em Números 2026.",
-        "space_after": 12,
+        "space_after": 20,
         "recuo_esq": -1.5
     },
     "Tabela 14: Performance do TJMG em indicadores de acessibilidade e inclusão.": {
         "tipo": "TABELA_SIMPLES_3COL", 
         "dados": dados_tabela_exemplo_3col,
         "fonte_custom": "Fonte: Painel de Sustentabilidade do CNJ.",
-        "recuo_esq": 0, 
-        "space_after": 12
+        "recuo_esq": 0,
+        "space_after": 20
     },
     "Tabela 15: Resultado TJMG comparativo 2024 X 2025.": {
         "tipo": "TABELA_4COL_SIMPLES", 
         "dados": dados_exemplo_4col,
         "fonte_custom": "Fonte: Painel iGovTIC-JUD CNJ.",
         "recuo_esq": -0.5, 
-        "space_after": 12
+        "space_after": 20
     },
     "Tabela 16 - Resultado comparativo do iGovTIC-JUD na Justiça Estadual de grande porte.": {
         "tipo": "TABELA_6COL_SIMPLES",
         "dados": dados_igovtic,
         "fonte_custom": "Fonte: Levantamento de Governança, Gestão e Infraestrutura de TIC do Poder Judiciário – agosto 2025/CNJ.",
         "recuo_esq": -0.5, # Um pequeno recuo para a esquerda ajuda tabelas largas
-        "space_after": 30
+        "space_after": 20
     },
     "Tabela 17 - Comparativo na Justiça Estadual de Grande Porte das notas alcançadas por tema.": {
         "tipo": "TABELA_COMPARATIVO_TEMAS",
         "dados": dados_comparativo_temas,
         "fonte_custom": "Fonte: Levantamento de Governança, Gestão e Infraestrutura de TIC do Poder Judiciário – agosto 2025/CNJ.",
         "recuo_esq": -0.5, # Ajuste para caber bem na página
-        "space_after": 30
+        "space_after": 20
     },
     "Tabela 18 - Tabela percentual de processos consistentes do TJMG no Datajud.": {
         "tipo": "TABELA_4COL_SIMPLES",
         "dados": dados_datajud_consistencia,
         "fonte_custom": "Fonte Painel Qualidade dos dados/ CNJ atualizado em 01/02/2026",
         "recuo_esq": -0.5, # Ajuste para caber bem na página
-        "space_after": 30
+        "space_after": 20
     },
     "Tabela 19 - Tabela comparativa de Desempenho do Eixo Governança.": {
         "tipo": "TABELA_4COL_SIMPLES",
         "dados": dados_desempenho_governanca,
         "fonte_custom": "Fonte: Painel de resultados do Prêmio/ CNJ.",
         "recuo_esq": -0.5,
-        "space_after": 12
+        "space_after": 20
     },
     "Tabela 20 - Tabela comparativa de Desempenho do Eixo Produtividade.": {
         "tipo": "TABELA_4COL_SIMPLES",
         "dados": dados_desempenho_produtividade,
         "fonte_custom": "Fonte: Painel de resultados do Prêmio/ CNJ.",
         "recuo_esq": -0.5,
-        "space_after": 12
+        "space_after": 20
     },
     "Tabela 21 - Tabela comparativa de Desempenho do Eixo Transparência.": {
         "tipo": "TABELA_4COL_SIMPLES",
         "dados": dados_desempenho_transparencia,
         "fonte_custom": "Fonte: Painel de resultados do Prêmio CNJ.",
         "recuo_esq": -0.5,
-        "space_after": 12
+        "space_after": 20
     },
     "Tabela 22 - Tabela comparativa de Desempenho do Eixo Dados e Tecnologia.": {
         "tipo": "TABELA_4COL_SIMPLES",
         "dados": dados_desempenho_tecnologia,
         "fonte_custom": "Fonte: Painel de resultados do Prêmio CNJ.",
         "recuo_esq": -0.5,
-        "space_after": 12,
+        "space_after": 20,
         "larguras": [2400, 1300, 1300, 4600] 
     },
 
@@ -941,109 +950,131 @@ MAPA_RECURSOS = {
 
     "Figura 01 - Informações sobre o Estado de Minas Gerais.": {
         "tipo": "IMAGEM", "arquivo": "figura_01.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "fonte" : "Fonte: Centro de Informações para a Gestão Institucional – CEINFO",
         "largura": 17.69,
         "recuo_esq": -0.85,
-        "space_after": 10
+        "space_after": 20
     },
     "Figura 02 - Síntese da estrutura na área fim.": {
         "tipo": "IMAGEM", "arquivo": "figura_02.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "fonte" : "Fonte: Centro de Informações para a Gestão Institucional – CEINFO",
         "largura": 17.69,
         "recuo_esq": -0.95,
-        "space_after": 12
+        "space_after": 20
     },
     "Figura 03 - Novas estruturas na área fim.": {
         "tipo": "IMAGEM", "arquivo": "figura_03.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "fonte" : "Fonte: Centro de Informações para a Gestão Institucional – CEINFO",
         "largura": 18.56,
-        "recuo_esq": -1.35
+        "recuo_esq": -1.35,
+        "space_after": 20
     },
     "Figura 04 - Força de Trabalho.": {
         "tipo": "IMAGEM", "arquivo": "figura_04.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "fonte" : "Fonte: Centro de Informações para a Gestão Institucional – CEINFO",
         "largura": 17.00,
         "space_after": 24,
-        "recuo_esq": -1.35
-        
+        "recuo_esq": -1.35,
+        "space_after": 20  
     },
     "Figura 05 - Colaboradores da Justiça.": {
         "tipo": "IMAGEM", "arquivo": "figura_05.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "fonte" : "Fonte: Centro de Informações para a Gestão Institucional – CEINFO",
         "largura": 17.00,
-        "recuo_esq": -1.35
+        "recuo_esq": -1.35,
+        "space_after": 20
     },
     "Figura 06 – Força de Trabalho e Colaboradores na área de TI.": {
         "tipo": "IMAGEM", "arquivo": "figura_06.png",
-        "fonte" : "Centro de Informações para a Gestão Institucional – CEINFO",
+        "fonte" : "Fonte: Centro de Informações para a Gestão Institucional – CEINFO",
         "largura": 17.00,
-        "recuo_esq": -1.35
+        "recuo_esq": -1.35,
+        "space_after": 20
     },
     "Figura 07 - Grandes Litigantes Polo Passivo.": {
         "tipo": "IMAGEM", "arquivo": "figura_07.png",
-        "fonte" : "Painel Litigantes do CNJ",
-        "largura": 12.50
+        "fonte" : "Fonte: Painel Litigantes do CNJ",
+        "largura": 12.50,
+        "space_after": 20
     },
     "Figura 08 - Grandes Litigantes Polo Ativo.": {
         "tipo": "IMAGEM", "arquivo": "figura_08.png",
-        "fonte" : "Painel Litigantes do CNJ",
-        "largura": 12.50
+        "fonte" : "Fonte: Painel Litigantes do CNJ",
+        "largura": 12.50,
+        "space_after": 20
     },
     "Figura 09 - Instalações prediais do TJMG.": {
         "tipo": "IMAGEM", "arquivo": "figura_09.png",
-        "fonte" : "Fonte: Centro de Informações para a Gestão Institucional – CEINFO"
+        "fonte" : "Fonte: Centro de Informações para a Gestão Institucional – CEINFO",
+        "space_after": 20
     },
     "Figura 10 - Desempenho da ação por programa (Unidade 1031).": {
         "tipo": "IMAGEM", "arquivo": "figura_10.png",
-        "fonte" : "Sigplan",
+        "fonte" : "Fonte: Sigplan",
         "largura": 19.0,
-        "recuo_esq": -1.85
+        "recuo_esq": -1.85,
+        "space_after": 20
     },
     "Figura 11 - Desempenho da ação por programa (Unidade 4031).": {
         "tipo": "IMAGEM", "arquivo": "figura_11.png",
-        "fonte" : "Sigplan",
+        "fonte" : "Fonte: Sigplan",
         "largura": 19.0,
-        "recuo_esq": -1.85
+        "recuo_esq": -1.85,
+        "space_after": 20
     },
     "Figura 12 - Esquema do Plano Estratégico 2025.": {
         "tipo": "IMAGEM", "arquivo": "figura_12.png",
-        "fonte" : "Sigplan",
+        "fonte" : "Fonte: Sigplan",
         "largura": 18.0,
         "recuo_esq": -0.75,
-        "space_after": 30
+        "space_after": 30,
+        "space_after": 20
     },
     "Figura 13 - Identidade organizacional do TJMG/DIRCOM": {
         "tipo": "IMAGEM", "arquivo": "figura_13.png",
-        "fonte" : "Sigplan",
+        "fonte" : "Fonte: Sigplan",
         "largura": 13.0,
-        "space_after": 30
+        "space_after": 30,
+        "space_after": 20
     },
     "Figura 14 - Mapa Estratégico do TJMG/ DIRCOM": {
         "tipo": "IMAGEM", "arquivo": "figura_14.png",
-        "fonte" : "Sigplan",
+        "fonte" : "Fonte: Sigplan",
         "largura": 13.0,
-        "space_after": 30
+        "space_after": 30,
+        "space_after": 20
     },
-    "Figura 15 - Habitantes por varas e juizado especial da Justiça Estadual.": {
+    "Figura 15 - ODS/ONU.": {
         "tipo": "IMAGEM", "arquivo": "figura_15.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: https://brasil.un.org/pt-br/sdgs",
+        "largura": 16.0,
+        "recuo_esq": 2.0,
+        "space_after": 40,
+        "space_after": 20
+    },
+    "Figura 16 - Habitantes por varas e juizado especial da Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "figura_16.png",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 11.0,
         "recuo_esq": 2.0,
-        "space_after": 40
+        "space_after": 40,
+        "space_after": 20
     },
-    "Figura 16 - Receita x Despesa – TJMG e Justiça Estadual.": {
-        "tipo": "IMAGEM", "arquivo": "figura_16.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+    "Figura 17 - Receita x Despesa – TJMG e Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "figura_17.png",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 17.0,
         "recuo_esq": -1.0,
-        "space_after": 30
+        "space_after": 30,
+        "space_after": 20
     },
-    "Figura 17 - Classificação dos tribunais da Justiça Estadual segundo o porte, ano-base 2024.": {
-        "tipo": "IMAGEM", "arquivo": "figura_17.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+    "Figura 18 - Classificação dos tribunais da Justiça Estadual segundo o porte, ano-base 2024.": {
+        "tipo": "IMAGEM", "arquivo": "figura_18.png",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 30,
+        "space_after": 20
     }, 
     
 
@@ -1056,331 +1087,335 @@ MAPA_RECURSOS = {
 
     "Gráfico 01 - Perfil racial no Poder Judiciário.": {
         "tipo": "IMAGEM", "arquivo": "grafico_01.png",
-        "fonte" : "Diagnóstico Étnico-Racial no Poder Judiciário.",
-        "largura": 12.50
+        "fonte" : "Fonte: Diagnóstico Étnico-Racial no Poder Judiciário.",
+        "largura": 12.50,
+        "space_after": 20
     },
     "Gráfico 02 - Percentual de magistrados(as) negros(as) na Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_02.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
-        "largura": 12.50
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 12.50,
+        "space_after": 20
     },
     "Gráfico 03 - Percentual de magistrados(as) na Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_03.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
-        "largura": 12.50
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 12.50,
+        "space_after": 20
     },
     "Gráfico 04 - Percentual de Desembargadoras na Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_04.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
-        "largura": 12.50
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
+        "largura": 12.50,
+        "space_after": 20
     },
     "Gráfico 05 - Número de municípios-sede e unidades judiciárias por tribunal de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_05.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 06 - Evolução das receitas totais e das despesas totais do TJMG.": {
         "tipo": "IMAGEM", "arquivo": "grafico_06.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -0.75,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 07 - Evolução da despesa total com pessoal do TJMG.": {
         "tipo": "IMAGEM", "arquivo": "grafico_07.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.0,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 08 - Custo médio mensal nos Tribunais de Justiça de grande porte com magistrados(as) e servidores(as), incluindo benefícios, encargos, previdência social, diárias, passagens, indenizações judiciais e demais indenizações eventuais e não eventuais.": {
         "tipo": "IMAGEM", "arquivo": "grafico_08.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 09 - Valores arrecadados em relação ao número de processos ingressados no TJMG e na Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_09.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 10 - Arrecadação com custas x Despesas totais no TJMG e Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_10.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.25,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 11 - Assistência Judiciária Gratuita no TJMG e na Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_11.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 12 - Número de CEJUSCs por tribunal de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_12.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.25,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 13 - Evolução de casos novos no TJMG.": {
         "tipo": "IMAGEM", "arquivo": "grafico_13.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 17.5,
         "recuo_esq": -0.85,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 14 - Variação de casos novos – 2023 – 2024 TJMG e Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_14.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 15 - Magistrados por 100 mil habitantes e percentual de cargos vagos de magistrados.": {
         "tipo": "IMAGEM", "arquivo": "grafico_15.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 16 - Percentual de servidores lotados na área administrativa.": {
         "tipo": "IMAGEM", "arquivo": "grafico_16.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 17 - IPC-Jus dos tribunais de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_17.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 18 - Análise de cenário para alcançar 100% no IPC-JUS dos tribunais estaduais de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_18.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 19 - Evolução dos processos baixados do TJMG.": {
         "tipo": "IMAGEM", "arquivo": "grafico_19.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 17.0,
         "recuo_esq": -0.75,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 20 - Ranking de processos baixados em 2024 na Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_20.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 21 - Tempo médio dos processos baixados e pendentes nos tribunais estaduais de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_21.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 22 - Evolução do Índice de Atendimento à Demanda do TJMG.": {
         "tipo": "IMAGEM", "arquivo": "grafico_22.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 17.0,
         "recuo_esq": -0.75,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 23 - Ranking do índice de Atendimento à Demanda dos tribunais estaduais de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_23.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 24 - Evolução da Taxa de Congestionamento Total e Líquida do TJMG.": {
         "tipo": "IMAGEM", "arquivo": "grafico_24.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 25 - Taxa de Congestionamento Total na Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_25.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 26 - Taxa de Congestionamento Líquida na Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_26.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 27 - Índice de Conciliação e sua trajetória no tempo para o TJMG e para a Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_27.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 17.5,
         "recuo_esq": -0.75,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 28 - Processos pendentes de execução fiscal e tempo de tramitação na execução fiscal nos tribunais de justiça de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_28.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 29 - Despesa com recursos humanos por tribunais estaduais de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_29.png",
         "fonte" : "Fonte: “Justiça em Números 2025” – Ano base 2024/ CNJ.",
         "largura": 17.0,
         "recuo_esq": -0.75,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 30 - Percentual de servidores lotados na área administrativa.": {
         "tipo": "IMAGEM", "arquivo": "grafico_30.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 17.0,
         "recuo_esq": -0.75,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 31 - Valores arrecadados em relação ao número de processos ingressados sujeitos a cobrança.": {
         "tipo": "IMAGEM", "arquivo": "grafico_31.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 0
+        "space_after": 20
     },
     "Gráfico 32 - Índice de conciliação por Tribunal de Justiça.": {
         "tipo": "IMAGEM", "arquivo": "grafico_32.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
         "space_after": 20
     },
     "Gráfico 33 - Percentual de audiências de conciliação por casos novos por Tribunal de Justiça.": {
         "tipo": "IMAGEM", "arquivo": "grafico_33.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 30
+        "space_after": 20
     },
     "Gráfico 34 - Percentual de execuções fiscais pendentes em relação ao total de processos pendentes.": {
         "tipo": "IMAGEM", "arquivo": "grafico_34.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 35 - Resultado do IPC-Jus da área judiciária por instância e Tribunal de Justiça.": {
         "tipo": "IMAGEM", "arquivo": "grafico_35.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 36 - IPC-Jus dos tribunais de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_36.png",
-        "fonte" : "'Justiça em Números 2025' – Ano base 2024/ CNJ.",
+        "fonte" : "Fonte: ‘Justiça em Números 2025’ – Ano base 2024/ CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 37 - Tempo de giro do acervo, por tribunal de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_37.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 38 - Tempo médio de tramitação dos processos pendentes e baixados, por Tribunal de Justiça.": {
         "tipo": "IMAGEM", "arquivo": "grafico_38.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 39 - Taxa de congestionamento, por tribunal de justiça de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_39.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 40 - Taxa de congestionamento na execução fiscal, por tribunal de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_40.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 41 - Índice de produtividade dos magistrados, por tribunal de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_41.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 42 - Índice de produtividade dos servidores da área judiciária, por tribunal de grande porte.": {
         "tipo": "IMAGEM", "arquivo": "grafico_42.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 43 - Custo médio mensal nos Tribunais de Justiça com magistrados(as) e servidores(as).": {
         "tipo": "IMAGEM", "arquivo": "grafico_43.png",
-        "fonte" : "Relatório Justiça em Números – 2025/CNJ.",
+        "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 44 - Ranking da Transparência na Justiça Estadual.": {
         "tipo": "IMAGEM", "arquivo": "grafico_44.png",
-        "fonte" : "Painel com resultado final de todos os tribunais e conselhos/ CNJ",
+        "fonte" : "Fonte: Painel com resultado final de todos os tribunais e conselhos/ CNJ",
         "largura": 18.0,
         "recuo_esq": -1.1,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 45 - Performance do TJMG no Prêmio CNJ de Qualidade - Governança.": {
         "tipo": "IMAGEM", "arquivo": "grafico_45.png",
-        "fonte" : "Painel de resultados do prêmio/ CNJ.",
+        "fonte" : "Fonte: Painel de resultados do prêmio/ CNJ.",
         "largura": 14.0,
         "recuo_esq": -0.7,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 46 - Performance do TJMG no Prêmio CNJ de Qualidade - Produtividade.": {
         "tipo": "IMAGEM", "arquivo": "grafico_46.png",
-        "fonte" : "Painel de resultados do prêmio/ CNJ.",
+        "fonte" : "Fonte: Painel de resultados do prêmio/ CNJ.",
         "largura": 14.0,
         "recuo_esq": -0.7,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 47 - Performance do TJMG no Prêmio CNJ de Qualidade - Dados e Tecnologia.": {
         "tipo": "IMAGEM", "arquivo": "grafico_47.png",
-        "fonte" : "Painel de resultados do prêmio/ CNJ.",
+        "fonte" : "Fonte: Painel de resultados do prêmio/ CNJ.",
         "largura": 14.0,
         "recuo_esq": -0.7,
-        "space_after": 24
+        "space_after": 20
     },
     "Gráfico 48 - Performance do TJMG no Prêmio CNJ de Qualidade - Transparência.": {
         "tipo": "IMAGEM", "arquivo": "grafico_48.png",
-        "fonte" : "Painel de resultados do prêmio/ CNJ.",
+        "fonte" : "Fonte: Painel de resultados do prêmio/ CNJ.",
         "largura": 14.0,
         "recuo_esq": -0.7,
-        "space_after": 24
+        "space_after": 20
     },
 
 }

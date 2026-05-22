@@ -48,7 +48,7 @@ def adicionar_imagem(document, nome_arquivo, titulo="", fonte="Própria", largur
     p_legenda.paragraph_format.space_after = Pt(espaco_abaixo)
     
     # 3. Textos da Legenda
-    texto_legenda = f"{titulo}. " if titulo else ""
+    texto_legenda = f"{titulo} " if titulo else ""
     if fonte:
         texto_legenda += fonte
         
