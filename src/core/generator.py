@@ -337,7 +337,12 @@ def processar_recurso(doc, chave, item, loader_jn=None):
     elif tipo == "TABELA_ORCAMENTO_CONJUNTO":
         builders.adicionar_tabela_orcamento_conjunto(doc, dados)
     elif tipo == "TABELA_ORCAMENTO_CONJUNTO_COMPARACAO":
-        builders.adicionar_tabela_orcamento_detalhada(doc, dados)
+        builders.adicionar_tabela_orcamento_detalhada(
+            doc, dados, 
+            titulo_custom=titulo_real,
+            indent_cm=item.get("recuo_esq", 0),
+            fonte=fonte_custom
+        )
     elif tipo == "TABELA_ORCAMENTO":
         builders.adicionar_tabela_orcamento(
             doc, titulo_vindo_do_word=titulo_real, dados=dados, 
@@ -387,6 +392,30 @@ def processar_recurso(doc, chave, item, loader_jn=None):
             fonte_custom = item.get("fonte_custom")
 
             builders.adicionar_tabela_comparativo_temas(
+                doc, 
+                item['dados'], 
+                titulo_custom=titulo_real,
+                indent_cm=recuo_custom,
+                fonte=fonte_custom
+            )
+
+    elif tipo == "TABELA_METAS_CONSOLIDADAS":
+            recuo_custom = item.get("recuo_esq", 0)
+            fonte_custom = item.get("fonte_custom")
+
+            builders.adicionar_tabela_metas_consolidadas(
+                doc, 
+                item['dados'], 
+                titulo_custom=titulo_real,
+                indent_cm=recuo_custom,
+                fonte=fonte_custom
+            )
+
+    elif tipo == "TABELA_2COL":
+            recuo_custom = item.get("recuo_esq", 0)
+            fonte_custom = item.get("fonte_custom")
+
+            builders.adicionar_tabela_2col(
                 doc, 
                 item['dados'], 
                 titulo_custom=titulo_real,

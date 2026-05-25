@@ -1,6 +1,10 @@
-# TJMG Relatório Diagnóstico - Sistema de Automação de Relatórios
+# 📋 TJMG Relatório Diagnóstico - Sistema Automatizado de Geração de Relatórios
 
-## 📋 Visão Geral do Projeto
+**Um sistema integrado para extrair, processar e gerar relatórios profissionais em Word** com dados do Tribunal de Justiça de Minas Gerais (TJMG).
+
+---
+
+## 🎯 Funcionalidades Principais
 
 **TJMG Relatório Diagnóstico** é um sistema integrado de **automação e processamento de relatórios diagnósticos** para o Tribunal de Justiça de Minas Gerais (TJMG). O projeto combina extração de dados de múltiplas fontes (PDF, Excel, CSV, APIs), processamento inteligente de metadados, e geração dinâmica de documentos Word profissionais com incorporação de gráficos, tabelas, e indicadores.
 

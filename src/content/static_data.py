@@ -557,6 +557,30 @@ dados_desempenho_tecnologia = [
     ["DATA_ROW", "Corpo Técnico TI", "205", "234", "Concurso público ou redistribuição de cargos"],
 ]
 
+dados_tabela_metas_consolidadas = [
+    ("HEADER", "Metas Nacionais para a Justiça Estadual"),
+    ("SUB_HEADER", "Meta Nacional", "Índice de Cumprimento Alcançado", "Síntese das ações Específicas de Melhoria Citadas pelos Tribunais"),
+    ("DATA_ROW", "Meta 1\nJulgar mais processos que os distribuídos", "99,69%", "Indicador em consolidação para 2025. Necessário implementar processos de\npriorização e especialização das câmaras."),
+    ("DATA_ROW", "Meta 2\nJulgar processos mais antigos", "105,83%", "Excelente desempenho com foco em processos de execução e demandas estruturais."),
+    ("DATA_ROW", "Meta 3\nEstimular a conciliação", "100,00%", "Meta atingida atrav és de núcleos de mediação e mediação judicial."),
+    ("DATA_ROW", "Meta 4\nPrioritizar crimes contra Administração Pública,\nimprobidade e ilícitos eleitorais", "133,80%", "Desempenho excepcional com priorização de ações de combate à corrupção\ne ilícitos eleitorais."),
+    ("DATA_ROW", "Meta 5\nReduzir taxa de congestionamento", "84,41%", "Redução estratégica de 0,5% ao ano. Foco em digitalização e eficiência nos\nprocessos de 1º grau."),
+    ("DATA_ROW", "Meta 6\nPrioritizar julgamento de ações ambientais", "50,00%", "Meta em implementação. Foco em demandas ambientais de importância\nregional e estadual."),
+    ("DATA_ROW", "Meta 7\nPrioritizar julgamento de processos com indígenas\ne quilombolas", "285,71%", "Desempenho excepcional com especialização de câmaras e magistrados\ntreinados em temas sensíveis."),
+    ("DATA_ROW", "Meta 8\nPrioritizar violência doméstica e feminicídio", "109,26%", "Desempenho acima da meta. Núcleos especializados e protocolos\nacel erados para proteção integral."),
+    ("DATA_ROW", "Meta 9\nEstimular inovação no Poder Judiciário", "100,00%", "Implementação de Núcleos de Justiça 4.0 com foco em inovação processual\ne aceleração de julgamentos."),
+]
+
+
+dados_tabela_premio_cnj = [
+    ("HEADER", "PRÊMIO CNJ DE QUALIDADE – PONTUAÇÃO GERAL TJMG: 52,1%"),
+    ("SUB_HEADER", "EIXO", "PONTUAÇÃO"),
+    ("DATA_ROW", "Governança", "68,1%"),
+    ("DATA_ROW", "Produtividade", "34,0%"),
+    ("DATA_ROW", "Transparência", "28,6%"),
+    ("DATA_ROW", "Dados e Tecnologia", "61,4%"),
+]
+
 
 HISTORICO_METAS_CNJ = {
     "Meta 1": {
@@ -792,8 +816,7 @@ MAPA_RECURSOS = {
     "Tabela 12 - Comparativo Orçamento 2025 x 2026 por ação orçamentária": {
         "tipo": "TABELA_ORCAMENTO_CONJUNTO_COMPARACAO",
         "dados": dados_tabela_orcamento_comparacao,
-        "fonte_custom": "",
-        "titulo": TITULO_TABELA_ORCAMENTO_ACAO_COMPARACAO,
+        "fonte_custom": "Fonte: LOA/TJMG.",
         "space_after": 20
     },
     "Tabela - Cidades": {
@@ -801,18 +824,12 @@ MAPA_RECURSOS = {
         "dados": dados_tabela_cidades,
         "space_after": 20
     },
-    "Tabela 12 - Dados estatísticos do Relatório Justiça em Números – Edições 2019 a 2024/CNJ.": {
-        "tipo": "TABELA_JUSTICA_NUMEROS", 
-        "dados": dados_tabela_justica_numeros,
-        "fonte_custom": "Legenda: s/d = Dados não encontrados no Relatório Justiça em Números do Período. (*) O indicador considera: número de servidores(as) (efetivos(as), requisitados(as), cedidos(as) e comissionados(as) sem vínculo efetivo); e número de trabalhadores(as) auxiliares (terceirizados(as), estagiários(as), juízes(as) leigos(as) e conciliadores(as).",
+    "Tabela 13 - Resultado Consolidado das Metas Nacionais para a Justiça Estadual.": {
+        "tipo": "TABELA_METAS_CONSOLIDADAS",
+        "dados": dados_tabela_metas_consolidadas,
+        "fonte_custom": "Fonte: Metas Nacionais do Poder Judiciário/CNJ.",
+        "recuo_esq": 0,
         "space_after": 20
-    },
-    "Tabela 13 - Relatório Justiça em Números (CNJ) | Dados do TJMG": {
-        "tipo": "TABELA_JUSTICA_NUMEROS",
-        "dados": dados_tabela_justica_numeros, # Ensure this variable is defined or available
-        "fonte_custom": "Fonte: Base de Dados Justiça em Números 2026.",
-        "space_after": 20,
-        "recuo_esq": -1.5
     },
     "Tabela 14: Performance do TJMG em indicadores de acessibilidade e inclusão.": {
         "tipo": "TABELA_SIMPLES_3COL", 
@@ -849,28 +866,35 @@ MAPA_RECURSOS = {
         "recuo_esq": -0.5, # Ajuste para caber bem na página
         "space_after": 20
     },
-    "Tabela 19 - Tabela comparativa de Desempenho do Eixo Governança.": {
+    "Tabela 19 - Pontuação do TJMG na edição 2025 do Prêmio CNJ de Qualidade.": {
+        "tipo": "TABELA_2COL",
+        "dados": dados_tabela_premio_cnj,
+        "fonte_custom": "Fonte: Painel de resultados do Prêmio/CNJ.",
+        "recuo_esq": 0,
+        "space_after": 20
+    },
+    "Tabela 20 - Tabela comparativa de Desempenho do Eixo Governança.": {
         "tipo": "TABELA_4COL_SIMPLES",
         "dados": dados_desempenho_governanca,
         "fonte_custom": "Fonte: Painel de resultados do Prêmio/ CNJ.",
         "recuo_esq": -0.5,
         "space_after": 20
     },
-    "Tabela 20 - Tabela comparativa de Desempenho do Eixo Produtividade.": {
+    "Tabela 21 - Tabela comparativa de Desempenho do Eixo Produtividade.": {
         "tipo": "TABELA_4COL_SIMPLES",
         "dados": dados_desempenho_produtividade,
         "fonte_custom": "Fonte: Painel de resultados do Prêmio/ CNJ.",
         "recuo_esq": -0.5,
         "space_after": 20
     },
-    "Tabela 21 - Tabela comparativa de Desempenho do Eixo Transparência.": {
+    "Tabela 22 - Tabela comparativa de Desempenho do Eixo Transparência.": {
         "tipo": "TABELA_4COL_SIMPLES",
         "dados": dados_desempenho_transparencia,
         "fonte_custom": "Fonte: Painel de resultados do Prêmio CNJ.",
         "recuo_esq": -0.5,
         "space_after": 20
     },
-    "Tabela 22 - Tabela comparativa de Desempenho do Eixo Dados e Tecnologia.": {
+    "Tabela 23 - Tabela comparativa de Desempenho do Eixo Dados e Tecnologia.": {
         "tipo": "TABELA_4COL_SIMPLES",
         "dados": dados_desempenho_tecnologia,
         "fonte_custom": "Fonte: Painel de resultados do Prêmio CNJ.",
@@ -878,6 +902,7 @@ MAPA_RECURSOS = {
         "space_after": 20,
         "larguras": [2400, 1300, 1300, 4600] 
     },
+    
 
     ########################################################################
     ########################################################################
@@ -1026,7 +1051,7 @@ MAPA_RECURSOS = {
         "tipo": "IMAGEM", "arquivo": "figura_12.png",
         "fonte" : "Fonte: Sigplan",
         "largura": 18.0,
-        "recuo_esq": -0.75,
+        "recuo_esq": -1,
         "space_after": 30,
         "space_after": 20
     },
@@ -1048,31 +1073,55 @@ MAPA_RECURSOS = {
         "tipo": "IMAGEM", "arquivo": "figura_15.png",
         "fonte" : "Fonte: https://brasil.un.org/pt-br/sdgs",
         "largura": 16.0,
+        "recuo_esq": 0,
+        "space_after": 40,
+        "space_after": 20
+    },
+    "Figura 16 - Composição da Matriz de Priorização de Iniciativas do TJMG.": {
+        "tipo": "IMAGEM", "arquivo": "figura_16.png",
+        "fonte" : "Fonte: ASPLAG/DEPLAG",
+        "largura": 16.0,
+        "recuo_esq": 0,
+        "space_after": 40,
+        "space_after": 20
+    },
+    "Figura 17 - Grupos de interesse do TJMG.": {
+        "tipo": "IMAGEM", "arquivo": "figura_17.png",
+        "fonte" : "Fonte: : Assessoria Técnica e Jurídica ao Planejamento e à Gestão Institucional – ASPLAG.",
+        "largura": 11.0,
         "recuo_esq": 2.0,
         "space_after": 40,
         "space_after": 20
     },
-    "Figura 16 - Habitantes por varas e juizado especial da Justiça Estadual.": {
-        "tipo": "IMAGEM", "arquivo": "figura_16.png",
+    "Figura 18 - Habitantes por varas e juizado especial da Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "figura_18.png",
         "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 11.0,
         "recuo_esq": 2.0,
         "space_after": 40,
         "space_after": 20
     },
-    "Figura 17 - Receita x Despesa – TJMG e Justiça Estadual.": {
-        "tipo": "IMAGEM", "arquivo": "figura_17.png",
+    "Figura 19 - Receita x Despesa – TJMG e Justiça Estadual.": {
+        "tipo": "IMAGEM", "arquivo": "figura_19.png",
         "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 17.0,
         "recuo_esq": -1.0,
         "space_after": 30,
         "space_after": 20
     },
-    "Figura 18 - Classificação dos tribunais da Justiça Estadual segundo o porte, ano-base 2024.": {
-        "tipo": "IMAGEM", "arquivo": "figura_18.png",
+    "Figura 20 - Classificação dos tribunais da Justiça Estadual segundo o porte, ano-base 2024.": {
+        "tipo": "IMAGEM", "arquivo": "figura_20.png",
         "fonte" : "Fonte: Relatório Justiça em Números – 2025/CNJ.",
         "largura": 18.0,
         "recuo_esq": -1.1,
+        "space_after": 30,
+        "space_after": 20
+    },
+    "Foto 01 - Participantes do Programa ESG no TJMG treinados como multiplicadores.": {
+        "tipo": "IMAGEM", "arquivo": "foto_01.png",
+        "fonte" : "Fonte: EJEF.",
+        "largura": 18.0,
+        "recuo_esq": -0.5,
         "space_after": 30,
         "space_after": 20
     }, 

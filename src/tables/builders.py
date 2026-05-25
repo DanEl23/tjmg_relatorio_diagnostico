@@ -1382,11 +1382,14 @@ def adicionar_tabela_orcamento_conjunto(document, dados):
     r_leg.font.size = Pt(9)
 
 
-def adicionar_tabela_orcamento_detalhada(document, dados):
+def adicionar_tabela_orcamento_detalhada(document, dados, titulo_custom=None, indent_cm=0, fonte=None):
     """
     Tabela 4 Colunas com LARGURAS e RECUO FIXOS.
     - Larguras: [6000, 2000, 800, 2000]
     - Recuo: -0,93 cm (-527 twips)
+    - titulo_custom: Título da tabela (legenda)
+    - indent_cm: Recuo à esquerda em cm
+    - fonte: Fonte/referência da tabela (legenda)
     """
     if not dados: return
 
@@ -1464,6 +1467,13 @@ def adicionar_tabela_orcamento_detalhada(document, dados):
     tblW = OxmlElement('w:tblW'); tblW.set(qn('w:w'), str(LARGURA_TOTAL_REAL)); tblW.set(qn('w:type'), 'dxa'); tblPr.append(tblW)
     tblLayout = OxmlElement('w:tblLayout'); tblLayout.set(qn('w:type'), 'fixed'); tblPr.append(tblLayout)
     
+    # Aplica Recuo se fornecido
+    if indent_cm != 0:
+        tblInd = OxmlElement('w:tblInd')
+        tblInd.set(qn('w:w'), str(int(Cm(indent_cm).twips)))
+        tblInd.set(qn('w:type'), 'dxa')
+        tblPr.append(tblInd)
+    
     # ==========================================================================
     # 4. PREENCHIMENTO
     # ==========================================================================
@@ -1502,10 +1512,22 @@ def adicionar_tabela_orcamento_detalhada(document, dados):
             # Usa a largura fixa da lista LARGURAS
             formatar_celula(cell, valor_final, bold=bold_atual, bg_color=bg_atual, align=align_atual, largura=LARGURAS[j])
 
+    # Monta a legenda com titulo_custom e fonte
     p_leg = document.add_paragraph()
     p_leg.alignment = WD_ALIGN_PARAGRAPH.LEFT
     p_leg.paragraph_format.space_before = Pt(6)
-    r_leg = p_leg.add_run("Tabela Orçamentária Detalhada. Fonte: LOA/TJMG")
+    
+    # Constrói texto da legenda
+    if titulo_custom and fonte:
+        texto_legenda = f"{titulo_custom}. Fonte: {fonte}"
+    elif titulo_custom:
+        texto_legenda = titulo_custom
+    elif fonte:
+        texto_legenda = f"Tabela Orçamentária Detalhada. Fonte: {fonte}"
+    else:
+        texto_legenda = "Tabela Orçamentária Detalhada. Fonte: LOA/TJMG"
+    
+    r_leg = p_leg.add_run(texto_legenda)
     r_leg.font.name = FONTE_NOME; r_leg.font.size = Pt(9)
     
 
@@ -3318,4 +3340,418 @@ def adicionar_todas_metas_institucionais(doc, loader_jn=None):
         import traceback
         traceback.print_exc()
 
+
+def adicionar_tabela_metas_consolidadas(document, dados, titulo_custom=None, indent_cm=0, fonte=None):
+    """
+    Tabela de Metas Consolidadas com Cabeçalho Mesclado.
+    
+    Estrutura:
+    ┌──────────────────────────────────────────────────────────────────┐
+    │   RESULTADO CONSOLIDADO DAS METAS NACIONAIS (Mesclado)           │
+    ├─────────────────────┬──────────────────┬───────────────────────┤
+    │ Meta Nacional       │ Índice Alcançado │ Síntese de Ações      │
+    ├─────────────────────┼──────────────────┼───────────────────────┤
+    │ Meta 1 - Julgar...  │   102,33%        │ Mutirões, semanas...  │
+    │ Meta 2 - Tribunais  │   Detalhado      │ Criação de grupos...  │
+    │ ...                 │ (múltiplas linhas)│ ...                   │
+    └─────────────────────┴──────────────────┴───────────────────────┘
+    
+    Padrão de dados (lista de tuplas):
+    [
+        ("HEADER", "Título da tabela mesclado"),
+        ("SUB_HEADER", "Col1", "Col2", "Col3"),
+        ("DATA_ROW", "Meta 1\nDescrição", "102,33%", "Ações descritas"),
+        ("DATA_ROW", "Meta 2\nDados", "107,04%\n104,94%", "Grupos..."),
+        ...
+    ]
+    
+    Args:
+        document: Documento Word (python-docx Document)
+        dados: Lista de tuplas com estrutura [(tipo, col1, col2, col3), ...]
+        titulo_custom: Título customizado para legenda (opcional)
+        indent_cm: Recuo da tabela em cm (ex: -0.5 para deslocar à esquerda)
+        fonte: Fonte/referência para legenda (opcional, ex: "Portal CNJ")
+    """
+    if not dados: return
+
+    # --- 1. CONFIGURAÇÕES ---
+    NUM_COLUNAS = 3
+    LARGURA_COL_1 = 2200   # Meta Nacional (um pouco mais larga)
+    LARGURA_COL_2 = 2400   # Índice de Cumprimento 
+    LARGURA_COL_3 = 4322   # Síntese de Ações (mais espaçosa)
+    larguras = [LARGURA_COL_1, LARGURA_COL_2, LARGURA_COL_3]
+    LARGURA_TOTAL_REAL = sum(larguras)
+    
+    ALTURA_LINHA = 340 
+    ALTURA_HEADER_MESCLADO = 400  # Um pouco maior para o cabeçalho
+    
+    FONTE_NOME = 'Calibri'
+    FONTE_TAM = Pt(11)
+    FONTE_SUBHEADER = Pt(10)
+    ESPACAMENTO_LINHA = 1.15
+    
+    # Cores
+    COR_HEADER_MESCLADO = '595959'  # Azul escuro (cabeçalho principal)
+    COR_SUBHEADER_BG = 'D9D9D9'     # Cinza claro (sub-cabeçalho)
+    COR_DADOS_BG_PAR = 'F2F2F2'     # Cinza muito claro (linhas pares)
+    COR_DADOS_BG_IMPAR = 'FFFFFF'   # Branco (linhas ímpares)
+
+    # --- 2. ESTRUTURA DA TABELA ---
+    table = document.add_table(rows=0, cols=NUM_COLUNAS)
+    table.autofit = False 
+    table.alignment = WD_TABLE_ALIGNMENT.LEFT 
+
+    tbl = table._tbl
+    tblPr = tbl.tblPr if tbl.tblPr is not None else OxmlElement('w:tblPr')
+    
+    # Define largura total fixa
+    tblW = OxmlElement('w:tblW')
+    tblW.set(qn('w:w'), str(LARGURA_TOTAL_REAL))
+    tblW.set(qn('w:type'), 'dxa')
+    tblPr.append(tblW)
+    
+    # Layout fixo
+    tblLayout = OxmlElement('w:tblLayout')
+    tblLayout.set(qn('w:type'), 'fixed')
+    tblPr.append(tblLayout)
+
+    # Aplica recuo se fornecido
+    if indent_cm != 0:
+        tblInd = OxmlElement('w:tblInd')
+        tblInd.set(qn('w:w'), str(int(Cm(indent_cm).twips)))
+        tblInd.set(qn('w:type'), 'dxa')
+        tblPr.append(tblInd)
+
+    # --- 3. POPULAÇÃO DOS DADOS ---
+    data_idx = 0
+    for i, row_data in enumerate(dados):
+        tipo = row_data[0] 
+        vals = [str(x) for x in row_data[1:]]
+        while len(vals) < NUM_COLUNAS: vals.append("")
+        
+        row = table.add_row()
+        trPr = row._tr.get_or_add_trPr()
+        trH = OxmlElement('w:trHeight')
+        
+        # Define altura diferenciada para cabeçalho mesclado
+        if tipo == "HEADER":
+            trH.set(qn('w:val'), str(ALTURA_HEADER_MESCLADO))
+        else:
+            trH.set(qn('w:val'), str(ALTURA_LINHA))
+        
+        trH.set(qn('w:hRule'), 'atLeast') 
+        trPr.append(trH)
+
+        if tipo in ["HEADER", "SUB_HEADER"]:
+            trPr.append(OxmlElement('w:tblHeader'))
+        else:
+            trPr.append(OxmlElement('w:cantSplit'))
+
+        # --- CABEÇALHO MESCLADO (Linha 1) ---
+        if tipo == "HEADER":
+            # Mescla todas as 3 colunas
+            c = row.cells[0].merge(row.cells[NUM_COLUNAS-1])
+            c.text = vals[0].upper()
+            
+            p = c.paragraphs[0]
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.paragraph_format.space_after = Pt(0)
+            
+            # Múltiplas linhas se necessário
+            if len(p.runs) == 0:
+                p.add_run(vals[0].upper())
+            
+            run = p.runs[0]
+            run.font.name = FONTE_NOME
+            run.font.size = Pt(12)
+            run.font.bold = True
+            run.font.color.rgb = RGBColor(255, 255, 255)  # Texto branco
+            
+            # Aplicar cor de fundo
+            tcPr = c._element.get_or_add_tcPr()
+            shading = OxmlElement('w:shd')
+            shading.set(qn('w:fill'), COR_HEADER_MESCLADO)
+            tcPr.append(shading)
+            
+            # Centralizar verticalmente
+            set_cell_vertical_alignment(c, 'center')
+            continue 
+
+        # --- SUB-CABEÇALHO E DADOS ---
+        for j, cell in enumerate(row.cells):
+            tcPr = cell._element.get_or_add_tcPr()
+            tcW = OxmlElement('w:tcW')
+            tcW.set(qn('w:w'), str(larguras[j]))
+            tcW.set(qn('w:type'), 'dxa')
+            tcPr.append(tcW)
+
+            # Limpa e adiciona texto (permite múltiplas linhas)
+            cell.text = ""
+            p = cell.paragraphs[0]
+            
+            # Suporta múltiplas linhas separadas por "\n"
+            linhas_texto = vals[j].split('\n') if vals[j] else ['']
+            
+            for line_idx, linha in enumerate(linhas_texto):
+                linha = linha.strip()
+                if not linha:
+                    continue
+                
+                if line_idx == 0:
+                    # Usa o parágrafo existente para primeira linha
+                    p.text = linha
+                else:
+                    # Cria novo parágrafo para linhas subsequentes
+                    p = cell.add_paragraph(linha)
+                    p.paragraph_format.space_before = Pt(0)
+                    p.paragraph_format.space_after = Pt(0)
+
+            # Alinhamento horizontal
+            for p_temp in cell.paragraphs:
+                if j == 0:
+                    p_temp.alignment = WD_ALIGN_PARAGRAPH.LEFT  # Primeira coluna à esquerda
+                elif j == 1:
+                    p_temp.alignment = WD_ALIGN_PARAGRAPH.CENTER  # Segunda coluna centralizada
+                else:
+                    p_temp.alignment = WD_ALIGN_PARAGRAPH.LEFT   # Terceira coluna à esquerda
+            
+            # Formatação de texto
+            for p_temp in cell.paragraphs:
+                for run in p_temp.runs:
+                    run.font.name = FONTE_NOME
+                    run.font.size = FONTE_SUBHEADER if tipo == "SUB_HEADER" else FONTE_TAM
+                    run.font.color.rgb = RGBColor(0, 0, 0)
+
+            # Cor de fundo e formatação por tipo
+            shading = OxmlElement('w:shd')
+            
+            if tipo == "SUB_HEADER":
+                # Sub-cabeçalho: texto em negrito, fundo cinza
+                shading.set(qn('w:fill'), COR_SUBHEADER_BG)
+                for p_temp in cell.paragraphs:
+                    for run in p_temp.runs:
+                        run.bold = True
+                        run.font.size = FONTE_SUBHEADER
+                
+                # Borda inferior mais grossa
+                tcBorders = OxmlElement('w:tcBorders')
+                bottom = OxmlElement('w:bottom')
+                bottom.set(qn('w:val'), 'single')
+                bottom.set(qn('w:sz'), '12')  # Mais grossa
+                bottom.set(qn('w:color'), '000000')
+                tcBorders.append(bottom)
+                tcPr.append(tcBorders)
+            else:
+                # Dados com zebrado
+                bg_color = COR_DADOS_BG_PAR if data_idx % 2 == 0 else COR_DADOS_BG_IMPAR
+                shading.set(qn('w:fill'), bg_color)
+                
+                # Borda inferior fina (cinza claro)
+                tcBorders = OxmlElement('w:tcBorders')
+                bottom = OxmlElement('w:bottom')
+                bottom.set(qn('w:val'), 'single')
+                bottom.set(qn('w:sz'), '4')  # Fina
+                bottom.set(qn('w:color'), 'D9D9D9')
+                tcBorders.append(bottom)
+                tcPr.append(tcBorders)
+            
+            cell._tc.get_or_add_tcPr().append(shading)
+            
+            # Alinhamento vertical
+            set_cell_vertical_alignment(cell, 'top')  # Top alinhado para textos multilinha
+            
+            # Espaçamento entre parágrafos
+            for p_temp in cell.paragraphs:
+                p_temp.paragraph_format.line_spacing = ESPACAMENTO_LINHA
+                p_temp.paragraph_format.space_before = Pt(2)
+                p_temp.paragraph_format.space_after = Pt(2)
+                p_temp.paragraph_format.left_indent = Pt(4) if j > 0 else Pt(0)
+        
+        if tipo == "DATA_ROW": 
+            data_idx += 1
+
+    # --- 4. LEGENDA INFERIOR (TÍTULO + FONTE) ---
+    if titulo_custom or fonte:
+        p = document.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        p.paragraph_format.space_before = Pt(6)
+        p.paragraph_format.space_after = Pt(12)
+        
+        # Constrói o texto unificado
+        texto_completo = ""
+        if titulo_custom:
+            texto_completo += str(titulo_custom).strip().rstrip('.') + ". "
+        
+        # Adiciona a fonte se existir, senão usa um padrão
+        txt_fonte = fonte if fonte else "Fonte: Metas Nacionais do Poder Judiciário."
+        texto_completo += txt_fonte
+        
+        run = p.add_run(texto_completo)
+        run.font.name = 'Calibri'
+        run.font.size = Pt(9)
+        run.font.color.rgb = RGBColor(0, 0, 0)
+
+
+def adicionar_tabela_2col(document, dados, titulo_custom=None, indent_cm=0, fonte=None):
+    """
+    Adiciona uma tabela com 2 colunas (EIXO | VALOR) com cabeçalho mesclado.
+    
+    Estrutura esperada dos dados:
+    [
+        ("HEADER", "Título da Tabela"),
+        ("SUB_HEADER", "Coluna 1", "Coluna 2"),
+        ("DATA_ROW", "valor1", "valor2"),
+        ...
+    ]
+    """
+    from docx.shared import Pt, RGBColor, Inches
+    from docx.enum.text import WD_ALIGN_PARAGRAPH
+    from docx.oxml.ns import qn
+    from docx.oxml import OxmlElement
+    from docx.oxml.shared import OxmlElement
+    
+    # Cores
+    COR_HEADER_BG = "44546A"
+    COR_SUBHEADER_BG = "D9D9D9"
+    COR_DADOS_BG_PAR = "FFFFFF"
+    COR_DADOS_BG_IMPAR = "F2F2F2"
+    
+    FONTE_NOME = "Calibri"
+    FONTE_TAM = Pt(11)
+    FONTE_SUBHEADER = Pt(11)
+    ESPACAMENTO_LINHA = 1.15
+    
+    # Larguras: 4600 + 4600 twips
+    larguras = [4600, 4600]
+    
+    # Cria tabela 2 colunas
+    table = document.add_table(rows=0, cols=2)
+    table.style = 'Light Grid Accent 1'
+    
+    data_idx = 0
+    
+    for vals in dados:
+        tipo = vals[0]
+        
+        if tipo == "HEADER":
+            # Cabeçalho: 1 linha com célula mesclada
+            row = table.add_row()
+            row.height = Inches(0.4)
+            
+            cell_0 = row.cells[0]
+            cell_1 = row.cells[1]
+            
+            # Texto na primeira célula
+            cell_0.text = vals[1]
+            
+            # Configura gridSpan para cell_0
+            tcPr = cell_0._element.get_or_add_tcPr()
+            gridSpan = OxmlElement('w:gridSpan')
+            gridSpan.set(qn('w:val'), '2')
+            tcPr.append(gridSpan)
+            
+            # Cor de fundo
+            shading = OxmlElement('w:shd')
+            shading.set(qn('w:fill'), COR_HEADER_BG)
+            tcPr.append(shading)
+            
+            # SOLUÇÃO: Remove a segunda célula do XML para evitar coluna órfã
+            row_elem = row._element
+            tc_list = row_elem.findall(qn('w:tc'))
+            if len(tc_list) > 1:
+                # Remove a segunda célula (o segundo tc element)
+                row_elem.remove(tc_list[1])
+            
+            # Texto em branco, centralizado, negrito
+            for p in cell_0.paragraphs:
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                for run in p.runs:
+                    run.font.name = FONTE_NOME
+                    run.font.size = FONTE_SUBHEADER
+                    run.font.bold = True
+                    run.font.color.rgb = RGBColor(255, 255, 255)
+            
+            set_cell_vertical_alignment(cell_0, 'center')
+            
+        else:
+            # Sub-header ou Data Row
+            row = table.add_row()
+            
+            for j, cell in enumerate(row.cells):
+                # Define largura
+                tcPr = cell._element.get_or_add_tcPr()
+                tcW = OxmlElement('w:tcW')
+                tcW.set(qn('w:w'), str(larguras[j]))
+                tcW.set(qn('w:type'), 'dxa')
+                tcPr.append(tcW)
+                
+                # Texto
+                cell.text = vals[j+1] if j+1 < len(vals) else ""
+                
+                # Alinhamento horizontal
+                for p in cell.paragraphs:
+                    if tipo == "SUB_HEADER":
+                        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    else:
+                        p.alignment = WD_ALIGN_PARAGRAPH.LEFT if j == 0 else WD_ALIGN_PARAGRAPH.CENTER
+                
+                # Formatação de texto
+                for p in cell.paragraphs:
+                    for run in p.runs:
+                        run.font.name = FONTE_NOME
+                        run.font.size = FONTE_SUBHEADER if tipo == "SUB_HEADER" else FONTE_TAM
+                        run.font.color.rgb = RGBColor(0, 0, 0)
+                        if tipo == "SUB_HEADER":
+                            run.bold = True
+                
+                # Cor de fundo
+                shading = OxmlElement('w:shd')
+                if tipo == "SUB_HEADER":
+                    shading.set(qn('w:fill'), COR_SUBHEADER_BG)
+                else:
+                    bg_color = COR_DADOS_BG_PAR if data_idx % 2 == 0 else COR_DADOS_BG_IMPAR
+                    shading.set(qn('w:fill'), bg_color)
+                
+                tcPr.append(shading)
+                
+                # Bordas brancas
+                tcBorders = OxmlElement('w:tcBorders')
+                for border_name in ['top', 'left', 'bottom', 'right']:
+                    border = OxmlElement(f'w:{border_name}')
+                    border.set(qn('w:val'), 'single')
+                    border.set(qn('w:sz'), '4')
+                    border.set(qn('w:color'), 'FFFFFF')
+                    tcBorders.append(border)
+                tcPr.append(tcBorders)
+                
+                # Alinhamento vertical
+                set_cell_vertical_alignment(cell, 'top')
+                
+                # Espaçamento
+                for p in cell.paragraphs:
+                    p.paragraph_format.line_spacing = ESPACAMENTO_LINHA
+                    p.paragraph_format.space_before = Pt(2)
+                    p.paragraph_format.space_after = Pt(2)
+            
+            if tipo == "DATA_ROW":
+                data_idx += 1
+    
+    # Legenda
+    if titulo_custom or fonte:
+        p = document.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        p.paragraph_format.space_before = Pt(6)
+        p.paragraph_format.space_after = Pt(12)
+        
+        texto_completo = ""
+        if titulo_custom:
+            texto_completo += str(titulo_custom).strip().rstrip('.') + ". "
+        
+        txt_fonte = fonte if fonte else "Fonte: Painel de resultados do Prêmio/CNJ."
+        texto_completo += txt_fonte
+        
+        run = p.add_run(texto_completo)
+        run.font.name = 'Calibri'
+        run.font.size = Pt(9)
+        run.font.color.rgb = RGBColor(0, 0, 0)
 
