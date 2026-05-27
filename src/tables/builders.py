@@ -3116,14 +3116,14 @@ def adicionar_todas_metas_institucionais(doc, loader_jn=None):
                 run.font.size = Pt(font_size)
                 run.font.name = 'Calibri'
     
-    print("⚡ Adicionando todas as Metas Institucionais do TJMG (55 metas)...")
+    print("Adicionando todas as Metas Institucionais do TJMG (55 metas)...")
     
     # Caminho do arquivo de metas institucionais
     arquivo_metas = 'exports/metas_institucionais_2025.xlsx'
     
     # Verifica se arquivo existe
     if not os.path.exists(arquivo_metas):
-        print(f"❌ ERRO: Arquivo {arquivo_metas} não encontrado!")
+        print(f"ERRO: Arquivo {arquivo_metas} não encontrado!")
         return
     
     try:
@@ -3162,16 +3162,18 @@ def adicionar_todas_metas_institucionais(doc, loader_jn=None):
             descricao = info_texto.iloc[0].get('Nº_Meta', meta_id)
             valor_meta = info_texto.iloc[0].get('Valor da Meta', '')
             
-            # --- SUBTÍTULO (Heading 3) ---
-            p_titulo = doc.add_paragraph(meta_id, style='Heading 3')
+            # --- SUBTÍTULO VISUAL (sem estilo Heading para não entrar no sumário) ---
+            p_titulo = doc.add_paragraph()
             p_titulo.paragraph_format.space_before = Pt(12)
             p_titulo.paragraph_format.space_after = Pt(6)
             p_titulo.paragraph_format.keep_with_next = True  # Manter título com próximo parágrafo
-            
-            # Formata o título: cor RGB(162, 22, 18) e tamanho 12pt
-            for run in p_titulo.runs:
-                run.font.color.rgb = RGBColor(162, 22, 18)
-                run.font.size = Pt(12)
+            p_titulo.alignment = WD_ALIGN_PARAGRAPH.LEFT
+
+            run_titulo = p_titulo.add_run(meta_id)
+            run_titulo.font.color.rgb = RGBColor(162, 22, 18)
+            run_titulo.font.size = Pt(12)
+            run_titulo.font.bold = True
+            run_titulo.font.name = 'Calibri'
             
             # --- DESCRIÇÃO ---
             texto_desc = str(descricao) if pd.notna(descricao) else meta_id
@@ -3319,15 +3321,16 @@ def adicionar_todas_metas_institucionais(doc, loader_jn=None):
                                     format_cell_meta(cell, other_rows_bg, other_rows_font, border_color,
                                                    bold=False, font_size=11, alignment=WD_ALIGN_PARAGRAPH.CENTER)
             
-            # --- LEGENDA/FONTE ---
-            p_fonte = doc.add_paragraph(fonte_padrao, style='Heading 4')
+            # --- LEGENDA/FONTE (texto simples, sem estilo de Heading) ---
+            p_fonte = doc.add_paragraph()
             p_fonte.paragraph_format.space_before = Pt(6)
             p_fonte.paragraph_format.space_after = Pt(12)
             p_fonte.paragraph_format.keep_with_next = False  # Não manter com próximo para permitir quebra após
-            for run in p_fonte.runs:
-                run.font.size = Pt(9)
-                run.font.italic = True
-                run.font.color.rgb = RGBColor(0, 0, 0)
+            p_fonte.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            run_fonte = p_fonte.add_run(fonte_padrao)
+            run_fonte.font.size = Pt(9)
+            run_fonte.font.italic = True
+            run_fonte.font.color.rgb = RGBColor(0, 0, 0)
             
             # --- ESPAÇAMENTO ENTRE METAS ---
             p_espaco = doc.add_paragraph()
@@ -3336,7 +3339,7 @@ def adicionar_todas_metas_institucionais(doc, loader_jn=None):
         print(f"✓ {len(df_valores)} metas institucionais adicionadas com sucesso!")
         
     except Exception as e:
-        print(f"❌ ERRO ao processar metas institucionais: {str(e)}")
+        print(f"ERRO ao processar metas institucionais: {str(e)}")
         import traceback
         traceback.print_exc()
 
@@ -3376,9 +3379,9 @@ def adicionar_tabela_metas_consolidadas(document, dados, titulo_custom=None, ind
 
     # --- 1. CONFIGURAÇÕES ---
     NUM_COLUNAS = 3
-    LARGURA_COL_1 = 2200   # Meta Nacional (um pouco mais larga)
-    LARGURA_COL_2 = 2400   # Índice de Cumprimento 
-    LARGURA_COL_3 = 4322   # Síntese de Ações (mais espaçosa)
+    LARGURA_COL_1 = 2400   # Meta Nacional (um pouco mais larga)
+    LARGURA_COL_2 = 2834   # Índice de Cumprimento 
+    LARGURA_COL_3 = 4700   # Síntese de Ações (mais espaçosa)
     larguras = [LARGURA_COL_1, LARGURA_COL_2, LARGURA_COL_3]
     LARGURA_TOTAL_REAL = sum(larguras)
     
@@ -3511,7 +3514,7 @@ def adicionar_tabela_metas_consolidadas(document, dados, titulo_custom=None, ind
                 if j == 0:
                     p_temp.alignment = WD_ALIGN_PARAGRAPH.LEFT  # Primeira coluna à esquerda
                 elif j == 1:
-                    p_temp.alignment = WD_ALIGN_PARAGRAPH.CENTER  # Segunda coluna centralizada
+                    p_temp.alignment = WD_ALIGN_PARAGRAPH.LEFT  # Segunda coluna centralizada
                 else:
                     p_temp.alignment = WD_ALIGN_PARAGRAPH.LEFT   # Terceira coluna à esquerda
             
@@ -3558,7 +3561,7 @@ def adicionar_tabela_metas_consolidadas(document, dados, titulo_custom=None, ind
             cell._tc.get_or_add_tcPr().append(shading)
             
             # Alinhamento vertical
-            set_cell_vertical_alignment(cell, 'top')  # Top alinhado para textos multilinha
+            set_cell_vertical_alignment(cell, 'center')  # Top alinhado para textos multilinha
             
             # Espaçamento entre parágrafos
             for p_temp in cell.paragraphs:
@@ -3585,6 +3588,8 @@ def adicionar_tabela_metas_consolidadas(document, dados, titulo_custom=None, ind
         # Adiciona a fonte se existir, senão usa um padrão
         txt_fonte = fonte if fonte else "Fonte: Metas Nacionais do Poder Judiciário."
         texto_completo += txt_fonte
+
+        
         
         run = p.add_run(texto_completo)
         run.font.name = 'Calibri'

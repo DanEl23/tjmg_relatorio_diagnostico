@@ -560,17 +560,18 @@ dados_desempenho_tecnologia = [
 dados_tabela_metas_consolidadas = [
     ("HEADER", "Metas Nacionais para a Justiça Estadual"),
     ("SUB_HEADER", "Meta Nacional", "Índice de Cumprimento Alcançado", "Síntese das ações Específicas de Melhoria Citadas pelos Tribunais"),
-    ("DATA_ROW", "Meta 1\nJulgar mais processos que os distribuídos", "99,69%", "Indicador em consolidação para 2025. Necessário implementar processos de\npriorização e especialização das câmaras."),
-    ("DATA_ROW", "Meta 2\nJulgar processos mais antigos", "105,83%", "Excelente desempenho com foco em processos de execução e demandas estruturais."),
-    ("DATA_ROW", "Meta 3\nEstimular a conciliação", "100,00%", "Meta atingida atrav és de núcleos de mediação e mediação judicial."),
-    ("DATA_ROW", "Meta 4\nPrioritizar crimes contra Administração Pública,\nimprobidade e ilícitos eleitorais", "133,80%", "Desempenho excepcional com priorização de ações de combate à corrupção\ne ilícitos eleitorais."),
-    ("DATA_ROW", "Meta 5\nReduzir taxa de congestionamento", "84,41%", "Redução estratégica de 0,5% ao ano. Foco em digitalização e eficiência nos\nprocessos de 1º grau."),
-    ("DATA_ROW", "Meta 6\nPrioritizar julgamento de ações ambientais", "50,00%", "Meta em implementação. Foco em demandas ambientais de importância\nregional e estadual."),
-    ("DATA_ROW", "Meta 7\nPrioritizar julgamento de processos com indígenas\ne quilombolas", "285,71%", "Desempenho excepcional com especialização de câmaras e magistrados\ntreinados em temas sensíveis."),
-    ("DATA_ROW", "Meta 8\nPrioritizar violência doméstica e feminicídio", "109,26%", "Desempenho acima da meta. Núcleos especializados e protocolos\nacel erados para proteção integral."),
-    ("DATA_ROW", "Meta 9\nEstimular inovação no Poder Judiciário", "100,00%", "Implementação de Núcleos de Justiça 4.0 com foco em inovação processual\ne aceleração de julgamentos."),
-]
+    ("DATA_ROW", "Meta 1\nJulgar mais processos que os distribuídos", "95,22%", "Mutirões, semanas temáticas e reforço da força de trabalho."),
+    ("DATA_ROW", "Meta 2\nJulgar processos mais antigos", "• 1º Grau: 107,66%\n• 2º Grau: 108,23%\n• Juizados/Turmas: 99,87%\n• Processos mais antigos: 52,53%","Criação de grupos de trabalho, núcleos especializados e apoio institucional."),
+    ("DATA_ROW", "Meta 3\nEstimular a conciliação", "100,00%", "Semanas de conciliação, pautas concentradas, fortalecimento e expansão dos Cejuscs."),
+    ("DATA_ROW", "Meta 4\nPrioritizar crimes contra Administração Pública,\nimprobidade e ilícitos eleitorais", "• Geral: 143,66%\n• Improbidade (até 2021): 75,11%", "Gestão baseada em dados, forças-tarefa e grupos de apoio especializado."),
+    ("DATA_ROW", "Meta 5\nReduzir taxa de congestionamento", "85,78%", "Atuação ativa da Corregedoria e realização de mutirões."),
+    ("DATA_ROW", "Meta 6\nPrioritizar julgamento de ações ambientais", "94,02%", "Ações concentradas, semanas temáticas e forças-tarefa."),
+    ("DATA_ROW", "Meta 7\nPrioritizar julgamento de processos com indígenas\ne quilombolas", "Direitos das comunidades indígenas - 120%\n\nDireitos das comunidades quilombolas - 100%", "Alinhamento com as unidades e capacitação dos envolvidos."),
+    ("DATA_ROW", "Meta 8\nPrioritizar violência doméstica e feminicídio", "• Feminicídio: 112,56%\n• Violência Doméstica: 93,12%", "Expansão e especialização da estrutura judiciária; mutirões e audiências concentradas."),
+    ("DATA_ROW", "Meta 9\nEstimular inovação no Poder Judiciário", "100%", "Fortalecimento e institucionalização dos Laboratórios de Inovação e cooperação interinstitucional."),
+    ("DATA_ROW", "Meta 10\nDireitos da criança e do adolescente", "• 1º Grau: 88,84%\n• 2º Grau: 85,03%", "Reuniões, acompanhamento institucional e capacitação das equipes."),
 
+]
 
 dados_tabela_premio_cnj = [
     ("HEADER", "PRÊMIO CNJ DE QUALIDADE – PONTUAÇÃO GERAL TJMG: 52,1%"),
@@ -828,7 +829,7 @@ MAPA_RECURSOS = {
         "tipo": "TABELA_METAS_CONSOLIDADAS",
         "dados": dados_tabela_metas_consolidadas,
         "fonte_custom": "Fonte: Metas Nacionais do Poder Judiciário/CNJ.",
-        "recuo_esq": 0,
+        "recuo_esq": -0.5,
         "space_after": 20
     },
     "Tabela 14: Performance do TJMG em indicadores de acessibilidade e inclusão.": {

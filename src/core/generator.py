@@ -108,6 +108,51 @@ def adicionar_paginacao_rodape(document):
     p_vazio.paragraph_format.space_after = Pt(6)
 
 
+def marcar_atualizacao_campos_na_abertura(document):
+    """Marca o documento para atualizar campos automaticamente ao abrir no Word."""
+    settings = document._part.settings
+    update_fields = settings.element.find(qn('w:updateFields'))
+    if update_fields is None:
+        update_fields = OxmlElement('w:updateFields')
+        update_fields.set(qn('w:val'), 'true')
+        settings.element.append(update_fields)
+
+
+def inserir_sumario_automatico(document, nivel_maximo=3):
+    """Insere um campo TOC nativo do Word."""
+    p_titulo = document.add_paragraph()
+    p_titulo.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p_titulo.paragraph_format.space_after = Pt(18)
+    run_titulo = p_titulo.add_run("SUMÁRIO")
+    run_titulo.bold = True
+    run_titulo.font.size = Pt(20)
+    run_titulo.font.color.rgb = COR_VINHO
+    run_titulo.font.name = 'Calibri'
+
+    p_toc = document.add_paragraph()
+    p_toc.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p_toc.paragraph_format.space_after = Pt(0)
+
+    run = p_toc.add_run()
+    fldChar1 = OxmlElement('w:fldChar')
+    fldChar1.set(qn('w:fldCharType'), 'begin')
+
+    instrText = OxmlElement('w:instrText')
+    instrText.set(qn('xml:space'), 'preserve')
+    instrText.text = f'TOC \\o "1-{nivel_maximo}" \\h \\z \\u'
+
+    fldChar2 = OxmlElement('w:fldChar')
+    fldChar2.set(qn('w:fldCharType'), 'separate')
+
+    fldChar3 = OxmlElement('w:fldChar')
+    fldChar3.set(qn('w:fldCharType'), 'end')
+
+    run._element.append(fldChar1)
+    run._element.append(instrText)
+    run._element.append(fldChar2)
+    run._element.append(fldChar3)
+
+
 def configurar_estilos_tjmg(document):
     """ Define estilos Heading 1, 2, 3 com a cor Vinho """
     styles = document.styles
@@ -143,14 +188,14 @@ def inserir_capa(document, pasta_resources):
     caminho_capa = pasta_resources / "capa_relatorio.png"
     
     if caminho_capa.exists():
-        print("🖼️ Inserindo Capa...")
+        print("Inserindo capa...")
         p = document.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         run = p.add_run()
         run.add_picture(str(caminho_capa), width=Cm(21.0))
         document.add_section(WD_SECTION.NEW_PAGE)
     else:
-        print(f"⚠️ Capa não encontrada em: {caminho_capa}")
+        print(f"AVISO: Capa não encontrada em: {caminho_capa}")
 
 
 def adicionar_texto_com_negrito(paragrafo, texto, cor_rgb=RGBColor(0,0,0), tamanho=12):
@@ -223,8 +268,36 @@ def adicionar_pagina_sumario_visual(doc, doc_orig):
 
 def preparar_dados_tabela_metas(nome_meta):
     import pandas as pd
+    import re
+    import unicodedata
     from src.content import static_data
     
+    def normalizar_texto(valor):
+        texto = str(valor or "").strip().casefold()
+        texto = unicodedata.normalize('NFKD', texto).encode('ascii', 'ignore').decode('ascii')
+        texto = re.sub(r'[^a-z0-9]+', ' ', texto)
+        return re.sub(r'\s+', ' ', texto).strip()
+
+    def localizar_resultado_2025(df_base, candidatos):
+        if df_base.empty:
+            return None
+
+        categorias_norm = df_base['Categoria'].astype(str).map(normalizar_texto)
+        for candidato in candidatos:
+            candidato_norm = normalizar_texto(candidato)
+            if not candidato_norm:
+                continue
+
+            mask = categorias_norm == candidato_norm
+            if not mask.any():
+                # Tolerância extra para variações com/sem hífen e com sufixos
+                mask = categorias_norm.str.contains(re.escape(candidato_norm), na=False)
+
+            if mask.any():
+                return str(df_base.loc[mask, 'Resultado'].iloc[0])
+
+        return None
+
     # 1. Carregamento do Excel
     try:
         df_2025 = pd.read_excel("exports/resultados_cnj.xlsx")
@@ -263,11 +336,15 @@ def preparar_dados_tabela_metas(nome_meta):
                 valor_2025 = "---"
                 if not df_filtrado.empty:
                     inst_busca = "Total" if instancia == "Geral" else instancia
-                    termo_busca = f"{inst_busca} - {chave_excel}"
-                    
-                    match = df_filtrado[df_filtrado['Categoria'].astype(str).str.strip() == termo_busca]
-                    if not match.empty:
-                        valor_2025 = str(match.iloc[0]['Resultado'])
+                    candidatos = [
+                        f"{inst_busca} - {chave_excel}",
+                        f"{inst_busca} {chave_excel}",
+                        f"{inst_busca} - {nome_visual}",
+                        f"{inst_busca} {nome_visual}",
+                    ]
+                    resultado = localizar_resultado_2025(df_filtrado, candidatos)
+                    if resultado is not None:
+                        valor_2025 = resultado
                 
                 # Monta a linha de dados
                 dados_finais.append(["DATA_ROW", nome_meta, info_meta['descricao'], nome_visual, instancia] + valores_anos + [valor_2025])
@@ -295,19 +372,22 @@ def preparar_dados_tabela_metas(nome_meta):
         for instancia, valores_anos in info_meta.get('dados_passados', {}).items():
             valor_2025 = "---"
             if not df_filtrado.empty:
-                # 1. Definição do termo de busca exato
-                termo_busca = instancia
-                # Pequeno ajuste de compatibilidade: se no static for "Geral", busca "Total" no Excel
-                if instancia == "Geral": termo_busca = "Total"
+                # O Excel usa variações como:
+                # - "Total"
+                # - "Total Meta 5"
+                # - "Total Violência Doméstica"
+                # então buscamos por múltiplos candidatos equivalentes.
+                candidatos = [instancia]
+                if instancia in ("Geral", "Tribunal", "Total"):
+                    candidatos.extend([
+                        "Total",
+                        f"Total {nome_meta}",
+                        f"Total - {nome_meta}",
+                    ])
 
-                # 2. Busca Estrita (Removemos o 'OR Total')
-                # Isso garante que 1º Grau só pegue dados de 1º Grau.
-                match = df_filtrado[
-                    df_filtrado['Categoria'].astype(str).str.strip() == termo_busca
-                ]
-                
-                if not match.empty:
-                    valor_2025 = str(match.iloc[0]['Resultado'])
+                resultado = localizar_resultado_2025(df_filtrado, candidatos)
+                if resultado is not None:
+                    valor_2025 = resultado
             
             dados_finais.append(["DATA_ROW", nome_meta, info_meta['descricao'], instancia] + valores_anos + [valor_2025])
             
@@ -322,7 +402,7 @@ def processar_recurso(doc, chave, item, loader_jn=None):
     titulo_real = item.get("titulo", chave) 
     fonte_custom = item.get("fonte_custom")
 
-    print(f"⚡ Inserindo Recurso: {titulo_real} (Tipo: {tipo})")
+    print(f"Inserindo recurso: {titulo_real} (Tipo: {tipo})")
 
     # === IMAGENS ===
     if tipo == "IMAGEM":
@@ -448,7 +528,7 @@ def processar_recurso(doc, chave, item, loader_jn=None):
 # === TABELA JUSTIÇA EM NÚMEROS (CONFERIDA E ALINHADA) ===
     elif tipo == "TABELA_JUSTICA_NUMEROS":
         if not loader_jn:
-            print("❌ Erro: Loader JN não foi inicializado.")
+            print("ERRO: Loader JN não foi inicializado.")
             return
 
         # 1. LISTA DE MÉTRICAS (CHAVES INTERNAS DO LOADER)
@@ -642,7 +722,7 @@ def processar_recurso(doc, chave, item, loader_jn=None):
 
 def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None):
     """ Gera o relatório DO ZERO (Blank Document). """
-    print(f"--- 🚀 Iniciando Geração (Modo Zero-Base) ---")
+    print(f"--- Iniciando Geração (Modo Zero-Base) ---")
 
     # 1. SETUP DE DIRETÓRIOS (CAMINHOS ABSOLUTOS SEGUROS)
     # Usa a localização deste arquivo (src/core/generator.py) para achar a raiz
@@ -665,7 +745,7 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
 
     # Validação do CSV
     if not arquivo_dados.exists():
-        print(f"❌ ERRO CRÍTICO: Arquivo de dados não encontrado em {arquivo_dados}")
+        print(f"ERRO CRÍTICO: Arquivo de dados não encontrado em {arquivo_dados}")
         print("   -> O relatório será gerado, mas a Tabela Justiça em Números falhará.")
     
     # 2. INICIALIZAÇÃO DE CARREGADORES
@@ -680,19 +760,11 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
     # 4. CAPA
     inserir_capa(doc_final, pasta_resources)
 
-    # 5. SUMÁRIO (Visual)
-    try:
-        # Fallback de caminho para sumário
-        if not caminho_sumario.exists():
-             # Tenta achar no diretório pai do dummy path (caso de teste)
-             caminho_sumario = Path(caminho_base_dummy).parent / "Sumario_Modelo.docx"
-
-        doc_sumario_orig = Document(caminho_sumario)
-        print("📋 Gerando página de Sumário...")
-        adicionar_pagina_sumario_visual(doc_final, doc_sumario_orig)
-        doc_final.add_page_break()
-    except Exception as e:
-        print(f"⚠️ Erro ao ler Sumario_Modelo ({e}). Pulando sumário.")
+    # 5. SUMÁRIO AUTOMÁTICO DO WORD
+    print("Inserindo sumário automático do Word...")
+    marcar_atualizacao_campos_na_abertura(doc_final)
+    inserir_sumario_automatico(doc_final, nivel_maximo=3)
+    doc_final.add_page_break()
 
     # 6. PROCESSAMENTO DO CONTEÚDO
     try:
@@ -702,7 +774,7 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
             
         doc_fonte = Document(caminho_conteudo)
     except:
-        print("❌ Erro fatal: Conteudo_Fonte.docx não encontrado."); return
+        print("ERRO FATAL: Conteudo_Fonte.docx não encontrado."); return
 
     mapa = static_data.MAPA_RECURSOS
     
@@ -761,7 +833,7 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
                 if nivel == 1: texto_final_titulo = f"{num_limpo}. {titulo_texto}"
                 else: texto_final_titulo = f"{num_limpo} {titulo_texto}"
 
-                print(f"🔖 Título Detectado: {texto_final_titulo}")
+                print(f"Titulo Detectado: {texto_final_titulo}")
                 h = doc_final.add_heading(texto_final_titulo, level=nivel)
                 if h.runs: 
                     h.runs[0].font.color.rgb = COR_VINHO
@@ -835,9 +907,9 @@ def gerar_relatorio_completo(caminho_base_dummy, output_path, mapa_recursos=None
     # 7. SALVAR
     try:
         doc_final.save(output_path)
-        print(f"✅ Relatório salvo em: {output_path}")
+        print(f"Relatório salvo em: {output_path}")
     except Exception as e:
-        print(f"❌ Erro ao salvar: {e}")
+        print(f"ERRO ao salvar: {e}")
 
 if __name__ == "__main__":
     # Teste isolado

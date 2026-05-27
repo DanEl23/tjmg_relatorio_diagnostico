@@ -28,14 +28,14 @@ def main():
     tem_imagens = any(DIR_IMAGES_EXTRACTED.glob("*.png")) if DIR_IMAGES_EXTRACTED.exists() else False
     
     if args.extrair or not tem_imagens:
-        print(">>> 📥 Iniciando extração de imagens do PDF...")
+        print(">>> Iniciando extração de imagens do PDF...")
         try:
             extrair_imagens() 
         except Exception as e:
-            print(f"⚠️  Aviso: Falha na extração de imagens do PDF: {e}")
+            print(f"AVISO: Falha na extração de imagens do PDF: {e}")
             print("    O relatório tentará ser gerado apenas com as imagens estáticas (Canvas).")
     else:
-        print(">>> ⏭️  Pulando extração (Imagens do PDF já detectadas). Use --extrair para forçar.")
+        print(">>> Pulando extração (Imagens do PDF já detectadas). Use --extrair para forçar.")
 
     # --- 5. Definição de Caminhos Finais ---
     # Template: Fica em data/raw/Sumario_Modelo.docx
@@ -47,7 +47,7 @@ def main():
     output_path = output_dir / args.saida
 
     # --- 6. Execução do Gerador (Passando o Mapa de Recursos) ---
-    print(f">>> 📝 Lendo 'Conteudo_Fonte.docx' e gerando relatório em:\n    {output_path}...")
+    print(f">>> Lendo 'Conteudo_Fonte.docx' e gerando relatório em:\n    {output_path}...")
     
     try:
         gerar_relatorio_completo(
@@ -56,11 +56,11 @@ def main():
             mapa_recursos=MAPA_RECURSOS
         )
     except Exception as e:
-        print(f"\n❌ ERRO FATAL durante a geração: {e}")
+        print(f"\nERRO FATAL durante a geração: {e}")
         import traceback
         traceback.print_exc()
 
-    print("\n=== ✅ Processo Finalizado ===")
+    print("\n=== Processo Finalizado ===")
 
 if __name__ == "__main__":
     main()
